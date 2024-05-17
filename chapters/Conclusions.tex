@@ -1,0 +1,31 @@
+%!TEX root = ../Thesis.tex
+\chapter{Conclusions and future work}
+In this section, we provide a critical analysis and interpretation of the findings presented in this thesis, focusing on their significance, implications, and potential applications. Then, we conclude with future work that we could not cover during the thesis period.
+
+\section{Summary}
+
+The thesis comprehensively explores designing, implementing, and evaluating a monitoring system and alert service for GPU resource utilization in High-Performance Computing (HPC) clusters. Through a systematic methodology, the research addresses critical challenges in efficiently analyzing jobs in HPC systems in real-time, focusing on minimizing alert delays and performance impacts on database systems, maintaining reliable data structures for job alert status checks, and identifying optimal algorithms for generating alerts.
+
+The contributions of the thesis are multifaceted. Firstly, a monitoring system and alert service are successfully created and deployed for Nvidia and AMD GPUs within Slurm-managed supercomputer systems. Through an investigation of collected monitoring data, an algorithm is developed to detect and alert jobs with inefficient GPU resource usage. Additionally, the thesis provides insights into GPU resource utilization dynamics. It offers practical applications in advancing generative AI models while promoting sustainability in HPC cluster usage.
+
+The thesis comprises sections dedicated to discussing techniques for building the monitoring system and alert service, detailing the implementation of the proposed system, presenting benchmark results from experimental and production setups, and offering concluding remarks. The methodology includes requirement analysis, system design and architecture, implementation and deployment, data collection and analysis, evaluation and validation, feedback and iterative improvement, documentation, and knowledge transfer.
+
+The thesis illustrates the operationalization of the monitoring system and alert service through JSON strings and SQL code excerpts, showcasing the real-time mechanisms for capturing and processing job metadata and GPU usage data. Triggers and notification functions within the PostgreSQL database enable instantaneous communication and notification of relevant events, facilitating timely updates and actions based on incoming data.
+
+Overall, the thesis contributes to advancing monitoring and alerting systems for GPU resource utilization in HPC clusters, with practical implications for optimizing job scheduling, resource allocation, and overall system efficiency. By addressing critical challenges and proposing innovative solutions, the research enhances the effectiveness and sustainability of GPU-accelerated computing environments, paving the way for future advancements in AI research and HPC infrastructure management.
+
+\section{Future work}
+While the real-time GPU monitoring system represents a significant advancement, there are several avenues for future research and improvements:
+
+\begin{enumerate}
+    \item \textbf{More Hardware Monitoring}: Collect monitoring data from other hardware (e.g., CPU, disk I/O) and collectively contribute to the alert for the whole system. The monitoring infrastructure already has those capabilities, but they have not been tested in production due to performance considerations.
+    \item \textbf{Dynamic Alerting Strategies}: Investigate adaptive alerting strategies that dynamically adjust thresholds based on workload characteristics, ensuring effective alerting across varying HPC cluster conditions.
+    \item \textbf{Integration with Additional Job Schedulers}: Extend support for real-time GPU monitoring to additional job schedulers commonly used in HPC environments, enhancing the system's compatibility with diverse cluster architectures.
+    \item \textbf{Advanced Machine Learning Techniques}: Explore the integration of possible other machine learning algorithms to predict GPU resource usage patterns, enabling proactive alerting based on historical data analysis.
+    \item \textbf{Security Considerations}: Address security concerns related to real-time monitoring by implementing robust access control mechanisms to safeguard possibly sensitive metrics data.
+    \item \textbf{User Feedback Mechanisms}: Implement mechanisms to gather feedback from administrators or support teams regarding the effectiveness of the jobs, ensuring continuous refinement based on practical usage experiences. Publish hints to HPC users regarding how to fix and improve their job utilization of hardware resources.
+    \item \textbf{Resource Allocation Optimization}: Investigate optimization techniques for dynamically allocating GPU resources based on real-time workload demands and system utilization. This could involve developing algorithms for intelligent resource provisioning and load balancing to maximize overall cluster efficiency and performance.
+    \item \textbf{Fine-Grained Monitoring}: Explore methods for capturing and analyzing fine-grained GPU usage metrics, including memory bandwidth, cache utilization, and instruction throughput. This granular level of monitoring can provide deeper insights into application performance and help identify optimization opportunities at the code level.
+    \item \textbf{Predictive Maintenance}: Investigate predictive maintenance techniques for GPUs based on real-time monitoring data. Predictive maintenance models can anticipate failures or performance degradation by analyzing hardware health metrics and performance degradation, enabling proactive maintenance actions to minimize downtime and maximize system reliability.
+    \item \textbf{Integration with Energy Management Systems}: Integrate the real-time GPU monitoring system with energy management systems to optimize power consumption and reduce environmental impact. By correlating GPU usage metrics with power consumption data, HPC users can implement energy-efficient computing strategies, such as dynamic voltage and frequency scaling, to minimize power consumption without sacrificing performance.
+\end{enumerate}

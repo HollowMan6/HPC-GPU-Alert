@@ -1,0 +1,67 @@
+%!TEX TS-program = xelatex
+
+\input{DTU/preamble/static}
+\input{DTU/preamble/general}
+\input{DTU/preamble/fonts}
+\input{DTU/preamble/etc}
+\addbibresource{Bibliography.bib}
+
+\newcommand{\includesvgpath}[2][]{%
+    \def\basepath{../figures/}%
+    \def\filename{#2}%
+    \def\options{#1}%
+    \edef\fullpath{\basepath\filename}%
+    \expandafter\includesvg\expandafter[\options]{\fullpath}%
+}
+
+\begin{document}
+\prefrontmatter
+\include{DTU/prefrontmatter/titlepage}
+\cleartoevenpage
+\include{DTU/prefrontmatter/colophon}
+\clearforchapter
+
+\frontmatter
+\chapter{Summary}
+\input{frontmatter/Summary}
+
+\vspace{1cm}
+
+\textbf{Keywords}: HPC, GPU, Monitoring System, Alert Service, Observability
+\chapter{Preface}
+\input{frontmatter/Preface}
+
+\vfill
+
+{
+\centering
+    \thesislocation{}, \today\\[1cm]
+    %\hspace{3cm}\includegraphics[scale=0.4]{Signature}\\[1cm]
+\begin{flushright}
+    \thesisauthor{}
+\end{flushright}
+}
+\chapter{Acknowledgements}
+\input{frontmatter/Acknowledgements}
+\chapter{Abbreviations}
+\input{frontmatter/Abbreviations}
+\clearforchapter
+\tableofcontents
+\clearforchapter
+\listoftables
+\listoffigures
+\mainmatter
+\include{chapters/Introduction}
+\include{chapters/Background}
+\include{chapters/Methods}
+\include{chapters/Results}
+\include{chapters/Discussion}
+%\blinddocument
+\include{chapters/Conclusions}
+
+% \appendix
+% \include{appendices/AnAppendix}
+
+\backmatter
+\printbibliography
+\end{document}

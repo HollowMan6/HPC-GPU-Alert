@@ -1,0 +1,603 @@
+@InProceedings{10.1007/10968987_3,
+author="Yoo, Andy B.
+and Jette, Morris A.
+and Grondona, Mark",
+editor="Feitelson, Dror
+and Rudolph, Larry
+and Schwiegelshohn, Uwe",
+title={{SLURM: Simple Linux Utility for Resource Management}},
+booktitle="Job Scheduling Strategies for Parallel Processing",
+year="2003",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="44--60",
+abstract="A new cluster resource management system called Simple Linux Utility Resource Management (SLURM) is described in this paper. SLURM, initially developed for large Linux clusters at the Lawrence Livermore National Laboratory (LLNL), is a simple cluster manager that can scale to thousands of processors. SLURM is designed to be flexible and fault-tolerant and can be ported to other clusters of different size and architecture with minimal effort. We are certain that SLURM will benefit both users and system architects by providing them with a simple, robust, and highly scalable parallel job execution environment for their cluster system.",
+isbn="978-3-540-39727-4"
+}
+
+@inproceedings{10.1145/3569951.3604396,
+author = {Plazonic, Josko and Halverson, Jonathan and Comi, Troy},
+title = {{Jobstats: A Slurm-Compatible Job Monitoring Platform for CPU and GPU Clusters}},
+year = {2023},
+isbn = {9781450399852},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3569951.3604396},
+doi = {10.1145/3569951.3604396},
+abstract = {Job monitoring on high-performance computing clusters is important for evaluating hardware performance, troubleshooting failed jobs, identifying inefficient jobs and more. The combination of the Prometheus monitoring framework and the Grafana visualization toolkit has proven successful in recent years. This work shows how four Prometheus exporters can be configured for a Slurm cluster to provide detailed job-level information on CPU/GPU efficiencies and CPU/GPU memory usage as well as node-level Network File System (NFS) statistics and cluster-level General Parallel File System (GPFS) activity. A novel approach was devised to efficiently store a summary of this data in the Slurm database for each completed job. The open-source job monitoring platform introduced here can be used for batch, interactive and Open OnDemand jobs. Several tools are presented that use the Prometheus and Slurm databases to create dashboards, utilization reports and alerts.},
+booktitle = {Practice and Experience in Advanced Research Computing},
+pages = {102–108},
+numpages = {7},
+keywords = {Slurm, Prometheus, Job Monitoring, Grafana, GPUs, Alerts},
+location = {Portland, OR, USA},
+series = {PEARC '23}
+}
+
+@article{MASSIE2004817,
+title = {{The ganglia distributed monitoring system: design, implementation, and experience}},
+journal = {Parallel Computing},
+volume = {30},
+number = {7},
+pages = {817-840},
+year = {2004},
+issn = {0167-8191},
+doi = {https://doi.org/10.1016/j.parco.2004.04.001},
+url = {https://www.sciencedirect.com/science/article/pii/S0167819104000535},
+author = {Matthew L Massie and Brent N Chun and David E Culler},
+keywords = {Monitoring, Clusters, Distributed systems},
+abstract = {Ganglia is a scalable distributed monitoring system for high performance computing systems such as clusters and Grids. It is based on a hierarchical design targeted at federations of clusters. It relies on a multicast-based listen/announce protocol to monitor state within clusters and uses a tree of point-to-point connections amongst representative cluster nodes to federate clusters and aggregate their state. It leverages widely used technologies such as XML for data representation, XDR for compact, portable data transport, and RRDtool for data storage and visualization. It uses carefully engineered data structures and algorithms to achieve very low per-node overheads and high concurrency. The implementation is robust, has been ported to an extensive set of operating systems and processor architectures, and is currently in use on over 500 clusters around the world. This paper presents the design, implementation, and evaluation of Ganglia along with experience gained through real world deployments on systems of widely varying scale, configurations, and target application domains over the last two and a half years.}
+}
+
+@INPROCEEDINGS{8049016,
+  author={Röhl, Thomas and Eitzinger, Jan and Hager, Georg and Wellein, Gerhard},
+  booktitle={2017 IEEE International Conference on Cluster Computing (CLUSTER)}, 
+  title={{LIKWID Monitoring Stack: A Flexible Framework Enabling Job Specific Performance monitoring for the masses}}, 
+  year={2017},
+  volume={},
+  number={},
+  pages={781-784},
+  keywords={Monitoring;Measurement;Tools;Databases;Hardware;Libraries;Protocols;job specific performance monitoring;likwid monitoring stack;high performance computing;performance monitoring;medium sized commodity cluster;hardware performance;system wide performance monitoring;monitoring infrastructure},
+  doi={10.1109/CLUSTER.2017.115}}
+
+@conference {208870,
+author = {Bj{\"o}rn Rabenstein and Julius Volz},
+title = {{Prometheus: A {Next-Generation} Monitoring System (Talk)}},
+year = {2015},
+address = {Dublin},
+booktitle = {Open Access Media},
+publisher = {USENIX Association},
+month = may
+}
+
+@Inbook{Chakraborty2021,
+author="Chakraborty, Mainak
+and Kundan, Ajit Pratap",
+title="Grafana",
+bookTitle="Monitoring Cloud-Native Applications: Lead Agile Operations Confidently Using Open Source Software",
+year="2021",
+publisher="Apress",
+address="Berkeley, CA",
+pages="187--240",
+abstract="Grafana is a popular open source time-series data query, visualization, and alerting tool which was developed by Torkel {\"O}degaard in 2014. It has a data source model which is highly pluggable and supports multiple time-series--based data sources like Prometheus, InfluxDB, and OpenTSDB as well as SQL databases like MySQL and Postgres. Independent of where the data is stored, it allows you to query the data using query editor, visualize it using dashboards, and alert on it using the alerting function.",
+isbn="978-1-4842-6888-9",
+doi="10.1007/978-1-4842-6888-9_6",
+url="https://doi.org/10.1007/978-1-4842-6888-9_6"
+}
+
+@INPROCEEDINGS{9229636,
+  author={Dietrich, Robert and Winkler, Frank and Knüpfer, Andreas and Nagel, Wolfgang},
+  booktitle={2020 IEEE International Conference on Cluster Computing (CLUSTER)}, 
+  title={{PIKA: Center-Wide and Job-Aware Cluster Monitoring}}, 
+  year={2020},
+  volume={},
+  number={},
+  pages={424-432},
+  keywords={Systematics;Runtime;Conferences;Data visualization;Metadata;Monitoring;Optimization;monitoring;data collection;data visualization;data analysis;collectd;LIKWID},
+  doi={10.1109/CLUSTER49012.2020.00061}}
+
+@INPROCEEDINGS{9556031,
+  author={Pal, Ashish and Malakar, Preeti},
+  booktitle={2021 IEEE International Conference on Cluster Computing (CLUSTER)}, 
+  title={{An Integrated Job Monitor, Analyzer and Predictor}}, 
+  year={2021},
+  volume={},
+  number={},
+  pages={609-617},
+  keywords={High performance computing;Current measurement;Conferences;Cluster computing;Supercomputers;Real-time systems;Delays;job log analysis;system monitoring;queuing delay prediction;visual analytics},
+  doi={10.1109/Cluster48925.2021.00091}}
+
+
+@INPROCEEDINGS{9229613,
+  author={Pal, Ashish and Malakar, Preeti},
+  booktitle={2020 IEEE International Conference on Cluster Computing (CLUSTER)}, 
+  title={{MAP: A Visual Analytics System for Job Monitoring and Analysis}}, 
+  year={2020},
+  volume={},
+  number={},
+  pages={442-448},
+  keywords={Visual analytics;Conferences;Cluster computing;Monitoring;job log analysis;system monitoring;visual analytics;D3 visualization},
+  doi={10.1109/CLUSTER49012.2020.00063}}
+
+
+@INPROCEEDINGS{7081222,
+  author={Evans, Todd and Barth, William L. and Browne, James C. and DeLeon, Robert L. and Furlani, Thomas R. and Gallo, Steven M. and Jones, Matthew D. and Patra, Abani K.},
+  booktitle={2014 First International Workshop on HPC User Support Tools}, 
+  title={{Comprehensive Resource Use Monitoring for HPC Systems with TACC Stats}}, 
+  year={2014},
+  volume={},
+  number={},
+  pages={13-21},
+  keywords={Monitoring;Radiation detectors;Hardware;Sockets;Measurement;Bandwidth;Standards},
+  doi={10.1109/HUST.2014.7}}
+
+
+@ARTICLE{7106398,
+  author={Palmer, Jeffrey T. and Gallo, Steven M. and Furlani, Thomas R. and Jones, Matthew D. and DeLeon, Robert L. and White, Joseph P. and Simakov, Nikolay and Patra, Abani K. and Sperhac, Jeanette and Yearke, Thomas and Rathsam, Ryan and Innus, Martins and Cornelius, Cynthia D. and Browne, James C. and Barth, William L. and Evans, Richard T.},
+  journal={Computing in Science \& Engineering}, 
+  title={{Open XDMoD: A Tool for the Comprehensive Management of High-Performance Computing Resources}}, 
+  year={2015},
+  volume={17},
+  number={4},
+  pages={52-62},
+  keywords={Data warehouses;Measurement;Open source software;Open source hardware;Quality of service;Open XDMoD;XDMoD;TACC_Stats;SUPReMM;high-performance computing;HPC;HPC resource management;HPC metrics;application kernels;scientific computing},
+  doi={10.1109/MCSE.2015.68}}
+
+
+@inproceedings{10.1145/3225058.3225086,
+author = {Izadpanah, Ramin and Naksinehaboon, Nichamon and Brandt, Jim and Gentile, Ann and Dechev, Damian},
+title = {{Integrating Low-latency Analysis into HPC System Monitoring}},
+year = {2018},
+isbn = {9781450365109},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3225058.3225086},
+doi = {10.1145/3225058.3225086},
+abstract = {The growth of High Performance Computer (HPC) systems increases the complexity with respect to understanding resource utilization, system management, and performance issues. While raw performance data is increasingly exposed at the component level, the usefulness of the data is dependent on the ability to do meaningful analysis on actionable timescales. However, current system monitoring infrastructures largely focus on data collection, with analysis performed off-system in post-processing mode. This increases the time required to provide analysis and feedback to a variety of consumers.In this work, we enhance the architecture of a monitoring system used on large-scale computational platforms, to integrate streaming analysis capabilities at arbitrary locations within its data collection, transport, and aggregation facilities. We leverage the flexible communication topology of the monitoring system to enable placement of transformations based on overhead concerns, while still enabling low-latency exposure on node. Our design internally supports and exposes the raw and transformed data uniformly for both node level and off-system consumers. We show the viability of our implementation for a case with production-relevance: run-time determination of the relative per-node files system demands.},
+booktitle = {Proceedings of the 47th International Conference on Parallel Processing},
+articleno = {5},
+numpages = {10},
+keywords = {Application and System Monitoring, Low-latency Analysis, Performance Data Processing},
+location = {Eugene, OR, USA},
+series = {ICPP '18}
+}
+
+@inproceedings{10.1145/3569951.3597554,
+author = {Litzinger, Jaelyn and Hallquist, Roy and Tessmer, James},
+title = {{HPC Monitoring \& Visualization: Understanding usage of HPC systems}},
+year = {2023},
+isbn = {9781450399852},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3569951.3597554},
+doi = {10.1145/3569951.3597554},
+abstract = {How do you check if you're using the HPC resources you've allocated? Are your multi-GPU jobs using all allocated GPUs or is the job just overloading the first GPU while the others remain idle? To help users answer these questions for themselves, we have engineered a monitoring service for our main HPC cluster's CPU and GPU resources. This service includes a live dashboard that graphs time-series metrics like memory usage, disk read/write times, network traffic, etc. These metrics can also be queried for their raw numerical data through a Python script for further analysis.},
+booktitle = {Practice and Experience in Advanced Research Computing},
+pages = {453–456},
+numpages = {4},
+location = {Portland, OR, USA},
+series = {PEARC '23}
+}
+
+@misc{TOP500,
+author={Strohmaier, Erich and Dongarra, Jack and Simon, Horst D. and Meuer, Hans}, 
+note={Accessed: Jun 2024},
+howpublished={\url{https://www.top500.org/lists/top500/2023/11/}},
+title={{TOP500}},
+year={2023},
+month={11}
+} 
+
+@misc{influxlineprotocol,
+author={InfluxData},
+note={Accessed: Jun 2024},
+howpublished={\url{https://docs.influxdata.com/influxdb/cloud/reference/syntax/line-protocol/}},
+title={{Line protocol | InfluxDB Cloud (TSM) Documentation}},
+year={2024},
+month={3}
+} 
+
+@misc{postgresql-doc,
+author={{PostgreSQL}},
+note={Accessed: Jun 2024},
+howpublished={\url{https://www.postgresql.org/docs/15/index.html}},
+title={{PostgreSQL 15.6 Documentation}},
+year={2024},
+month={4}
+} 
+
+@misc{timescaledb,
+note={Accessed: Jun 2024},
+howpublished={\url{https://www.timescale.com/blog/guide-to-postgres-data-management/}},
+title={{Guide to Postgres Data Management}},
+year={2023},
+author={Ryan Booz},
+month={10}
+}
+
+@misc{timescaledb-compress,
+note={Accessed: Jun 2024},
+howpublished={\url{https://www.timescale.com/blog/time-series-compression-algorithms-explained/}},
+title={{Time-Series Compression Algorithms, Explained}},
+year={2023},
+author={Lockerman, Joshua and Kulkarni, Ajay},
+month={10}
+} 
+
+@misc{ConAggs,
+author={Timescale},
+note={Accessed: Jun 2024},
+howpublished={\url{https://docs.timescale.com/use-timescale/latest/continuous-aggregates/about-continuous-aggregates/}},
+title={{About continuous aggregates | Timescale Documentation}},
+year={2024},
+month={3}
+}
+
+@misc{hypertables,
+author={Timescale},
+note={Accessed: Jun 2024},
+howpublished={\url{https://docs.timescale.com/use-timescale/latest/hypertables/about-hypertables/}},
+title={{About hypertables | Timescale Documentation}},
+year={2024},
+month={3}
+} 
+
+@misc{lumi,
+author={CSC -- IT Center for Science},
+note={Accessed: Jun 2024},
+howpublished={\url{https://docs.lumi-supercomputer.eu/hardware/lumig/}},
+title={{GPU nodes - LUMI-G - Documentation}},
+year={2023},
+month={11}
+} 
+
+@misc{amd-epyc-cpu,
+author={{AMD}},
+note={Accessed: Jun 2024},
+howpublished={\url{https://www.amd.com/system/files/documents/amd-epyc-7003-series-datasheet.pdf}},
+title={{AMD EPYC 7003 Processors Data Sheet}},
+year={2023},
+month={10}
+} 
+
+@misc{amd-mi250x,
+author={{AMD}},
+note={Accessed: Jun 2024},
+howpublished={\url{https://www.amd.com/en/products/accelerators/instinct/mi200/mi250x.html}},
+title={{AMD Instinct MI250X Accelerators}},
+year={2021},
+month={11}
+}
+
+@misc{puhti,
+author={CSC -- IT Center for Science},
+note={Accessed: Jun 2024},
+howpublished={\url{https://docs.csc.fi/computing/systems-puhti/}},
+title={{Puhti - Docs CSC}},
+year={2023},
+month={3}
+}
+
+@misc{mahti,
+author={CSC -- IT Center for Science},
+note={Accessed: Jun 2024},
+howpublished={\url{https://docs.csc.fi/computing/systems-mahti/}},
+title={{Mahti - Docs CSC}},
+year={2023},
+month={3}
+}
+
+@misc{nvml,
+author={Nvidia},
+note={Accessed: Jun 2024},
+howpublished={\url{https://developer.nvidia.com/nvidia-management-library-nvml}},
+title={{NVIDIA Management Library (NVML) | NVIDIA Developer}},
+year={2024},
+month={1}
+}
+
+@misc{rocm-smi,
+author={{AMD}},
+note={Accessed: Jun 2024},
+howpublished={\url{https://rocm.docs.amd.com/projects/rocm_smi_lib/en/latest/}},
+title={{ROCm System Management Interface (ROCm SMI) Library - Documentation}},
+year={2024},
+month={1}
+}
+
+@misc{eu-ai,
+author={European Commission},
+note={Accessed: Jun 2024},
+howpublished={\url{https://ec.europa.eu/commission/presscorner/detail/en/ip_24_383}},
+title={{Commission launches AI innovation package to support Artificial Intelligence startups and SMEs}},
+year={2024},
+month={1}
+}
+
+@INPROCEEDINGS{9235080,
+  author={Cérin, Christophe and Greneche, Nicolas and Menouer, Tarek},
+  booktitle={2020 IEEE 32nd International Symposium on Computer Architecture and High Performance Computing (SBAC-PAD)}, 
+  title={{Towards Pervasive Containerization of HPC Job Schedulers}}, 
+  year={2020},
+  volume={},
+  number={},
+  pages={281-288},
+  keywords={Containers;Cloud computing;Engines;Runtime;Kernel;Hardware;Computer architecture;HPC;Cloud Computing;Containers;Security;Operating system;Middleware layers},
+  doi={10.1109/SBAC-PAD49847.2020.00046}}
+
+@INPROCEEDINGS{7876184,
+  author={Zhenyun Zhuang and Cuong Tran and Weng, Jerry and Ramachandra, Haricharan and Sridharan, Badri},
+  booktitle={2017 International Conference on Computing, Networking and Communications (ICNC)}, 
+  title={{Taming memory related performance pitfalls in linux Cgroups}}, 
+  year={2017},
+  volume={},
+  number={},
+  pages={531-535},
+  keywords={Random access memory;Throughput;Linux;Cloud computing;Big data;Kernel;Virtual machining},
+  doi={10.1109/ICCNC.2017.7876184}}
+
+@INPROCEEDINGS{5544096,
+  author={Li Yuanyuan and Xiao Peng and Deng Wu},
+  booktitle={2010 International Conference on Computer and Communication Technologies in Agriculture Engineering}, 
+  title={{The method to test Linux software performance}}, 
+  year={2010},
+  volume={1},
+  number={},
+  pages={420-423},
+  keywords={Variable speed drives;Power capacitors;Ions;Runtime;linux kernel;Linux software test;Benchmark methodology},
+  doi={10.1109/CCTAE.2010.5544096}}
+
+@book{le2021developing,
+  title={Developing Modern Database Applications with PostgreSQL: Use the Highly Available and Object-Relational PostgreSQL to Build Scalable and Reliable Apps},
+  author={Le, Q.H. and Diaz, M.},
+  isbn={9781838648145},
+  url={https://books.google.fi/books?id=BwXwzQEACAAJ},
+  year={2021},
+  publisher={Packt Publishing, Limited}
+}
+
+@Inbook{Wu2012,
+author="Wu, Junjie",
+title="Cluster Analysis and K-means Clustering: An Introduction",
+bookTitle="Advances in K-means Clustering: A Data Mining Thinking",
+year="2012",
+publisher="Springer Berlin Heidelberg",
+address="Berlin, Heidelberg",
+pages="1--16",
+abstract="The phrase ``data mining'' was termed in the late eighties of the last century, which describes the activity that attempts to extract interesting patterns from data. Since then, data mining and knowledge discovery has become one of the hottest topics in both academia and industry. It provides valuable business and scientific intelligence hidden in a large amount of historical data",
+isbn="978-3-642-29807-3",
+doi="10.1007/978-3-642-29807-3_1",
+url="https://doi.org/10.1007/978-3-642-29807-3_1"
+}
+
+@InProceedings{10.1007/978-3-319-62416-7_21,
+author="Wang, Fei
+and Franco-Penya, Hector-Hugo
+and Kelleher, John D.
+and Pugh, John
+and Ross, Robert",
+editor="Perner, Petra",
+title={{An Analysis of the Application of Simplified Silhouette to the Evaluation of k-means Clustering Validity}},
+booktitle="Machine Learning and Data Mining in Pattern Recognition",
+year="2017",
+publisher="Springer International Publishing",
+address="Cham",
+pages="291--305",
+abstract="This paper analyses the application of Simplified Silhouette to the evaluation of k-means clustering validity and compares it with the k-means Cost Function and the original Silhouette. We conclude that for a given dataset the k-means Cost Function is the most valid and efficient measure in the evaluation of the validity of k-means clustering with the same k value, but that Simplified Silhouette is more suitable than the original Silhouette in the selection of the best result from k-means clustering with different k values.",
+isbn="978-3-319-62416-7"
+}
+
+@Inbook{Shaik2023listen,
+author="Shaik, Baji
+and Chemuduru, Dinesh Kumar",
+title="Listen and Notify",
+bookTitle="Procedural Programming with PostgreSQL PL/pgSQL: Design Complex Database-Centric Applications with PL/pgSQL",
+year="2023",
+publisher="Apress",
+address="Berkeley, CA",
+pages="283--292",
+abstract="In the previous chapter, we discussed aggregator concepts, where we created custom aggregators to solve users' specific problems using state changes and final functions. In this chapter, we will talk about the LISTEN and NOTIFY commands, which act as interprocess communication between database connections. Essentially, two sessions communicate over a channel, with LISTEN looking for changes from the other session and NOTIFY sending messages to all listening channels.",
+isbn="978-1-4842-9840-4",
+doi="10.1007/978-1-4842-9840-4_18",
+url="https://doi.org/10.1007/978-1-4842-9840-4_18"
+}
+
+@Inbook{Shaik2023triggers,
+author="Shaik, Baji
+and Chemuduru, Dinesh Kumar",
+title="Triggers",
+bookTitle="Procedural Programming with PostgreSQL PL/pgSQL: Design Complex Database-Centric Applications with PL/pgSQL",
+year="2023",
+publisher="Apress",
+address="Berkeley, CA",
+pages="241--262",
+abstract="In the previous chapter, we talked about the different types of exceptions available in PL/pgSQL and how to handle them with some examples. In this chapter, we will cover triggers in PostgreSQL. It will start with the introduction of triggers and how to create them using PL/pgSQL code with a simple example. We will then talk about the types of triggers with some use cases and real-world examples of where and when to use these triggers using PL/pgSQL functions. We will also cover the advantages and disadvantages of triggers.",
+isbn="978-1-4842-9840-4",
+doi="10.1007/978-1-4842-9840-4_15",
+url="https://doi.org/10.1007/978-1-4842-9840-4_15"
+}
+
+@article{10.14778/3611540.3611559,
+author = {Shen, Chunhui and Ouyang, Qianyu and Li, Feibo and others},
+title = {{Lindorm TSDB: A Cloud-Native Time-Series Database for Large-Scale Monitoring Systems}},
+year = {2023},
+issue_date = {August 2023},
+publisher = {VLDB Endowment},
+volume = {16},
+number = {12},
+issn = {2150-8097},
+url = {https://doi.org/10.14778/3611540.3611559},
+doi = {10.14778/3611540.3611559},
+abstract = {Internet services supported by large-scale distributed systems have become essential for our daily life. To ensure the stability and high quality of services, diverse metric data are constantly collected and managed in a time-series database to monitor the service status. However, when the number of metrics becomes massive, existing time-series databases are inefficient in handling high-rate data ingestion and queries hitting multiple metrics. Besides, they all lack the support of machine learning functions, which are crucial for sophisticated analysis of large-scale time series. In this paper, we present Lindorm TSDB, a distributed time-series database designed for handling monitoring metrics at scale. It sustains high write throughput and low query latency with massive active metrics. It also allows users to analyze data with anomaly detection and time series forecasting algorithms directly through SQL. Furthermore, Lindorm TSDB retains stable performance even during node scaling. We evaluate Lindorm TSDB under different data scales, and the results show that it outperforms two popular open-source time-series databases on both writing and query, while executing time-series machine learning tasks efficiently.},
+journal = {Proc. VLDB Endow.},
+month = {8},
+pages = {3715–3727},
+numpages = {13}
+}
+
+@InProceedings{10.1007/978-3-031-42529-5_26,
+author="Burgos, Gonzalo
+and Sierra-Garc{\'i}a, Jes{\'u}s Enrique
+and Baruque-Zan{\'o}n, Bruno",
+title="Comparative Study of Open Source Database Management Systems to Enable Predictive Maintenance of Autonomous Guided Vehicles",
+booktitle="18th International Conference on Soft Computing Models in Industrial and Environmental Applications (SOCO 2023)",
+year="2023",
+publisher="Springer Nature Switzerland",
+address="Cham",
+pages="269--278",
+abstract="A number of open source database systems have been researched and assessed in this work for the purpose of choosing the optimum technology to implement predictive maintenance systems for industrial Autonomous Guided Vehicles. An application-driven technique has been suggested as a way to achieve it. The use case and its specifications are first outlined and listed. The top five most popular time series database systems are then contrasted based on a variety of technical metrics including software support, community support, and different technical features. From this analysis the best two options are selected (InfluxDB and TimeScale DB). The performance of these two is then further examined, taking into account performance indicators like insert time, throughput, and resource consumption. Results show that TimeScale DB provides a higher performance but demands considerably more resources.",
+isbn="978-3-031-42529-5"
+}
+
+@article{hashem2016mapreduce,
+  title={MapReduce: Review and open challenges},
+  author={Hashem, Ibrahim Abaker Targio and Anuar, Nor Badrul and Gani, Abdullah and Yaqoob, Ibrar and Xia, Feng and Khan, Samee Ullah},
+  journal={Scientometrics},
+  volume={109},
+  pages={389--422},
+  year={2016},
+  publisher={Springer}
+}
+
+@inproceedings{10.1145/2783258.2789993,
+author = {Shanahan, James G. and Dai, Laing},
+title = {Large Scale Distributed Data Science using Apache Spark},
+year = {2015},
+isbn = {9781450336642},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2783258.2789993},
+doi = {10.1145/2783258.2789993},
+abstract = {Apache Spark is an open-source cluster computing framework for big data processing. It has emerged as the next generation big data processing engine, overtaking Hadoop MapReduce which helped ignite the big data revolution. Spark maintains MapReduce's linear scalability and fault tolerance, but extends it in a few important ways: it is much faster (100 times faster for certain applications), much easier to program in due to its rich APIs in Python, Java, Scala (and shortly R), and its core data abstraction, the distributed data frame, and it goes far beyond batch applications to support a variety of compute-intensive tasks, including interactive queries, streaming, machine learning, and graph processing. This tutorial will provide an accessible introduction to Spark and its potential to revolutionize academic and commercial data science practices.},
+booktitle = {Proceedings of the 21th ACM SIGKDD International Conference on Knowledge Discovery and Data Mining},
+pages = {2323–2324},
+numpages = {2},
+keywords = {spark, map reduce, large scale machine learning, hdfs, hadoop, distributed systems, data science},
+location = {Sydney, NSW, Australia},
+series = {KDD '15}
+}
+
+@article{10.14778/3137765.3137777,
+author = {Carbone, Paris and Ewen, Stephan and F\'{o}ra, Gyula and Haridi, Seif and Richter, Stefan and Tzoumas, Kostas},
+title = {State management in Apache Flink®: consistent stateful distributed stream processing},
+year = {2017},
+issue_date = {August 2017},
+publisher = {VLDB Endowment},
+volume = {10},
+number = {12},
+issn = {2150-8097},
+url = {https://doi.org/10.14778/3137765.3137777},
+doi = {10.14778/3137765.3137777},
+abstract = {Stream processors are emerging in industry as an apparatus that drives analytical but also mission critical services handling the core of persistent application logic. Thus, apart from scalability and low-latency, a rising system need is first-class support for application state together with strong consistency guarantees, and adaptivity to cluster reconfigurations, software patches and partial failures. Although prior systems research has addressed some of these specific problems, the practical challenge lies on how such guarantees can be materialized in a transparent, non-intrusive manner that relieves the user from unnecessary constraints. Such needs served as the main design principles of state management in Apache Flink, an open source, scalable stream processor.We present Flink's core pipelined, in-flight mechanism which guarantees the creation of lightweight, consistent, distributed snapshots of application state, progressively, without impacting continuous execution. Consistent snapshots cover all needs for system reconfiguration, fault tolerance and version management through coarse grained rollback recovery. Application state is declared explicitly to the system, allowing efficient partitioning and transparent commits to persistent storage. We further present Flink's backend implementations and mechanisms for high availability, external state queries and output commit. Finally, we demonstrate how these mechanisms behave in practice with metrics and large-deployment insights exhibiting the low performance trade-offs of our approach and the general benefits of exploiting asynchrony in continuous, yet sustainable system deployments.},
+journal = {Proc. VLDB Endow.},
+month = {8},
+pages = {1718–1729},
+numpages = {12}
+}
+
+@ARTICLE{10213406,
+  author={Raptis, Theofanis P. and Passarella, Andrea},
+  journal={IEEE Access}, 
+  title={A Survey on Networked Data Streaming With Apache Kafka}, 
+  year={2023},
+  volume={11},
+  number={},
+  pages={85333-85350},
+  keywords={Surveys;Real-time systems;Security;Fault tolerant systems;Distributed databases;Partitioning algorithms;Optimization;Cyber-physical systems;Internet of Things;Algorithms;cyber-physical;data;Internet of Things;networks;pub-sub;security;stream processing},
+  doi={10.1109/ACCESS.2023.3303810}}
+
+@Inbook{Sharma2022pulsar,
+author="Sharma, Rahul
+and Atyab, Mohammad",
+title="Introduction to Apache Pulsar",
+bookTitle="Cloud-Native Microservices with Apache Pulsar: Build Distributed Messaging Microservices ",
+year="2022",
+publisher="Apress",
+address="Berkeley, CA",
+pages="1--22",
+abstract="Traditionally, most enterprise applications were developed on monolith architectures. These applications were quick to create at the early stages, but the maintenance and operational teams often encountered many challenges when working on them. Over the last decade, distributed application architecture has become the primary enterprise development strategy. It is well supported by enterprise cloud infrastructure adaption and container adaption plans. As a result, we no longer build simple applications; instead, we typically develop end-to-end platforms. These platforms consist of numerous applications that communicate using lightweight communication protocols, like REST APIs or remote procedure calls (RPC). These platforms cut across organizational boundaries and often require complex tools and architectures to deliver their intended benefits.",
+isbn="978-1-4842-7839-0",
+doi="10.1007/978-1-4842-7839-0_1",
+url="https://doi.org/10.1007/978-1-4842-7839-0_1"
+}
+
+@article{song2015decision,
+  title={Decision tree methods: applications for classification and prediction},
+  author={Song, Yan-Yan and Ying, LU},
+  journal={Shanghai archives of psychiatry},
+  volume={27},
+  number={2},
+  pages={130},
+  year={2015},
+  publisher={Shanghai Mental Health Center}
+}
+
+@INPROCEEDINGS{598994,
+  author={Tin Kam Ho},
+  booktitle={Proceedings of 3rd International Conference on Document Analysis and Recognition}, 
+  title={Random decision forests}, 
+  year={1995},
+  volume={1},
+  number={},
+  pages={278-282 vol.1},
+  keywords={Classification tree analysis;Decision trees;Training data;Optimization methods;Testing;Tin;Stochastic processes;Handwriting recognition;Hidden Markov models;Multilayer perceptrons},
+  doi={10.1109/ICDAR.1995.598994}}
+
+@article{geurts2006extremely,
+  title={Extremely randomized trees},
+  author={Geurts, Pierre and Ernst, Damien and Wehenkel, Louis},
+  journal={Machine learning},
+  volume={63},
+  pages={3--42},
+  year={2006},
+  publisher={Springer}
+}
+
+@inproceedings{NIPS2017_3f5ee243,
+ author = {Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and Uszkoreit, Jakob and Jones, Llion and Gomez, Aidan N and Kaiser, \L ukasz and Polosukhin, Illia},
+ booktitle = {Advances in Neural Information Processing Systems},
+ editor = {I. Guyon and U. Von Luxburg and S. Bengio and H. Wallach and R. Fergus and S. Vishwanathan and R. Garnett},
+ pages = {},
+ publisher = {Curran Associates, Inc.},
+ title = {{Attention is All you Need}},
+ url = {https://proceedings.neurips.cc/paper_files/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf},
+ volume = {30},
+ year = {2017}
+}
+
+@misc{touvron2023llama,
+      title={{LLaMA: Open and Efficient Foundation Language Models}}, 
+      author={Hugo Touvron and Thibaut Lavril and Gautier Izacard and Xavier Martinet and Marie-Anne Lachaux and Timothée Lacroix and Baptiste Rozière and Naman Goyal and Eric Hambro and Faisal Azhar and Aurelien Rodriguez and Armand Joulin and Edouard Grave and Guillaume Lample},
+      year={2023},
+      eprint={2302.13971},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
+
+@misc{gemmateam2024gemma,
+      title={{Gemma: Open Models Based on Gemini Research and Technology}}, 
+      author={Gemma Team and Thomas Mesnard and Cassidy Hardin and others},
+      year={2024},
+      eprint={2403.08295},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
+
+@misc{openai2024gpt4,
+      title={{GPT-4 Technical Report}}, 
+      author={OpenAI and Josh Achiam and Steven Adler and others},
+      year={2024},
+      eprint={2303.08774},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
+
+@INPROCEEDINGS{5289128,
+  author={Kindratenko, Volodymyr V. and Enos, Jeremy J. and Shi, Guochun and Showerman, Michael T. and Arnold, Galen W. and Stone, John E. and Phillips, James C. and Hwu, Wen-mei},
+  booktitle={2009 IEEE International Conference on Cluster Computing and Workshops}, 
+  title={{GPU clusters for high-performance computing}}, 
+  year={2009},
+  volume={},
+  number={},
+  pages={1-8},
+  keywords={Production;Computer architecture;Resource management;Bandwidth;Hardware;Space cooling;Data security;Parallel programming;Quadratic programming;Computational biophysics},
+  doi={10.1109/CLUSTR.2009.5289128}}
