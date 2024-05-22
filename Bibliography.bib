@@ -187,6 +187,67 @@ year={2023},
 month={11}
 } 
 
+@misc{SlurmK8sIntegration,
+author={Tim Wickberg}, 
+note={Accessed: Jun 2024},
+howpublished={\url{https://slurm.schedmd.com/SC23/Slurm-and-or-vs-Kubernetes.pdf}},
+title={{Slurm and/or/vs Kubernetes}},
+year={2023},
+month={11}
+} 
+
+@inproceedings{10.1145/3569951.3597564,
+author = {Leong, Shin F. and Pohl, Craig S.},
+title = {Traditional High-Performance Computing with Container Technology (THPC): HPC using Container Technology, EasyBuild, Spack, and IBM LSF scheduler},
+year = {2023},
+isbn = {9781450399852},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3569951.3597564},
+doi = {10.1145/3569951.3597564},
+abstract = {High-performance Computing (HPC) has been around for decades but maintaining software for HPC with heterogeneous compute nodes remains a challenging task for system administrators. Many software package frameworks have been developed over the years to ease software installation tasks, for example, EasyBuild [1], Spack [2], and GNU Guix [3]. Advances in virtualization technology, such as hypervisor and container, have dramatically changed the computing world. Incorporating container technology into HPC has its own challenges, not to mention adding HPC software on top of container technology in an HPC cluster. This paper will describe Washington University in St. Louis (WashU) Traditional High-Performance Computing (THPC) which utilizes container technology, software package frameworks, and IBM Spectrum LSF 10.1 [14] as an HPC job scheduler. We will describe the WashU research HPC environment architecture, THPC system configurations, THPC software packages, and THPC use cases.},
+booktitle = {Practice and Experience in Advanced Research Computing},
+pages = {306–311},
+numpages = {6},
+keywords = {containers, Spack, LSF, Infiniband, GPFS, EasyBuild, Docker},
+location = {Portland, OR, USA},
+series = {PEARC '23}
+}
+
+@inproceedings{10.1145/3332186.3338408,
+author = {Ahmadian, Misha and Rees, Eric and Zhuang, Yu and Chen, Yong},
+title = {Reducing Faulty Jobs by Job Submission Verifier in Grid Engine},
+year = {2019},
+isbn = {9781450372275},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3332186.3338408},
+doi = {10.1145/3332186.3338408},
+abstract = {Grid Engine is a Distributed Resource Manager (DRM), that manages the resources of distributed systems (such as Grid, HPC, or Cloud systems) and executes designated jobs which have requested to occupy or consume those resources. Grid Engine applies scheduling policies to allocate resources for jobs while simultaneously attempting to maintain optimal utilization of all machines in the distributed system. However, due to the complexity of Grid Engine's job submission commands and complicated resource management policies, the number of faulty job submissions in data centers increases with the number of jobs being submitted. To combat the increase in faulty jobs, Grid Engine allows administrators to design and implement Job Submission Verifiers (JSV) to verify jobs before they enter into Grid Engine. In this paper, we will discuss a Job Submission Verifier that was designed and implemented for Univa Grid Engine, a commercial version of Grid Engine, and thoroughly evaluated at the High Performance Computing Center of Texas Tech University. Our newly developed JSV communicates with Univa Grid Engine (UGE) components to verify whether a submitted job should be accepted as is, or modified then accepted, or rejected due to improper requests for resources. It had a substantial positive impact on reducing the number of faulty jobs submitted to UGE by far. For instance, it corrected 28.6\% of job submissions and rejected 0.3\% of total jobs from September 2018 to February 2019, that may otherwise lead to long or infinite waiting time in the job queue.},
+booktitle = {Proceedings of the Practice and Experience in Advanced Research Computing on Rise of the Machines (Learning)},
+articleno = {116},
+numpages = {8},
+keywords = {Faulty Jobs, Grid Engine, Job Submission Verifier},
+location = {Chicago, IL, USA},
+series = {PEARC '19}
+}
+
+@inproceedings{10.1145/1188455.1188464,
+author = {Staples, Garrick},
+title = {TORQUE resource manager},
+year = {2006},
+isbn = {0769527000},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/1188455.1188464},
+doi = {10.1145/1188455.1188464},
+abstract = {With TORQUE Resource Manager now reaching over 10,000 downloads per month and use across thousands of leading sites representing commercial, government, and academic organizations, we invite all TORQUE users to meet and discuss TORQUE with the professional developers, community volunteers other members who use and have contributed to the TORQUE project.Here we will discuss the current state of TORQUE including some of the more recent enhancements and capabilities along with the road map for the upcoming year. We will also provide a time for TORQUE users to share experiences, best practices, and new needs.},
+booktitle = {Proceedings of the 2006 ACM/IEEE Conference on Supercomputing},
+pages = {8–es},
+location = {Tampa, Florida},
+series = {SC '06}
+}
+
 @misc{influxlineprotocol,
 author={InfluxData},
 note={Accessed: Jun 2024},
@@ -194,7 +255,16 @@ howpublished={\url{https://docs.influxdata.com/influxdb/cloud/reference/syntax/l
 title={{Line protocol | InfluxDB Cloud (TSM) Documentation}},
 year={2024},
 month={3}
-} 
+}
+
+@misc{aboutslurm,
+author={SchedMD},
+note={Accessed: Jun 2024},
+howpublished={\url{https://www.schedmd.com/about-schedmd/slurm-history/}},
+title={{Slurm History -- SchedMD}},
+year={2024},
+month={5}
+}
 
 @misc{postgresql-doc,
 author={{PostgreSQL}},

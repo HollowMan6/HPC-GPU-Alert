@@ -1,10 +1,12 @@
 %!TEX root = ../Thesis.tex
 \chapter{Results and analysis}
-This section presents the results from benchmarking the real-time GPU resource monitoring and alerting system in experimental and production setups. The evaluation includes a comprehensive analysis of the system's performance, scalability, and impact on energy efficiency and resource utilization for production within High-Performance Computing (HPC) clusters.
+\label{chap:result}
+This chapter presents the results from benchmarking the real-time GPU resource monitoring and alerting system in experimental and production setups. The evaluation includes a comprehensive analysis of the system's performance, scalability, and impact on energy efficiency and resource utilization for production within High-Performance Computing (HPC) clusters.
 
 \section{Benchmark}
 \subsection{Experimental setup}
-The experimental setup involves deploying the proposed GPU monitoring system in a controlled environment that emulates the characteristics of a typical HPC cluster. The monitoring infrastructure continuously collects and analyzes the simulated GPU metrics, and an alert service is configured to notify any sub-optimal GPU resource utilization.
+\label{subsection:experiment}
+The experimental setup involves deploying the proposed GPU monitoring system in a controlled environment, that emulates the characteristics of a typical HPC cluster. The monitoring infrastructure continuously collects and analyzes the simulated GPU metrics, and an alert service is configured to notify any sub-optimal GPU resource utilization.
 
 To integrate all the components for testing, we deployed Slurm in a containerized environment with an isolated network to simulate the actual HPC job context. Everything, including the software versions, replicates what we have in production. We use Podman as the container runtime and Rocky Linux 8 as the base container image to keep up with the operating system we use in Puhti and Mahti (RHEL 8).
 
@@ -30,15 +32,15 @@ To make testing easier with an arbitrary number of GPUs in a container without n
 We also have separate testing setups for each component, either by randomly generated data or by replaying the data we collected in production from the database dump.
 
 \begin{itemize}
-    \item For random data benchmark, we spawn maximum 23824 (2978*8) Go routines that write to the database simultaneously, which is the maximum GPU number we have in LUMI, to simulate the heaviest situation we can have in the pre-exascale supercomputer.
-    \item For real data replaying, we read all the records from the database dump order by time stamp and send it to timescale ingest with accelerated speed to reproduce the production situation.
+    \item For the random data benchmark, we spawn maximum 23824 (2978*8) Go routines that write to the database simultaneously, which is, i.e. the maximum GPU number we have in LUMI, to simulate the heaviest situation we can have in the pre-exascale supercomputer.
+    \item For real data replaying, we read all the records from the database dump ordered by time stamp, and send it to timescale ingest with accelerated speed to reproduce the production situation.
 \end{itemize}
 
 \subsection{Performance}
+\label{subsec:performance}
+The benchmarking process focused on evaluating the system's responsiveness in detecting anomalies and the overall impact on system performance during monitoring, to assess the system's adaptability and robustness in different usage patterns.
 
-The benchmarking process focused on evaluating the system's responsiveness in detecting anomalies and the overall impact on system performance during monitoring to assess the system's adaptability and robustness in different usage patterns.
-
-We use the local environment to run the container setup mentioned in the previous section on the 12th Gen Intel Core i7-12700H CPU with SSD and 16 GB of RAM by writing random GPU metrics data to the database continuously in an infinite loop without any interval for writing and dumping data. We run each solution for 10 minutes and take the average of the last 2-minute delay. The benchmark result is shown in Figure \ref{fig_benchmark}:
+We use the local environment to run the container setup mentioned in Subsection \ref{subsection:experiment} on the 12th Gen Intel Core i7-12700H CPU with SSD and 16 GB of RAM by writing random GPU metrics data to the database continuously in an infinite loop, without any interval for writing and dumping data. We run each solution for 10 minutes and take the average of the last 2-minute delay. The benchmark result is shown in Figure \ref{fig_benchmark}:
 
 % import matplotlib.pyplot as plt
 
@@ -106,24 +108,24 @@ We use the local environment to run the container setup mentioned in the previou
     \label{fig_benchmark}
 \end{figure}
 
-From \ref{fig_benchmark}, we can learn that:
+From Figure \ref{fig_benchmark}, we can learn that:
 
 \begin{itemize}
-    \item Generally, all the time delays scale linearly with the number of GPUs.
+    \item Generally, all the delays scale linearly with the number of GPUs.
     \item Triggers generally double the delay in database transaction commit time for writing, which the overhead of NOTIFY should cause.
-    \item Continuous aggregates (CAgg) cause a slight increase in writing delay and the memory status dump delay for triggers solution, which is likely to be caused by the overhead of CAgg background jobs. However, CAgg accelerates the query speed dramatically compared to traditional SQL queries aggregate, as we can see a significant time reduction in completing a read loop among all the jobs available.
-    \item Polling is very inefficient for accessing data in real-time since it creates a delay that is almost 100x more than the Triggers solution.
+    \item Continuous aggregates (CAgg) cause a slight increase in writing delay and the memory status dump delay for the triggers solution, which is likely to be caused by the overhead of CAgg background jobs. However, CAgg accelerates the query speed dramatically compared to traditional SQL queries aggregate, as we can see a significant time reduction in completing a read loop among all the jobs available.
+    \item Polling is very inefficient for accessing data in real-time, since it creates a delay that is almost 100x more than the triggers solution.
 \end{itemize}
 
-Hence, the results confirmed our empirical analysis in the Methods section and led to the final design we used after comparison: triggers without continuous aggregates. The reason is that triggers have the best real-time access while only doubling the delay in writing compared to polling, which is acceptable, and the in-memory solution has a better performance in both read and write delay. Most importantly, the in-memory solution allows us to access raw data for more complicated statistics calculations and use machine learning models. We used the Golang data race detector to ensure the correctness during benchmarking and testing. We also checked the memory usage during the benchmark. The maximum Resident Set Size (RSS) is around 84.6 MB, which is also acceptable.
+Hence, the results confirmed our empirical analysis in Section \ref{sec:alertservice} and led to the final design we used after comparison: triggers without continuous aggregates. The reason is that triggers have the best real-time access, while only doubling the delay in writing compared to polling, which is acceptable, and the in-memory solution has a better performance in both read and write delay. Most importantly, the in-memory solution allows us to access raw data for more complicated statistics calculations and use machine learning models. We used the Golang data race detector to ensure the correctness during benchmarking and testing. We also checked the memory usage during the benchmark. The maximum Resident Set Size (RSS) is around 84.6 MB, which is also acceptable.
 
 %CPU %MEM    VSZ   RSS 21.0  0.5 3184092 84612
 
 \section{Production}
 
-The Production evaluation involved deploying the real-time GPU monitoring system in a live HPC environment, specifically on the Puhti, Mahti at the CSC -- IT Center for Science, which allows us to test the practicability in alerting for real-world workloads from diverse scientific domains, including molecular dynamics simulations, computational chemistry, and machine learning.
+The production evaluation involved deploying the real-time GPU monitoring system in a live HPC environment, specifically on the Puhti and Mahti systems at the CSC -- IT Center for Science, which allows us to test the practicability in alerting for real-world workloads from diverse scientific domains, including molecular dynamics simulations, computational chemistry, and machine learning. Unfortunately, due to the time limit for the thesis writing process, we are not able to finish the deployment of the whole monitoring and alert services in production for the pre-exascale HPC system, LUMI, but we have already verified this possibility in Section \ref{subsection:experiment} through a benchmark.
 
-We intended to deploy this whole infrastructure on LUMI as well. Unfortunately, we were unable to do so during the thesis writing period due to the shortage of administrators on the LUMI side.
+% We intended to deploy this whole infrastructure on LUMI as well. Unfortunately, we were unable to do so during the thesis writing period due to the shortage of administrators on the LUMI side.
 
 The production evaluation focused on the practical implications of integrating the alerting and monitoring system into the daily operations of HPC clusters. Key performance indicators, such as the system's ability to facilitate timely alerts, were measured. Additionally, the impact on user experience was evaluated considering the introduction of real-time alerts to administrators.
 
@@ -143,7 +145,7 @@ As is presented in Figure \ref{fig_monitoring_production_development}, we have t
     \item \textbf{Lmod} is the environment module system in Lua. It is deployed on each compute node as well.
     \item \textbf{Timescale Reader}, \textbf{Timescale Ingest}, and \textbf{Timescale Alert} are all written in Go and deployed as systemd services. Both copies for Mahti and Puhti are deployed on the Puhti MonDB Utility node.
     \item \textbf{TimescaleDB} is deployed as a plugin on the PostgreSQL node. We use different database names to isolate the monitoring data between Puhti and Mahti.
-    \item \textbf{Seff} script is the CLI utility written in Perl. It is deployed in the login node and can be called by the user.
+    \item \textbf{Seff} script is the CLI utility written in Perl. It is installed as an RPM package by admins in all the nodes and can be called by the user.
     \item Other \textbf{visualization} services, such as the job history and alert status dashboard, are deployed as Flask Apps for Open OnDemand.
 \end{itemize}
 
