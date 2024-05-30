@@ -1,7 +1,7 @@
 %!TEX root = ../Thesis.tex
 \chapter{Conclusions and future work}
 \label{chap:conclusions}
-In this Chapter, we provide a critical analysis and interpretation of the findings presented in this thesis, focusing on their significance, implications, and potential applications. Then, we conclude with future work that we could not cover during the thesis period.
+In this chapter, we provide a critical analysis and interpretation of the findings presented in this thesis, focusing on their significance, implications, and potential applications. Then, we conclude with future work that we could not cover during the thesis period.
 
 \section{Summary}
 
@@ -9,14 +9,14 @@ The thesis comprehensively explores designing, implementing, and evaluating a mo
 
 The contributions of the thesis are multifaceted. Firstly, a monitoring system and alert service are successfully created and deployed for Nvidia and AMD GPUs within Slurm-managed supercomputer systems. Through an investigation of collected monitoring data, an algorithm is developed to detect and alert jobs with inefficient GPU resource usage. Additionally, the thesis provides insights into GPU resource utilization dynamics. It offers practical applications in advancing generative AI models while promoting sustainability in HPC cluster usage.
 
-The thesis comprises sections dedicated to discussing techniques for building the monitoring system and alert service, detailing the implementation of the proposed system, presenting benchmark results from experimental and production setups, and offering concluding remarks. The methodology includes requirement analysis, system design and architecture, implementation and deployment, data collection and analysis, evaluation and validation, feedback and iterative improvement, documentation, and knowledge transfer.
+The thesis comprises sections dedicated to discussing techniques for building the monitoring system and alert service, detailing the implementation of the proposed system, presenting results from experimental benchmark and production setups, and offering concluding remarks. The methodology includes requirement analysis, system design and architecture, implementation and deployment, data collection and analysis, evaluation and validation, feedback and iterative improvement, documentation, and knowledge transfer.
 
 The thesis illustrates the operationalization of the monitoring system and alert service through JSON strings and SQL code excerpts, showcasing the real-time mechanisms for capturing and processing job metadata and GPU usage data. Triggers and notification functions within the PostgreSQL database enable instantaneous communication and notification of relevant events, facilitating timely updates and actions based on incoming data.
 
 Overall, the thesis contributes to advancing monitoring and alerting systems for GPU resource utilization in HPC clusters, with practical implications for optimizing job scheduling, resource allocation, and overall system efficiency. By addressing critical challenges and proposing innovative solutions, the research enhances the effectiveness and sustainability of GPU-accelerated computing environments, paving the way for future advancements in AI research and HPC infrastructure management.
 
 \section{Future work}
-While the real-time GPU monitoring system represents a significant advancement, there are several avenues for future research and improvements:
+There are several avenues for future research and improvements due to the limited time during this master's thesis project:
 
 \begin{enumerate}
     \item \textbf{Integration with Additional Job Schedulers}: Extend support for real-time GPU monitoring to additional job schedulers commonly used in HPC environments, such as LSF \cite{10.1145/3569951.3597564}, TORQUE \cite{10.1145/1188455.1188464}, or UGE \cite{10.1145/3332186.3338408}, enhancing the system's compatibility with diverse cluster architectures.

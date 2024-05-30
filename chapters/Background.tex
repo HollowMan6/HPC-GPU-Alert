@@ -216,6 +216,7 @@ The GPU nodes have 512 GB of memory and a local 3.8 TB NVMe drive. They also hav
 % \end{figure}
 
 \subsection{LUMI}
+\label{subsec:lumi}
 By Dec 2023, LUMI \cite{lumi}, one of the three European pre-exascale supercomputers and an HPE Cray EX supercomputer, was the fastest supercomputer in Europe. The GPU partition, LUMI-G, features the primary compute power, which consists of 2978 nodes, as described in Figure \ref{fig_lumig_overview}.
 
 \begin{figure}[H]
@@ -225,7 +226,7 @@ By Dec 2023, LUMI \cite{lumi}, one of the three European pre-exascale supercompu
     \label{fig_lumig_overview}
 \end{figure}
 
-\paragraph{GPU:}\mbox{}
+\subsubsection{GPU}
 
 The LUMI-G compute nodes have four AMD MI250X GPUs, each based on the 2nd Gen AMD CDNA architecture. The MI250X GPU is structured as a multi-chip module, which includes two GPU dies referred to as AMD Graphics Compute Dies (GCD). In Slurm and HIP runtime, a single MI250X module is recognized as two GPUs. Thus, when we do actual computing, the LUMI-G nodes are shown as 8 GPU nodes.
 
@@ -261,11 +262,11 @@ Each GCD has 110 compute units and accesses a 64 GB slice of high-bandwidth memo
 
 % The vector ALUs are complemented by matrix cores optimized to execute matrix fused multiply-add instructions, offering significant acceleration for generalized matrix multiplication computations, crucial for Linear Algebra in High-Performance Computing applications and AI workloads. Each compute unit (CU) has four matrix cores capable of achieving a throughput of 256 double-precision floating-point format (FP64) Flops/cycle/CU.
 
-\paragraph{CPU:}\mbox{}
+\subsubsection{CPU}
 
 The CPU of LUMI-G nodes is a 64-core AMD EPYC 7A53 Trento CPU. These CPU cores, built on the Zen 3 architecture, support AVX2 256-bit vector instructions, enabling a maximum throughput of 16 double-precision FLOP/clock (AVX2 FMA operations). Each core has 32 KiB of private L1 cache, a 32 KiB instruction cache, and 512 KiB of L2 cache. The L3 cache has 32 MiB shared among groups of 8 cores, accumulating in 256 MiB of L3 cache per CPU. Configured as 4 NUMA nodes (NPS4), the system allocates 128 GiB of DDR4 memory per NUMA node, resulting in a cumulative 512 GiB of CPU memory.
 
-% \paragraph{Connections:}\mbox{}
+% \subsubsection{Connections}
 
 % Figure \ref{fig_lumig_topology} shows the node topology. Each MI250X module includes 5 GPU-GPU links, 2 CPU-GPU links, and 1 PCIe link to the slingshot-11 interconnect. The MI250X modules are connected via an in-package Infinity Fabric interface, capable of delivering a theoretical peak bidirectional bandwidth of up to 400 GB/s. Furthermore, GCDs across different MI250X modules are linked through single or double Infinity Fabric links, offering peak bidirectional bandwidths of 100 GB/s and 200 GB/s, respectively. Each MI250X module directly connects to the slingshot-11 network, affording peak bandwidths of up to 25+25 GB/s. 
 
@@ -329,11 +330,13 @@ The /proc can also form the baseline for understanding CPU and memory consumptio
     \item \textbf{/proc/<PID>/maps} provides information about memory mappings for the specified process. We can find a list of memory regions allocated to the process and details such as the starting and ending addresses, permissions, and file mappings if applicable.
 \end{itemize}
 
-\subsection{NVML \& ROCm-SMI}
+\subsection{GPU management library}
+\subsubsection{NVML}
 NVML \cite{nvml} is a GPU-specific library provided by NVIDIA for managing and monitoring NVIDIA GPU devices. Its C-based API is designed to monitor and control the diverse states of NVIDIA GPU devices. This API offers direct access to the queries and commands accessible through Nvidia-SMI. It can help efficiently manage and monitor NVIDIA GPU devices. NVML exposes a comprehensive set of metrics, including GPU temperature, memory usage, and GPU utilization, allowing for detailed insights into GPU performance.
 
 NVML is a cornerstone for GPU monitoring on systems equipped with NVIDIA GPUs, such as Puhti and Mahti.
 
+\subsubsection{ROCm-SMI}
 ROCm-SMI \cite{rocm-smi} is an analogous tool to NVML but tailored for AMD GPUs within the Radeon Open Compute ecosystem. Like NVML, ROCm-SMI provides GPU-specific metrics, allowing for the monitoring and managing of AMD GPU devices.
 
 For HPC clusters that utilize AMD GPUs, such as LUMI, integrating ROCm-SMI into the monitoring framework for GPU is essential. In contrast, Puhti and Mahti utilize NVIDIA GPUs, so NVML is used in these two systems.
@@ -356,13 +359,15 @@ Effectively managing time-series data involves addressing numerous challenges, r
 
 One of the primary challenges in time-series monitoring for HPC jobs is handling high cardinality, which refers to the number of unique sets of data combinations. High cardinality can lead to performance bottlenecks as the database needs to manage and index a vast number of unique series, each potentially requiring separate storage and processing resources. This can strain the database system's capacity to ingest data rapidly and execute queries efficiently, especially as the data volume scales. A lot of non-time-series databases, and other time-series databases, including InfluxDB, will crash as the job to record (cardinality) increases.
 
+\subsubsection{TimescaleDB}
+
 TimescaleDB \cite{timescaledb} emerges as a robust solution, excelling in both rapid data ingestion and streamlined query processing, ensuring comprehensive time-series data management capabilities. TimescaleDB is an open-source time-series database optimized for fast ingest and complex queries. It is engineered on top of the mature RDBMS system PostgreSQL and packaged as an extension. TimescaleDB extends PostgreSQL with time-series-specific optimizations and functions, allowing it to manage time series data efficiently. TimescaleDB supports the full range of SQL functionality, including aggregates, joins, subqueries, and window functions.
 
 Central to TimescaleDB's architecture are \textbf{hypertables}, which serve as fundamental structures for efficient time-series data management as shown in Figure \ref{fig:hypertables-chunks}. Hypertables abstract multiple individual tables that store the data, referred to as chunks, providing users with a unified interface for data interaction. With hypertables, users can execute diverse operations, including data insertion, querying, and schema modifications, seamlessly integrating standard SQL functionalities. Hypertables are particularly advantageous for time-series data management, because they efficiently partition incoming data into smaller, manageable subsets. These data subsets, represented as time-based chunks, enable TimescaleDB to handle data retention and optimization efficiently. Consequently, TimescaleDB can do fast data ingestion and is scalable to millions of rows per second, which is crucial for time-series applications.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=1\textwidth]{figures/hypertables-chunks.png}
+\includegraphics[width=0.8\textwidth]{figures/hypertables-chunks.png}
 \caption{Hypertable compared with normal table \cite{hypertables}}
 \label{fig:hypertables-chunks}
 \end{figure}

@@ -112,12 +112,12 @@ From Figure \ref{fig_benchmark}, we can learn that:
 
 \begin{itemize}
     \item Generally, all the delays scale linearly with the number of GPUs.
-    \item Triggers generally double the delay in database transaction commit time for writing, which the overhead of NOTIFY should cause.
+    \item Triggers generally double the delay in database transaction commit time for writing, which the overhead of NOTIFY should be the cause.
     \item Continuous aggregates (CAgg) cause a slight increase in writing delay and the memory status dump delay for the triggers solution, which is likely to be caused by the overhead of CAgg background jobs. However, CAgg accelerates the query speed dramatically compared to traditional SQL queries aggregate, as we can see a significant time reduction in completing a read loop among all the jobs available.
     \item Polling is very inefficient for accessing data in real-time, since it creates a delay that is almost 100x more than the triggers solution.
 \end{itemize}
 
-Hence, the results confirmed our empirical analysis in Section \ref{sec:alertservice} and led to the final design we used after comparison: triggers without continuous aggregates. The reason is that triggers have the best real-time access, while only doubling the delay in writing compared to polling, which is acceptable, and the in-memory solution has a better performance in both read and write delay. Most importantly, the in-memory solution allows us to access raw data for more complicated statistics calculations and use machine learning models. We used the Golang data race detector to ensure the correctness during benchmarking and testing. We also checked the memory usage during the benchmark. The maximum Resident Set Size (RSS) is around 84.6 MB, which is also acceptable.
+Hence, the results confirmed our empirical analysis in Section \ref{sec:alertservice} and led to the final design we used after comparison: \textbf{triggers without continuous aggregates}. The reason is that triggers have the best real-time access, while only doubling the delay in writing compared to polling, which is acceptable, and the in-memory solution has a better performance in both read and write delay. Most importantly, the in-memory solution allows us to access raw data for more complicated statistics calculations and use machine learning models. We used the Golang data race detector to ensure the correctness during benchmarking and testing. We also checked the memory usage during the benchmark: The maximum Resident Set Size (RSS) is around 84.6 MB, which is also acceptable.
 
 %CPU %MEM    VSZ   RSS 21.0  0.5 3184092 84612
 
@@ -135,7 +135,7 @@ As is presented in Figure \ref{fig_monitoring_production_development}, we have t
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{figures/structurizr-1-ProductionDeployment.png}
+    \includegraphics[width=1\textwidth]{figures/production-deployment.pdf}
     \caption{GPU monitoring infrastructure production setup for Puhti and Mahti}
     \label{fig_monitoring_production_development}
 \end{figure}
@@ -151,7 +151,48 @@ As is presented in Figure \ref{fig_monitoring_production_development}, we have t
 
 We set the alert sliding window size at 30 minutes. Initially, we collected the monitoring data at 1-minute intervals, then increased that to 20 seconds, and the whole monitoring and alert system was still stable enough. We set the compression policy to compress the data after one day and do the retention every half-year. We also put an index on the hostname, job ID, and GPU ID to accelerate the querying speed on the database.
 
-\subsection{Case study}
-Here is a typical real-world scenario where we use our monitoring infrastructure and Timescale Alert to uncover a configuration mistake in software:
+\subsection{Case studies}
+Here are some real-world scenarios, where we use our monitoring infrastructure and Timescale Alert to help users solve issues when they submit jobs in HPC. These case studies illustrate how the system proposed in this thesis enables the support team to proactively identify, diagnose, and resolve issues, ensuring efficient utilization of HPC resources, reducing user queuing time, and improving user satisfaction.
 
-From the GPU alert status dashboard, the user support team got alerted by a job that reserved a full node with 4 A100 GPUs, with 98\% usage for 1 GPU but zero usage for the rest 3. By checking the GPU alert history dashboard, the support team finds that the alert began 1 hour ago, so they suspect this to be a configuration error. By checking the module load information stored in the job metadata, they found that Pytorch was loaded to the job context. Hence, a machine-learning expert contacted the user for possible software bugs or configuration errors. Finally, they discovered that \texttt{CUDA\_VISIBLE\_DEVICES} was mistakenly set to \texttt{0} (only utilizing 1 GPU), so the job was killed. A new job with the correct configuration was submitted again.
+\subsubsection{Configuration Error}
+From the GPU alert status dashboard, the user support team was alerted by a job that reserved 2 full nodes, each with 4 A100 GPUs. It has nearly 100\% usage almost all the time for 1 GPU but zero usage for the remaining 7, as illustrated in Figure \ref{fig_job_config_error}. By checking the GPU alert history dashboard, the support team found that the alert began a long time ago, the disk I/O currently used by that job is low, so it shouldn't be the case that the job is still loading data. The situation leads them to suspect a configuration error or code bug. By examining the module load information stored in the job metadata, they discovered that Pytorch was loaded into the job context, which is a mature machine-learning library and shouldn't have such a situation if everything is configured right. The user support team then contacted the user to investigate possible configuration errors. It was eventually discovered that \texttt{CUDA\_VISIBLE\_DEVICES} was mistakenly set to \texttt{0} (utilizing only 1 GPU), and they didn't use \texttt{srun} to properly distribute the job step to all nodes they applied for with \texttt{torchrun}. To fix this, the job was terminated, and a new job with the correct configuration was subsequently submitted.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{figures/job-config-error.png}
+    \caption{Job usage graph for the one with configuration error}
+    \label{fig_job_config_error}
+\end{figure}
+
+\subsubsection{Code Bugs}
+In another scenario, the support team received a similar situation of alerts described in the \textit{Configuration Error} about a job that was allocated multiple GPUs, but showed low utilization on all GPUs except one, which is very similar to Figure \ref{fig_job_config_error}. By analyzing the job's execution patterns, as well as checking with the user, they found that the workload was not properly distributed across the GPUs because of code bugs and how the user's code was written. The user was advised on how to improve their code to better parallelize their tasks and fully utilize the allocated GPUs. This resulted in significantly improved performance and more efficient use of the cluster's GPU resources.
+
+\subsubsection{GPU Over-Provisioning}
+For most cases, the support team was alerted by jobs with low overall GPU utilization across all allocated GPUs, as shown in Figure \ref{fig_gpu-usage-graph} and Figure \ref{fig_job_over_provison} for examples. After contacting the users, most of the time it was found that their applications did not scale well beyond a certain number of GPUs, which means they were allocated more GPUs than needed, resulting in under-utilization of the resources. In the end, the support team recommended shrinking the GPU requests to better match the application's needs, leading to more efficient resource usage and freeing up GPUs for other jobs.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{figures/job-over-provison.png}
+    \caption{Job usage graph for the one with over provision}
+    \label{fig_job_over_provison}
+\end{figure}
+
+\subsubsection{Interactive use on GPU compute node}
+For some cases, the support team also gets alerted by jobs that only requested 1 GPU but still with low GPU utilization, on partitions that were meant for heavy GPU computing jobs, as demonstrated in Figure \ref{fig_job_interactive} for one example. After checking with the users, most of the time it was found that they are developing their code interactively. The user then was suggested to switch their job to the partition that is meant for lightweight GPU computing.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{figures/job-interactive.png}
+    \caption{Job usage graph for the one with interactive usage on heavy GPU compute partition}
+    \label{fig_job_interactive}
+\end{figure}
+
+\subsubsection{GPU Memory Leaks}
+A user raised a ticket, asking for help from the user support team about why his long-running AI inference job eventually crashed after some time. After checking the monitoring history, as shown in Figure \ref{fig_job_memory_leak}, the support team found progressively increasing GPU memory usage, which ultimately led to the job being killed due to exceeding memory limits. The support team worked with the user to review the code and identified a memory leak caused by improper handling of GPU memory allocations in a loop. The memory usage was stabilized by fixing the code, allowing the job to be finished successfully without exceeding memory limits.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{figures/job-memory-leak.png}
+    \caption{Job usage graph for the one with GPU memory leaks}
+    \label{fig_job_memory_leak}
+\end{figure}

@@ -13,31 +13,13 @@ As a result, effective GPU monitoring has become an indispensable component for 
 Furthermore, with the growing popularity of AI applications, from natural language processing to computer vision, the demand for GPU resources continues to grow. Effective monitoring ensures the smooth operation of AI training jobs. It facilitates capacity planning and scalability to ensure that all the resources are used efficiently, allowing HPC users to seamlessly adapt to evolving computational demands. Through the lens of this thesis, we aim to underscore how we conduct GPU monitoring to harness the full potential of HPC in real-world applications, showing its pivotal role in driving innovation, enhancing system performance, and advancing the frontiers of both scientific research and artificial intelligence.
 
 \section{Purpose}
-Most of the workload managers in the HPC world lack the GPU monitoring feature. Implementing a real-time GPU usage alert service at the job level on HPC clusters can yield significant benefits across various domains. Notably, it can facilitate the advancement of generative AI development while enhancing the overall sustainability of utilizing the computing cluster.
-
-\subsection{Generative AI}
-In January 2024, the European Commission introduced comprehensive measures to bolster European startups and SMEs (Small and Medium-sized Enterprises) in developing AI that upholds EU values and regulations \cite{eu-ai}. This initiative follows the political consensus reached in December 2023 regarding the EU AI Act, which is tailored to support AI startups and foster innovation. It includes a proposal aimed at amending the Regulation of the EuroHPC JU (European High-Performance Computing Joint Undertaking), thereby granting startups and the broader innovation community access to AI-optimized supercomputers -- thus birthing the concept of AI Factories.
-
-AI Factories leverage the supercomputing capacity of the EuroHPC Joint Undertaking to develop trustworthy, cutting-edge generative AI models. Generative AI, now a trendy research area, focuses on creating new content or data that is original and often indistinguishable from human-created content. These models are trained on vast amounts of text data to learn the intricacies of language. They can then generate coherent and contextually relevant text, pictures, sound, and videos in various styles and topics. Through fine-tuning and conditioning on specific prompts or input contexts (prompt engineering), LLMs can generate text that mimics human writing remarkably, making them valuable tools for various creative and practical applications, including content generation, story writing, and even code generation. Most of the generative AI models, such as LLaMA \cite{touvron2023llama}, Gemma \cite{gemmateam2024gemma} as well as OpenAI's GPT series \cite{openai2024gpt4}, use transformers. 
-
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.6\textwidth]{figures/ModalNet-21.png}
-%     \caption{Transformer model architecture \cite{NIPS2017_3f5ee243}}
-%     \label{fig_transformers}
-% \end{figure}
-
-Transformers employ attention mechanisms to capture dependencies between words in a sequence, allowing them to understand and generate text with greater contextual awareness \cite{NIPS2017_3f5ee243}. The architecture of transformers, characterized by their extensive layers and attention mechanisms, necessitates vast amounts of parallel computation, making them an ideal fit for GPU acceleration.
-
-GPUs excel at handling the matrix multiplications and element-wise operations inherent in the forward and backward passes of transformer models, leveraging their massively parallel architecture to accelerate training and inference processes. Moreover, the large memory bandwidth of GPUs helps process the immense datasets typically associated with LLMs efficiently, which enables scalability. As a result, integrating GPUs in LLM frameworks enhances computational performance. It allows researchers and practitioners to explore more complex models and larger datasets, pushing the boundaries of natural language understanding and generation. 
-
-However, due to the highly intensive model structure and the complicated nature of distributed parallel training and inference logic, those generative AI training programs and inference applications will likely not utilize all the GPUs fully. GPU monitoring and alerting can provide insights into the performance and help identify code bugs and optimization opportunities for AI workloads, thus advancing state-of-the-art AI research and applications.
+Most of the workload managers in the HPC world lack the GPU monitoring feature. Implementing a real-time GPU usage alert service at the job level on HPC clusters can yield significant benefits across various domains. Notably, it can enhance the overall sustainability of utilizing the computing cluster while facilitating the advancement of generative AI development.
 
 \subsection{Sustainability}
 
-In HPC environments, GPUs are typically allocated by the device, while the CPU allocates cores. For instance, the LUMI supercomputer, ranked as the fastest in Europe according to TOP500 by December 2023 \cite{TOP500}, uses the AMD Radeon Instinct MI250X GPU Accelerator, which is equipped with 220 compute units (cores), in contrast to the 64-core 3rd Gen EPYC 7A53s Trento CPU \cite{lumi}. While this abundance of cores enables GPUs to efficiently manage numerous mathematical and spatial computations simultaneously, it also makes GPUs the most power-intensive component in a computing system.
+In HPC environments, GPUs are typically allocated by the device, while the CPU allocates cores. For instance, the LUMI supercomputer, ranked as the fastest in Europe according to TOP500 by June 2024 \cite{TOP500}, uses the AMD Radeon Instinct MI250X GPU Accelerator, which is equipped with 220 compute units (cores), in contrast to the 64-core 3rd Gen EPYC 7A53s Trento CPU \cite{lumi}. While this abundance of cores enables GPUs to efficiently manage numerous mathematical and spatial computations simultaneously, it also makes GPUs the most power-intensive component in a computing system.
 
-Compared with CPUs, inefficient utilization of GPUs can lead to substantial resource wastage, particularly during peak hours when numerous jobs await allocation. As is shown in Table \ref{tab:lumi_resources}, the maximum TDP for the CPU is 280W \cite{amd-epyc-cpu}, whereas the TBP for the GPU is 500W, peaking at 560W \cite{amd-mi250x}. Thus, each allocation on systems like LUMI incurs a mere 4W per core for CPUs, contrasting wildly with the over 250W consumption for GPUs (1 GPU has 2 GCDs in this case here) \cite{lumi}.
+Compared with CPUs, inefficient utilization of GPUs can lead to substantial resource wastage, particularly during peak hours when numerous jobs await allocation. Referring to Subsection \ref{subsec:lumi}, as is shown in Table \ref{tab:lumi_resources}, in LUMI, the maximum TDP for the CPU is 280W \cite{amd-epyc-cpu}, whereas the TBP for the GPU is 500W, peaking at 560W \cite{amd-mi250x}. Thus, each allocation on systems like LUMI incurs a mere 4W per core for CPUs, contrasting wildly with the over 250W consumption for GPUs (1 GPU has 2 GCDs in this case here) \cite{lumi}.
 
 \begin{table}[H]
     \centering
@@ -54,7 +36,26 @@ Compared with CPUs, inefficient utilization of GPUs can lead to substantial reso
     \label{tab:lumi_resources}
 \end{table}
 
-However, knowing the performance and getting alerted for sub-optimal jobs on time poses a challenge for supercomputer administrators. Existing workload managers and job schedulers in HPC systems, such as Slurm and LSF, provide descriptive accounts of CPU and memory usage but lack real-time hardware monitoring capabilities at the job level, and they have no accounting for GPU. They also have no built-in alert systems. As a result, a GPU monitoring and alerting system is urgently needed to help administrators ensure sustainability and reduce carbon emissions. Users may also need this information to debug/improve their code and make their program more environmentally friendly.
+However, knowing the performance and getting alerted for sub-optimal jobs on time poses a challenge for supercomputer administrators. Existing workload managers and job schedulers in HPC systems, such as Slurm and LSF, provide descriptive accounts of CPU and memory usage but lack real-time hardware monitoring capabilities at the job level, and they have no recording of history monitoring data. They also have no built-in alert systems. As a result, a GPU monitoring and alerting system is urgently needed to help administrators ensure sustainability and reduce carbon emissions. Users may also need this information to debug or improve their code and make their program more environmentally friendly.
+
+
+\subsection{Generative AI}
+In January 2024, the European Commission introduced comprehensive measures to bolster European startups and SMEs (Small and Medium-sized Enterprises) in developing AI that upholds EU values and regulations \cite{eu-ai}. This initiative follows the political consensus reached in December 2023 regarding the EU AI Act, which is tailored to support AI startups and foster innovation. It includes a proposal aimed at amending the Regulation of the EuroHPC JU (European High-Performance Computing Joint Undertaking) \cite{european_union_2021}, thereby granting startups and the broader innovation community access to AI-optimized supercomputers -- thus birthing the concept of AI Factories.
+
+AI Factories leverage the supercomputing capacity of the EuroHPC Joint Undertaking to develop trustworthy, cutting-edge generative AI models. Generative AI, now a trendy research area, focuses on creating new content or data that is original and often indistinguishable from human-created content. These models are trained on vast amounts of text data to learn the intricacies of language. They can then generate coherent and contextually relevant text, pictures, sound, and videos in various styles and topics. Through fine-tuning and conditioning on specific prompts or input contexts (prompt engineering), LLMs can generate text that mimics human writing remarkably, making them valuable tools for various creative and practical applications, including content generation, story writing, and even code generation. Most of the generative AI models, such as LLaMA \cite{touvron2023llama}, Gemma \cite{gemmateam2024gemma} as well as OpenAI's GPT series \cite{openai2024gpt4}, use transformers. 
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.6\textwidth]{figures/ModalNet-21.png}
+%     \caption{Transformer model architecture \cite{NIPS2017_3f5ee243}}
+%     \label{fig_transformers}
+% \end{figure}
+
+Transformers employ attention mechanisms to capture dependencies between words in a sequence, allowing them to understand and generate text with greater contextual awareness \cite{NIPS2017_3f5ee243}. The architecture of transformers, characterized by their extensive layers and attention mechanisms, necessitates vast amounts of parallel computation, making them an ideal fit for GPU acceleration.
+
+GPUs excel at handling the matrix multiplications and element-wise operations inherent in the forward and backward passes of transformer models, leveraging their massively parallel architecture to accelerate training and inference processes. Moreover, the large memory bandwidth of GPUs helps process the immense datasets typically associated with LLMs efficiently, which enables scalability. As a result, integrating GPUs in LLM frameworks enhances computational performance. It allows researchers and practitioners to explore more complex models and larger datasets, pushing the boundaries of natural language understanding and generation. 
+
+However, due to the highly intensive model structure and the complicated nature of distributed parallel training and inference logic, those generative AI training programs and inference applications will likely not utilize all the GPUs fully. GPU monitoring and alerting can provide insights into the performance and help identify code bugs and optimization opportunities for AI workloads, thus advancing state-of-the-art AI research and applications.
 
 \section{Research questions}
 \label{sec:rqs}
