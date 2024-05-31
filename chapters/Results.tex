@@ -165,7 +165,14 @@ From the GPU alert status dashboard, the user support team was alerted by a job 
 \end{figure}
 
 \subsubsection{Code Bugs}
-In another scenario, the support team received a similar situation of alerts described in the \textit{Configuration Error} about a job that was allocated multiple GPUs, but showed low utilization on all GPUs except one, which is very similar to Figure \ref{fig_job_config_error}. By analyzing the job's execution patterns, as well as checking with the user, they found that the workload was not properly distributed across the GPUs because of code bugs and how the user's code was written. The user was advised on how to improve their code to better parallelize their tasks and fully utilize the allocated GPUs. This resulted in significantly improved performance and more efficient use of the cluster's GPU resources.
+In another scenario, the support team received a similar situation of alerts described in the \textit{Configuration Error} about a job that was allocated multiple GPUs, but showed low utilization on all GPUs except a few of them, but those with high usage always change and take turns, as demonstrated in Figure \ref{fig_job_code_bugs}. By analyzing the job's execution patterns, as well as checking with the user, they found that the workload was not properly distributed across the GPUs because of code bugs and how the user's code was written. The user was advised on how to improve their code to better parallelize their tasks and fully utilize the allocated GPUs. This resulted in significantly improved performance and more efficient use of the cluster's GPU resources.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{figures/job-code-bugs.png}
+    \caption{Job usage graph for the one with code bugs}
+    \label{fig_job_code_bugs}
+\end{figure}
 
 \subsubsection{GPU Over-Provisioning}
 For most cases, the support team was alerted by jobs with low overall GPU utilization across all allocated GPUs, as shown in Figure \ref{fig_gpu-usage-graph} and Figure \ref{fig_job_over_provison} for examples. After contacting the users, most of the time it was found that their applications did not scale well beyond a certain number of GPUs, which means they were allocated more GPUs than needed, resulting in under-utilization of the resources. In the end, the support team recommended shrinking the GPU requests to better match the application's needs, leading to more efficient resource usage and freeing up GPUs for other jobs.
