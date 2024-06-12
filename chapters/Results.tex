@@ -6,7 +6,7 @@ This chapter presents the results from benchmarking the real-time GPU resource m
 \section{Benchmark}
 \subsection{Experimental setup}
 \label{subsection:experiment}
-The experimental setup involves deploying the proposed GPU monitoring system in a controlled environment, that emulates the characteristics of a typical HPC cluster. The monitoring infrastructure continuously collects and analyzes the simulated GPU metrics, and an alert service is configured to notify any sub-optimal GPU resource utilization.
+The experimental setup involves deploying the proposed GPU monitoring system in a controlled environment, that emulates the characteristics of a typical HPC cluster. The monitoring infrastructure continuously collects and analyzes the simulated GPU metrics, and an alert service is configured to notify any sub-optimal GPU utilization.
 
 To integrate all the components for testing, we deployed Slurm in a containerized environment with an isolated network to simulate the actual HPC job context. Everything, including the software versions, replicates what we have in production. We use Podman as the container runtime and Rocky Linux 8 as the base container image to keep up with the operating system we use in Puhti and Mahti (RHEL 8).
 
@@ -22,17 +22,17 @@ We have two compute nodes in our test environment. All the containers are listed
     \item \textbf{timescaledb}: TimescaleDB instance for storing the monitoring data.
     \item \textbf{timescaleingest}: Timescale Ingest instance for ingesting the monitoring data into TimescaleDB.
     \item \textbf{timescalereader}: Timescale Reader instance for fetching the monitoring data and serving as the API for displaying to end users.
-    \item \textbf{timescalealert}: Timescale Alert instance for checking the alerts and displaying related information.
+    \item \textbf{timescalealert}: Timescale Alert instance for checking alerts and displaying related information.
     \item \textbf{ondemand}: Open OnDemand serves as a web-based UI to computer clusters in HPC, in addition to SSH access, to help new users who are not familiar with Linux get started quickly. It offers an intuitive entry point for straightforward tasks and shell access for more intricate operations.
-    \item \textbf{ldap}: Lightweight Directory Access Protocol (LDAP), required for access control in Open OnDemand.
+    \item \textbf{ldap}: Lightweight Directory Access Protocol (LDAP), for access control in Open OnDemand.
 \end{itemize}
 
-To make testing easier with an arbitrary number of GPUs in a container without needing them, we created a fake Nvidia library that implements the Nvidia-ML interface for generating random metrics data.
+To make testing easier with an arbitrary number of GPUs in a container without needing them, we created a fake Nvidia library that implements the Nvidia-ML interface for generating random data.
 
 We also have separate testing setups for each component, either by randomly generated data or by replaying the data we collected in production from the database dump.
 
 \begin{itemize}
-    \item For the random data benchmark, we spawn maximum 23824 (2978*8) Go routines that write to the database simultaneously, which is, i.e. the maximum GPU number we have in LUMI, to simulate the heaviest situation we can have in the pre-exascale supercomputer.
+    \item For the random data benchmark, we spawn maximum 23824 (2978*8) Go routines that write to the database simultaneously, which is, i.e., the maximum GPU number we have in LUMI, to simulate the heaviest situation we can have in the pre-exascale supercomputer.
     \item For real data replaying, we read all the records from the database dump ordered by time stamp, and send it to timescale ingest with accelerated speed to reproduce the production situation.
 \end{itemize}
 
@@ -117,17 +117,17 @@ From Figure \ref{fig_benchmark}, we can learn that:
     \item Polling is very inefficient for accessing data in real-time, since it creates a delay that is almost 100x more than the triggers solution.
 \end{itemize}
 
-Hence, the results confirmed our empirical analysis in Section \ref{sec:alertservice} and led to the final design we used after comparison: \textbf{triggers without continuous aggregates}. The reason is that triggers have the best real-time access, while only doubling the delay in writing compared to polling, which is acceptable, and the in-memory solution has a better performance in both read and write delay. Most importantly, the in-memory solution allows us to access raw data for more complicated statistics calculations and use machine learning models. We used the Golang data race detector to ensure the correctness during benchmarking and testing. We also checked the memory usage during the benchmark: The maximum Resident Set Size (RSS) is around 84.6 MB, which is also acceptable.
+Hence, the results confirmed our empirical analysis in Section \ref{sec:alertservice} and led to our final design after comparison: \textbf{triggers without continuous aggregates}. The reason is that triggers have the best real-time access, while only doubling the delay in writing compared to polling, which is acceptable, and the in-memory solution has a better performance in both read and write delay. Most importantly, the in-memory solution allows us to access raw data for more complicated statistics calculations and use machine learning models. We used the Golang data race detector to ensure the correctness during benchmarking and testing. We also checked the memory usage during the benchmark: The maximum Resident Set Size (RSS) is around 84.6 MB, which is also acceptable.
 
 %CPU %MEM    VSZ   RSS 21.0  0.5 3184092 84612
 
 \section{Production}
 
-The production evaluation involved deploying the real-time GPU monitoring system in a live HPC environment, specifically on the Puhti and Mahti systems at the CSC -- IT Center for Science, which allows us to test the practicability in alerting for real-world workloads from diverse scientific domains, including molecular dynamics simulations, computational chemistry, and machine learning. Unfortunately, due to the time limit for the thesis writing process, we are not able to finish the deployment of the whole monitoring and alert services in production for the pre-exascale HPC system, LUMI, but we have already verified this possibility in Section \ref{subsection:experiment} through a benchmark.
+The production evaluation involved deploying the real-time GPU monitoring system in a live HPC environment, including Puhti and Mahti. This evaluation allows us to test the practicability of alerting for real-world workloads from diverse scientific domains, including molecular dynamics simulations, computational chemistry, and machine learning. Unfortunately, due to the time limit for the thesis writing process, we cannot finish deploying the alert services in production for the pre-exascale HPC system, LUMI. Still, we have verified this possibility in Section \ref{subsection:experiment} through a benchmark.
 
 % We intended to deploy this whole infrastructure on LUMI as well. Unfortunately, we were unable to do so during the thesis writing period due to the shortage of administrators on the LUMI side.
 
-The production evaluation focused on the practical implications of integrating the alerting and monitoring system into the daily operations of HPC clusters. Key performance indicators, such as the system's ability to facilitate timely alerts, were measured. Additionally, the impact on user experience was evaluated considering the introduction of real-time alerts to administrators.
+The production evaluation focused on the practical implications of integrating the alerting and monitoring system into the daily operations of HPC clusters. Key performance indicators were measured, such as the system's ability to facilitate timely alerts. Additionally, the impact on user experience was evaluated considering the introduction of real-time alerts to administrators.
 
 \subsection{Setup}
 
@@ -149,57 +149,57 @@ As is presented in Figure \ref{fig_monitoring_production_development}, we have t
     \item Other \textbf{visualization} services, such as the job history and alert status dashboard, are deployed as Flask Apps for Open OnDemand.
 \end{itemize}
 
-We set the alert sliding window size at 30 minutes. Initially, we collected the monitoring data at 1-minute intervals, then increased that to 20 seconds, and the whole monitoring and alert system was still stable enough. We set the compression policy to compress the data after one day and do the retention every half-year. We also put an index on the hostname, job ID, and GPU ID to accelerate the querying speed on the database.
+We set the alert sliding window size at 30 minutes. Initially, we collected the monitoring data at 1-minute intervals, then increased that to 20 seconds, and the whole monitoring and alert system was still stable enough. We set the compression policy to compress the data after one day and do the retention every half-year. We also put an index on the hostname, job ID, and GPU ID to accelerate the querying speed.
 
 \subsection{Case studies}
-Here are some real-world scenarios, where we use our monitoring infrastructure and Timescale Alert to help users solve issues when they submit jobs in HPC. These case studies illustrate how the system proposed in this thesis enables the support team to proactively identify, diagnose, and resolve issues, ensuring efficient utilization of HPC resources, reducing user queuing time, and improving user satisfaction.
+Here are some real-world scenarios in which we use our monitoring infrastructure and Timescale Alert to help users solve issues when they submit jobs in HPC. These case studies illustrate how the system proposed in this thesis enables the support team to proactively identify, diagnose, and resolve issues, ensuring efficient utilization of HPC, reducing user queuing time, and improving user satisfaction.
 
 \subsubsection{Configuration Error}
-From the GPU alert status dashboard, the user support team was alerted by a job that reserved 2 full nodes, each with 4 A100 GPUs. It has nearly 100\% usage almost all the time for 1 GPU but zero usage for the remaining 7, as illustrated in Figure \ref{fig_job_config_error}. By checking the GPU alert history dashboard, the support team found that the alert began a long time ago, the disk I/O currently used by that job is low, so it shouldn't be the case that the job is still loading data. The situation leads them to suspect a configuration error or code bug. By examining the module load information stored in the job metadata, they discovered that Pytorch was loaded into the job context, which is a mature machine-learning library and shouldn't have such a situation if everything is configured right. The user support team then contacted the user to investigate possible configuration errors. It was eventually discovered that \texttt{CUDA\_VISIBLE\_DEVICES} was mistakenly set to \texttt{0} (utilizing only 1 GPU), and they didn't use \texttt{srun} to properly distribute the job step to all nodes they applied for with \texttt{torchrun}. To fix this, the job was terminated, and a new job with the correct configuration was subsequently submitted.
+From the GPU alert status dashboard, the user support team was alerted by a job that reserved two full nodes, each with 4 A100 GPUs. It has nearly 100\% usage almost all the time for 1 GPU but zero usage for the remaining 7, as illustrated in Figure \ref{fig_job_config_error}. By checking the GPU alert history dashboard, the support team found that the alert began long ago. The disk I/O currently used by that job is low, so it shouldn't be the case that the job is still loading data. The situation leads them to suspect a configuration error or code bug. By examining the module load information stored in the job metadata, they discovered that Pytorch was loaded into the job context, a mature machine-learning library that shouldn't have such a situation if everything is configured right. The user support team then contacted the user to investigate possible configuration errors. It was eventually discovered that \texttt{CUDA\_VISIBLE\_DEVICES} was mistakenly set to \texttt{0} (utilizing one GPU only), and they didn't use \texttt{srun} to distribute the job steps to all nodes properly with \texttt{torchrun}. The job was terminated to fix this, and a new job with the correct configuration was subsequently submitted.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{figures/job-config-error.png}
-    \caption{Job usage graph for the one with configuration error}
+    \caption{Job usage graph for a job with configuration error}
     \label{fig_job_config_error}
 \end{figure}
 
 \subsubsection{Code Bugs}
-In another scenario, the support team received a similar situation of alerts described in the \textit{Configuration Error} about a job that was allocated multiple GPUs, but showed low utilization on all GPUs except a few of them, but those with high usage always change and take turns, as demonstrated in Figure \ref{fig_job_code_bugs}. By analyzing the job's execution patterns, as well as checking with the user, they found that the workload was not properly distributed across the GPUs because of code bugs and how the user's code was written. The user was advised on how to improve their code to better parallelize their tasks and fully utilize the allocated GPUs. This resulted in significantly improved performance and more efficient use of the cluster's GPU resources.
+In another scenario, the support team received similar alerts about a job allocated multiple GPUs, described in the \textit{Configuration Error} above. Still, it showed low utilization on all GPUs except a few. Those with high usage constantly change and take turns, as Figure \ref{fig_job_code_bugs} demonstrates. By analyzing the job's execution patterns and checking with the user, they found that the workload was not adequately distributed across the GPUs because of code bugs and how the user's code was written. The user was advised to improve their code to parallelize tasks and fully utilize the allocated GPUs. This resulted in significantly improved performance and more efficient use of the cluster's GPU resources.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{figures/job-code-bugs.png}
-    \caption{Job usage graph for the one with code bugs}
+    \caption{Job usage graph for a job with code bugs}
     \label{fig_job_code_bugs}
 \end{figure}
 
 \subsubsection{GPU Over-Provisioning}
-For most cases, the support team was alerted by jobs with low overall GPU utilization across all allocated GPUs, as shown in Figure \ref{fig_gpu-usage-graph} and Figure \ref{fig_job_over_provison} for examples. After contacting the users, most of the time it was found that their applications did not scale well beyond a certain number of GPUs, which means they were allocated more GPUs than needed, resulting in under-utilization of the resources. In the end, the support team recommended shrinking the GPU requests to better match the application's needs, leading to more efficient resource usage and freeing up GPUs for other jobs.
+For most cases, the support team was alerted by jobs with low overall GPU utilization across all allocated GPUs, as shown in Figure \ref{fig_gpu-usage-graph} and Figure \ref{fig_job_over_provison} for examples. After contacting the users, most of the time, it was found that their applications did not scale well beyond a certain number of GPUs, which means there were more allocated GPUs than needed, resulting in under-utilization of the resources. Ultimately, the support team recommended shrinking the GPU requests to match the application's needs better, leading to more efficient GPU usage and freeing for other jobs.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{figures/job-over-provison.png}
-    \caption{Job usage graph for the one with over provision}
+    \caption{Job usage graph for a job with over-provisioning}
     \label{fig_job_over_provison}
 \end{figure}
 
 \subsubsection{Interactive use on GPU compute node}
-For some cases, the support team also gets alerted by jobs that only requested 1 GPU but still with low GPU utilization, on partitions that were meant for heavy GPU computing jobs, as demonstrated in Figure \ref{fig_job_interactive} for one example. After checking with the users, most of the time it was found that they are developing their code interactively. The user then was suggested to switch their job to the partition that is meant for lightweight GPU computing.
+For some cases, the support team also gets alerted by jobs that only requested 1 GPU but still have low GPU utilization, on partitions meant for heavy GPU computing jobs, as demonstrated in Figure \ref{fig_job_interactive} for one example. After checking with the users, most of the time, it was found that they develop their code interactively. The user was then advised to switch their job to the partition meant for lightweight GPU computing.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{figures/job-interactive.png}
-    \caption{Job usage graph for the one with interactive usage on heavy GPU compute partition}
+    \caption{Job usage graph for a interactive job on heavy GPU compute partition}
     \label{fig_job_interactive}
 \end{figure}
 
 \subsubsection{GPU Memory Leaks}
-A user raised a ticket, asking for help from the user support team about why his long-running AI inference job eventually crashed after some time. After checking the monitoring history, as shown in Figure \ref{fig_job_memory_leak}, the support team found progressively increasing GPU memory usage, which ultimately led to the job being killed due to exceeding memory limits. The support team worked with the user to review the code and identified a memory leak caused by improper handling of GPU memory allocations in a loop. The memory usage was stabilized by fixing the code, allowing the job to be finished successfully without exceeding memory limits.
+A user raised a ticket, asking for help from the user support team about why his long-running AI inference job eventually crashed after some time. After checking the monitoring history, as shown in Figure \ref{fig_job_memory_leak}, the support team found progressively increasing GPU memory usage, ultimately leading to the job being killed due to exceeding memory limits. The support team worked with the user to review the code and identified a memory leak, caused by improper handling of GPU memory allocations in a loop. The memory usage was stabilized by fixing the code, allowing the job to be finished successfully, without exceeding memory limits.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{figures/job-memory-leak.png}
-    \caption{Job usage graph for the one with GPU memory leaks}
+    \caption{Job usage graph for a job with GPU memory leaks}
     \label{fig_job_memory_leak}
 \end{figure}
