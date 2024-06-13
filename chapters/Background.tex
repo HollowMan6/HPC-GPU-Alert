@@ -136,7 +136,7 @@ Slurm plays a crucial role in maximizing the utilization of computational resour
 % \end{enumerate}
 
 \section{HPC systems at CSC}
-Table \ref{tab:gpu_details} shows the GPU statistics for the three HPC systems at the CSC-IT Center for Science: Puhti, Mahti, and LUMI. Understanding the architecture and capabilities of these systems is crucial for tailoring GPU monitoring and alerting strategies and ensuring seamless integration with existing infrastructure. This section then provides a comprehensive overview of the computing nodes for these HPC systems.
+Table \ref{tab:gpu_details} shows the GPU statistics for the three HPC systems at the CSC-IT Center for Science: Puhti, Mahti, and LUMI. Understanding the architecture and capabilities of these systems is crucial for tailoring GPU monitoring and alerting strategies and ensuring seamless integration with existing infrastructure. This section provides an overview of the GPU computing nodes for these HPC systems.
 
 \begin{table}[H]
     \centering
@@ -217,7 +217,7 @@ The GPU nodes have 512 GB of memory and a local 3.8 TB NVMe drive. They also hav
 
 \subsection{LUMI}
 \label{subsec:lumi}
-By Dec 2023, LUMI \cite{lumi}, one of the three European pre-exascale supercomputers and an HPE Cray EX supercomputer, was the fastest supercomputer in Europe. The GPU partition, LUMI-G, features the primary compute power, which consists of 2978 nodes, as described in Figure \ref{fig_lumig_overview}.
+By Jun 2024, LUMI \cite{lumi}, one of the three European pre-exascale supercomputers and an HPE Cray EX supercomputer, was the fastest supercomputer in Europe. The GPU partition, LUMI-G, features the primary compute power, which consists of 2978 nodes, as described in Figure \ref{fig_lumig_overview}.
 
 \begin{figure}[H]
     \centering
@@ -228,7 +228,7 @@ By Dec 2023, LUMI \cite{lumi}, one of the three European pre-exascale supercompu
 
 \subsubsection{GPU}
 
-The LUMI-G compute nodes have four AMD MI250X GPUs, each based on the 2nd Gen AMD CDNA architecture. The MI250X GPU is structured as a multi-chip module, which includes two GPU dies referred to as AMD Graphics Compute Dies (GCD). In Slurm and HIP runtime, a single MI250X module is recognized as two GPUs. Thus, when we do actual computing, the LUMI-G nodes are 8-GPU.
+The LUMI-G compute nodes have four AMD MI250X GPUs, each based on the 2nd Gen AMD CDNA architecture. The MI250X GPU is structured as a multi-chip module, which includes two GPU dies referred to as AMD Graphics Compute Dies (GCD). In Slurm and HIP runtime, a single MI250X module is recognized as two GPUs. Thus, when we do actual computing, the LUMI-G is 8-GPU node.
 
 Each GCD has 110 compute units and accesses a 64 GB slice of high-bandwidth memory, totaling 220 compute units and 128 GB of memory per MI250X module. All compute units share an L2 cache with an 8 MB capacity to enhance memory throughput. The cache is divided into 32 slices, capable of delivering 128 B/clock/slice, amounting to a peak theoretical bandwidth of 6.96 TB/s. Including an L2 cache in the MI250X GPU modules enhances synchronization capabilities for algorithms reliant on atomic operations to coordinate communication across the entire GPU. These atomic operations are executed close to the memory within the L2 cache.
 
@@ -306,7 +306,7 @@ Slurm can be configured to use Cgroups to regulate resources allocated to jobs, 
 
 At CSC, Puhti and Mahti still use Red Hat Enterprise Linux (RHEL) 8, which means Cgroup v1. In contrast, LUMI uses a more recent system, SUSE Linux Enterprise Server (SLES) 15 SP4, which means Cgroup v2. So, we need to support both Cgroup versions to cover the CPU and memory monitoring for all the systems.
 
-Cgroups can form the baseline for understanding CPU and memory consumption. Take Cgroups v1, for example:
+Cgroups can form the foundation for understanding CPU and memory consumption. Take Cgroups v1, for example:
 
 \begin{itemize}
     \item \textbf{/sys/fs/cgroup/memory/slurm/uid\_*/job\_*/*/memory.usage\_in\_bytes} tells the memory usage for the job.
@@ -322,7 +322,7 @@ The /proc \cite{5544096} directory is unique within the Linux file system, as it
 
 When browsing the directory, we see those numbered subdirectories corresponding to the unique process ID (PID). By cross-referencing these PIDs with the process table, we can identify and examine specific processes. For instance, if the process table denotes a process with PID 1234, accessing the directory /proc/1234 reveals detailed information about this process.
     
-The /proc can also form the baseline for understanding CPU and memory consumption. Monitoring processes often involve parsing information from /proc to extract consumption-related statistics according to process IDs, including their memory usage and CPU information:
+The /proc can also form the basis for understanding CPU and memory consumption. Monitoring processes often involve parsing information from /proc to extract consumption-related statistics according to process IDs, including their memory usage and CPU information:
 
 \begin{itemize}
     \item \textbf{/proc/cpuinfo} helps us know the frequency of CPU cores in the current node.
@@ -376,7 +376,9 @@ Moreover, TimescaleDB effectively addresses cardinality issues. Leveraging hyper
 
 \textbf{Compression} functionalities in TimescaleDB further enhance data storage efficiency. By employing compression algorithms such as delta encoding, delta-of-delta, simple-8b, run-length encoding, etc. \cite{timescaledb-compress}, TimescaleDB significantly reduces disk space utilization, achieving very high compression ratios.
 
-TimescaleDB also facilitates the implementation of \textbf{data retention} policies as background jobs, automating the removal of obsolete data chunks and ensuring efficient data lifecycle management. These features collectively make TimescaleDB a preferred choice over other time-series databases, especially for applications requiring robust performance under high cardinality conditions.
+TimescaleDB also facilitates the implementation of \textbf{data retention} policies as background jobs, automating the removal of obsolete data chunks and ensuring efficient data lifecycle management.
+
+These features collectively make TimescaleDB a preferred choice over other time-series databases, especially for applications requiring robust performance under high cardinality conditions.
 
 \section{Database techniques}
 Databases are crucial in effectively managing and analyzing time-series data generated in real-time GPU resource monitoring. Our motivation is to create a system that can handle long-term reliable storage and provide near real-time status overviews without heavy SQL searches, thus contributing to resolving both \textbf{RQ1} and \textbf{RQ2} in Section \ref{sec:rqs}. To achieve this, we explore three significant database techniques that can be employed: Triggers, LISTEN \& NOTIFY, and Continuous Aggregates.
@@ -423,7 +425,7 @@ It is up to the underlying PostgreSQL application programming interface for the 
 
 \textbf{NOTIFY} enables processes accessing a shared PostgreSQL database to exchange information. The data transmitted to the client during a notification event includes the name of the notification channel, the process ID (PID) of the notifying session's server, and the payload string, which defaults to an empty string if unspecified, to client applications previously registered in listening for events on a specified channel within the current database. These notifications are broadcast to all listeners. More complex data structures can be established with database tables, to convey additional information from the notifier to the listeners. 
 
-A practical programming approach to signaling changes to a particular table using NOTIFY involves embedding the NOTIFY command within a statement trigger, triggered by table updates. This automates the process upon table modification.
+A practical programming approach to signaling changes to a particular table using NOTIFY involves embedding the NOTIFY command within a trigger, triggered by table insertion.
 
 % It is worth noting that notifications issued within a transaction are only dispatched upon transaction commitment, ensuring consistency in the event of transaction rollback. Notifications received during a transaction are deferred until after completion, to avoid premature delivery in case of a transaction abort.
 
@@ -511,7 +513,7 @@ This section explores the alert algorithms we can use, including descriptive sta
 
 \subsection{Descriptive statistics}
 \label{subsec:statistics}
-Descriptive statistics is a branch of statistics that summarizes the data at hand through numerical calculations. Its main purpose is to simplify and present data in an easy-to-understand format. Key measures include:
+Descriptive statistics is a branch of statistics that summarizes the data through numerical calculations. Its main purpose is to simplify and present data in an easy-to-understand format. Key measures include:
 
 \begin{itemize}
 \item \textbf{Central Tendency:} Mean, median, and mode. These measures of central tendency describe a distribution's center position.
@@ -570,7 +572,7 @@ Here is a list of definitions of these possible descriptive statistics:
 A decision tree \cite{song2015decision} represents possible solutions to a decision based on branches of certain conditions and reaches several conclusions based on the conditions. As shown in Figure \ref{fig_decision_tree}, the main components of a decision tree are:
 
 \begin{itemize}
-\item \textbf{Root Node:} Division of two or more homogeneous sets for the entire dataset.
+\item \textbf{Root Node:} Collection of all the data that can be divided into two or more homogeneous sets.
 \item \textbf{Splitting:} The process of dividing a parent node into two or more sub-nodes.
 \item \textbf{Decision Node:} The split sub-nodes.
 \item \textbf{Leaf Node:} Terminal nodes that do not further split.
@@ -607,7 +609,7 @@ The exploration began with an overview of Slurm, emphasizing its role in resourc
 
 Subsequently, we provided insights into the architecture and specifications of three HPC systems at the CSC-IT Center for Science: Puhti, Mahti, and LUMI. These systems represent state-of-the-art computing clusters with diverse GPU configurations, highlighting the need for a flexible and scalable monitoring solution to accommodate varying hardware architectures.
 
-We then delved into monitoring systems, exploring essential techniques and tools such as /proc, Cgroups, NVML, and ROCm-SMI for capturing resource utilization metrics at both the CPU and GPU levels. Additionally, we discussed the significance of time-series databases like TimescaleDB and related techniques such as LISTEN \& NOTIFY, triggers, and continuous aggregates in efficiently storing and querying monitoring data, enabling real-time analysis and visualization.
+We then delved into monitoring systems, exploring essential techniques and tools such as /proc, Cgroups, NVML, and ROCm-SMI for capturing resource utilization metrics at both the CPU and GPU levels. Additionally, we discussed the significance of time-series databases like TimescaleDB and related techniques such as triggers, LISTEN \& NOTIFY, and continuous aggregates in efficiently storing and querying monitoring data, enabling real-time analysis and visualization.
 
 % Event stream management platforms such as MapReduce, Apache Spark, Apache Flink, and Apache Kafka/Pulsar were also examined, offering insights into their capabilities and ideal use cases for real-time data processing and analytics.
 

@@ -274,6 +274,7 @@ Table \ref{tab:slurm_job_metadata} shows how we define the database table for st
   "method":"stop-job",
   "slurmInternalID":8934,
   "hostname":"g1101",
+  "gpu":"1",
   "gpu_energy":[
     {
       "pciBusId":"00000000:03:00.0",
@@ -333,10 +334,10 @@ FOR EACH ROW EXECUTE FUNCTION notify_new_gpu_usage_insertion();
 
 
 \begin{itemize}
-    \item \textbf{notify\_new\_job\_metadata\_insertion()}: This function retrieves the newly inserted row and constructs a notification message using concatenation (\textit{||}). The message includes all the fields except the timestamp from the inserted row. Finally, the \textit{pg\_notify()} function is called to send a notification to a specific channel named \textit{job\_updates}.
+    \item \textbf{notify\_new\_job\_metadata\_insertion()}: This function retrieves the newly inserted row and constructs a notification message using concatenation (\textit{||}) separated with \textit{|} to avoid any collision with the JSON format text (metadata). The message includes all the fields except the timestamp from the inserted row. Finally, the \textit{pg\_notify()} function is called to send a notification to a specific channel named \textit{job\_updates}.
     \item \textbf{job\_metadata\_insertion\_notify\_trigger}: This trigger fires after each insertion into the \textit{slurm\_job\_metadata} table. It is associated with the \\
     \textit{notify\_new\_job\_metadata\_insertion()} function, causing the function to execute automatically whenever new data is inserted into the table.
-    \item \textbf{notify\_new\_gpu\_usage\_insertion()}: Similar to the first function, it constructs a notification message using all the fields except the timestamp, username, and total\_mem from the inserted row. It then sends a notification to the \\ \textit{gpu\_usage\_insertion} channel.
+    \item \textbf{notify\_new\_gpu\_usage\_insertion()}: Similar to the first function, it constructs a notification message using all the fields except the timestamp, username, and total\_mem from the inserted row seperated by commas (\textit{,}). It then sends a notification to the \textit{gpu\_usage\_insertion} channel.
     \item \textbf{gpu\_usage\_insertion\_notify\_trigger}: This trigger fires after each insertion into the \textit{gpu\_usage} table and is associated with the \textit{notify\_new\_gpu\_usage\_insertion()} function, triggering it automatically upon insertion of new data.
 \end{itemize}
 
@@ -345,7 +346,7 @@ These triggers and notification functions facilitate real-time communication wit
 \subsection{Timescale Reader}
 The Timescale Reader component facilitates the retrieval of metrics from TimescaleDB for analysis and reporting. It provides a RESTful API for building other elements that support administrators in gaining insights into historical resource utilization, aiding in capacity planning, performance optimization, and trend analysis. It also enables the integration of other components to show statistics to users via GUI or CLI. The Timescale Reader complements the real-time monitoring capabilities, providing a comprehensive view of metrics across different time intervals.
 
-We have a centralized web page that allows users to use the APIs provided by Timescale Reader to check job usage data, as shown in Figure \ref{fig_gpu-usage-history-dashboard}. Figure \ref{fig_gpu-usage-graph} shows one example of a graph rendered via Timescale Chart through Timescale Reader API data. It also has accessibility support to help viewers with vision deficiencies (e.g., color blindness or partial sight) more easily understand the data with patterns and gradients, as shown in Figure \ref{fig_gpu-usage-graph-accessibility}.
+We have a centralized web page that allows users to use the APIs provided by Timescale Reader to check job history data with interactive graphs about the GPU load, memory, power, and temperature, as shown in Figure \ref{fig_gpu-usage-history-dashboard}. Figure \ref{fig_gpu-usage-graph} shows one example of a graph rendered via Timescale Chart through Timescale Reader API data. It also has accessibility support to help viewers with vision deficiencies (e.g., color blindness or partial sight) more easily understand the data with patterns and gradients, as shown in Figure \ref{fig_gpu-usage-graph-accessibility}.
 
 \begin{figure}[H]
     \centering
@@ -368,7 +369,7 @@ We have a centralized web page that allows users to use the APIs provided by Tim
     \label{fig_gpu-usage-graph-accessibility}
 \end{figure}
 
-Below is an example showing the output of the \textit{seff} command. The GPU job efficiency section is printed via the Timescale Reader API. Here, we show the metrics related to the GPU, including the load, memory, and energy. Each entry shows the hostname, the GPU ID about the metrics, and the aggregated mean, standard deviation, and maximum value for the whole job history.
+Below is an example showing the output of our modified \textit{seff} command. The GPU job efficiency section is printed via the Timescale Reader API. Here, we show the metrics related to the GPU, including the load, memory, and energy. Each entry shows the hostname, the GPU ID about the metrics, and the aggregated mean, standard deviation, and maximum value for the whole job history.
 
 \clearpage
 
@@ -416,7 +417,7 @@ The API design for the Timescale Reader is as follows:
 \begin{itemize}
     \item \textbf{/version}: Same as Timescale Ingest, it displays the version information and build time.
     \item \textbf{/status}: Liveness checking endpoint.
-    \item \textbf{/chart}: Serving the static files for Timescale Chart JS web interface, available parameters can be referred from Table \ref{tab:chart_params}.
+    \item \textbf{/chart}: Serving the static files for Timescale Chart JS web interface (an encapsulated web component using Chart.js), available parameters can be referred from Table \ref{tab:chart_params}.
     \item \textbf{/getJobs}: Endpoint for listing all the available job IDs in the database with valid GPU monitoring data, meaning those jobs are long enough to view data.
     \item \textbf{/getData/:table/:jobid}: Fetching the raw (unaggregated) history data in JSON format to be rendered by Timescale Chart.
     \item \textbf{/getLoad/:metric/:resource/:jobid/:type}: Displaying aggregated result of the history monitoring data.
@@ -685,7 +686,7 @@ The \textbf{API design} of the Timescale Alert is as follows, which provides the
     \item \textbf{/}: Displaying the current alert status. Host, username, and job ID can also be the filter.
 \end{itemize}
 
-Below is an example showing the GPU alert history output section of the \texttt{seff} command. The alert information is printed via the above-mentioned \texttt{/history} endpoint. Here are a few alert histories related to GPU usage. Each entry shows the time when the alert happened, the hostname, and the GPU ID that generated the alert event. It also shows the 75th percentile aggregation result for the sliding window time frame that contributes to the alert status change, and the \texttt{Normal} column shows whether this entry generates a new alert (with \texttt{x}) or clears the old alert (with \texttt{v}).
+Below is an example showing the GPU alert history output section of the modified \texttt{seff} command we added for Timescale Alert. The alert information is printed via the above-mentioned \texttt{/history} endpoint. Here are a few alert histories related to GPU usage. Each entry shows the time when the alert happened, the hostname, and the GPU ID that generated the alert event. It also shows the 75th percentile aggregation result for the sliding window time frame that contributes to the alert status change, and the \texttt{Normal} column shows whether this entry generates a new alert (with \texttt{x}) or clears the old alert (with \texttt{v}).
 
 \begin{lstlisting}
 $ seff 5465
@@ -711,7 +712,9 @@ The alert dashboard reads data to display and learn about the current job status
     \label{fig_status_dashboard}
 \end{figure}
 
-In addition, the dashboard allows users to disable or re-enable job alerts, so that admins can improve the alert manually and focus more on those jobs, that have not been checked or can be improved. The users can also click on the button to check more detailed JSON information about jobs from the output of \texttt{sacct --json}. (We don't render that information directly into the table, since the SQL database behind Slurm runs full steam for several seconds while calling that for one single job)
+In addition, the dashboard allows users to disable or re-enable job alerts, so that admins can improve the alert manually and focus more on those jobs, that have not been checked or can be improved. The users can also click on the button to check more detailed JSON information about jobs from the output of \texttt{sacct --json}. (We don't render that information directly into the table, since the SQL database behind Slurm runs full steam for several seconds when calling that even for a single job)
+
+Besides showing the alert status, the dashboard also displays the watermark information for the job lifetime metrics, such as the average, minimum and maximum GPU load, to give admins a whole picture of what might happen to the job.
 
 Aside from sorting the data, the dashboard allows the viewers to filter the data by job ID, user name, hostname, and alert status, so viewers can quickly target different entities in question. When we filter by user name or job ID, the dashboard also allows admins to send emails to the user in question, with one click, from the preset template, for the current jobs in the alert. One example email generated by the dashboard, when we click the button in Figure \ref{fig_status_dashboard}, is as follows:
 
@@ -745,7 +748,7 @@ Best regards,
 CSC computing services
 \end{minted}
 
-We also have a dashboard showing the alert history, as presented in Figure \ref{fig_history_dashboard}.
+We also have a dashboard showing the alert history, as presented in Figure \ref{fig_history_dashboard}, which shows the alert status change time, job ID, user name, hostname, GPU ID, alert type, alert value (for usage alert, it will be the 75\% percentile), and whether the status change generate new alert or clear out an old one. The history dashboard also shares the same features with the status dashboard.
 
 \begin{figure}[H]
     \centering
