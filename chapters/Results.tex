@@ -29,7 +29,7 @@ We have two compute nodes in our test environment. All the containers are listed
 
 To make testing easier with an arbitrary number of GPUs in a container without needing them, we created a fake Nvidia library that implements the Nvidia-ML interface for generating random data.
 
-We also have separate testing setups for each component, either by randomly generated data or by replaying the data we collected in production from the database dump.
+We also have separate testing setups, either by randomly generated data or by replaying the data we collected in production from the database dump.
 
 \begin{itemize}
     \item For the random data benchmark, we spawn maximum 23824 (2978*8) Go routines that write to the database simultaneously, which is, i.e., the maximum GPU number we have in LUMI, to simulate the heaviest situation we can have in the pre-exascale supercomputer.
@@ -123,7 +123,7 @@ Hence, the results confirmed our empirical analysis in Section \ref{sec:alertser
 
 \section{Production}
 
-The production evaluation involved deploying the real-time GPU monitoring system in a live HPC environment, including Puhti and Mahti. This evaluation allows us to test the practicability of alerting for real-world workloads from diverse scientific domains, including molecular dynamics simulations, computational chemistry, and machine learning. Unfortunately, due to the time limit for the thesis writing process, we cannot finish deploying the alert services in production for the pre-exascale HPC system, LUMI. Still, we have verified this possibility in Section \ref{subsection:experiment} through a benchmark.
+The production evaluation involved deploying the real-time GPU monitoring system in a live HPC environment, including Puhti and Mahti. This evaluation allows us to test the practicability of alerting for real-world workloads from diverse scientific domains, including molecular dynamics simulations, computational chemistry, and machine learning. Unfortunately, due to the time limit for the thesis writing process, we cannot finish deploying the alert services in production for the pre-exascale HPC system, LUMI. Still, we have verified the possibility of deploying it in a pre-exascale system in Section \ref{subsection:experiment} through a benchmark.
 
 % We intended to deploy this whole infrastructure on LUMI as well. Unfortunately, we were unable to do so during the thesis writing period due to the shortage of administrators on the LUMI side.
 
@@ -190,7 +190,7 @@ For some cases, the support team also gets alerted by jobs that only requested 1
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{figures/job-interactive.png}
-    \caption{Job usage graph for a interactive job on heavy GPU compute partition}
+    \caption{Job usage graph for an interactive job on heavy GPU compute partition}
     \label{fig_job_interactive}
 \end{figure}
 

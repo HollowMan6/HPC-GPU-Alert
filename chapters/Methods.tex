@@ -92,7 +92,7 @@ In addition to the /write API endpoint as demonstrated above, the API design for
 \end{itemize}
 
 \subsection{TimescaleDB}
-TimescaleDB, as the time-series database, introduces a relational aspect to monitoring. This component stores metrics in a structured manner, allowing for complex SQL queries and analysis. TimescaleDB accommodates the evolving nature of HPC workloads by enabling the retention of historical data. It also accelerates the query speed, essential for identifying trends and patterns over time.
+TimescaleDB, as the time-series database, introduces a relational aspect to monitoring. This component stores metrics in a structured manner, allowing for complex SQL queries and analysis. TimescaleDB accommodates the evolving nature of HPC workloads by enabling the retention of historical data. It also accelerates the query speed, which is essential for identifying trends and patterns over time.
 
 Table \ref{tab:gpu_usage} shows how we define the database table for storing the GPU usage data at the job level collected by MonServer. These give us a basic idea of how well the job performs using GPUs.
 
@@ -229,7 +229,7 @@ Table \ref{tab:slurm_job_metadata} shows how we define the database table for st
 
 \end{lstlisting}
 
-    \item \textbf{stop-task}: denotes completing or terminating a task within a job. Like the start task, it includes metadata for the task and the energy consumption of GPUs allocated to the job during its execution.
+    \item \textbf{stop-task}: denotes completing or terminating a task within a job. Like the start task, it includes metadata for the task and the energy consumption of GPUs allocated to the task-related job during its execution.
 
 \begin{lstlisting}[language=JSON]
 {
@@ -337,7 +337,7 @@ FOR EACH ROW EXECUTE FUNCTION notify_new_gpu_usage_insertion();
     \item \textbf{notify\_new\_job\_metadata\_insertion()}: This function retrieves the newly inserted row and constructs a notification message using concatenation (\textit{||}) separated with \textit{|} to avoid any collision with the JSON format text (metadata). The message includes all the fields except the timestamp from the inserted row. Finally, the \textit{pg\_notify()} function is called to send a notification to a specific channel named \textit{job\_updates}.
     \item \textbf{job\_metadata\_insertion\_notify\_trigger}: This trigger fires after each insertion into the \textit{slurm\_job\_metadata} table. It is associated with the \\
     \textit{notify\_new\_job\_metadata\_insertion()} function, causing the function to execute automatically whenever new data is inserted into the table.
-    \item \textbf{notify\_new\_gpu\_usage\_insertion()}: Similar to the first function, it constructs a notification message using all the fields except the timestamp, username, and total\_mem from the inserted row seperated by commas (\textit{,}). It then sends a notification to the \textit{gpu\_usage\_insertion} channel.
+    \item \textbf{notify\_new\_gpu\_usage\_insertion()}: Similar to the first function, it constructs a notification message using all the fields except the timestamp, username, and total\_mem from the inserted row separated by commas (\textit{,}). It then notifies through the \textit{gpu\_usage\_insertion} channel.
     \item \textbf{gpu\_usage\_insertion\_notify\_trigger}: This trigger fires after each insertion into the \textit{gpu\_usage} table and is associated with the \textit{notify\_new\_gpu\_usage\_insertion()} function, triggering it automatically upon insertion of new data.
 \end{itemize}
 
@@ -562,7 +562,7 @@ In the hope of doing labeling automatically, we also did the silhouette analysis
 
 Ultimately, we used more descriptive statistics to help understand its central tendency, spread, and shape to aid alerting. We can use nine descriptive statistics metrics to provide valuable insights into the characteristics of the data: percentiles (25\%, 50\%, 75\%), kurtosis, maximum, minimum, skewness, standard deviation, and variance, as defined in Subsection \ref{subsec:statistics}.
 
-The histogram distribution graph is shown in Figure \ref{fig_load_gpu_histogram_1} and Figure \ref{fig_load_gpu_histogram_2}. The graph shows that kurtosis, mean, skewness, and standard deviation have a central tendency. We cannot find a good separation for these data, so these metrics cannot separate good and bad jobs. Combined with the analysis of the monitoring data in production and the actual need for job alerting, which is to find out the bad jobs that can be significantly improved, we eventually fine-tuned and discovered that 20 in the 75th percentile and 32 in the maximum are good separations, as defined in Algorithm \ref{algo:statistics}.
+Figure \ref{fig_load_gpu_histogram_1} and Figure \ref{fig_load_gpu_histogram_2} show the histogram distribution graph. The graph shows that kurtosis, mean, skewness, and standard deviation have a central tendency. We cannot find a good separation for these data, so these metrics cannot separate good and bad jobs. Combined with the analysis of the monitoring data in production and the actual need for job alerting, which is to find out the bad jobs that can be significantly improved, we eventually fine-tuned and discovered that 20 in the 75th percentile and 32 in the maximum are good separations, as defined in Algorithm \ref{algo:statistics}.
 
 \begin{algorithm}[H]
 \SetAlgoLined
