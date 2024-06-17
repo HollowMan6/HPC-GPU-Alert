@@ -497,7 +497,7 @@ Regarding the design of the alert algorithms for GPU usage: many high-performanc
 \label{algo:ml}
 \end{algorithm}
 
-Unsupervised machine learning, such as reinforcement learning, is hard to train and interpret. Deep learning algorithms are also very slow to run, so they might not fit our need for real-time job analysis. Most importantly, we cannot find a good reward function. The only way is from human feedback.
+Unsupervised machine learning, such as reinforcement learning, is hard to train and interpret. Deep learning algorithms are also very slow to run, so they do not fit our need for real-time job analysis. Most importantly, we cannot find a good reward function. The only way is from human feedback.
 
 For supervised machine learning, such as random forests that involve decision trees, although it can be much faster to run, all the data collected from the monitoring system is unlabeled. It is unrealistic for humans to label all those data manually.
 
@@ -748,7 +748,7 @@ Best regards,
 CSC computing services
 \end{minted}
 
-We also have a dashboard showing the alert history, as presented in Figure \ref{fig_history_dashboard}, which shows the alert status change time, job ID, user name, hostname, GPU ID, alert type, alert value (for usage alert, it will be the 75\% percentile), and whether the status change generate new alert or clear out an old one. The history dashboard also shares the same features with the status dashboard.
+We also have a dashboard showing the alert history, as presented in Figure \ref{fig_history_dashboard}, which shows the alert status change time, job ID, user name, hostname, GPU ID, alert type, alert value (for usage alert, it will be the 75\% percentile), and whether the status change generates a new alert or clear out an old one. The history dashboard also shares the same features as the status dashboard.
 
 \begin{figure}[H]
     \centering

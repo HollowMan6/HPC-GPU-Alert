@@ -1,7 +1,7 @@
 %!TEX root = ../Thesis.tex
 \chapter{Introduction}
 \label{chap:introduction}
-In this chapter, we provide an overview of the thesis, which includes its foundational background, the purpose and objectives to be pursued, and the identified problems. Additionally, we point out the thesis's contributions, and structure.
+This chapter provides an overview of the thesis, including its foundational background, the purpose and objectives to be pursued, and the identified problems. Additionally, we point out the thesis's contributions, and structure.
 
 \section{Background}
 In contemporary computational science and AI, using HPC systems has become advantageous and indispensable. As the boundaries of human knowledge expand, so do the complexities of the problems we seek to solve. From simulating climate models to analyzing vast datasets in genomics and training deep neural networks to powering advanced simulations in fluid dynamics, HPC emerges as the bedrock for modern scientific research and technological advancement.
@@ -82,7 +82,7 @@ This involves data organization, scalability, and fault tolerance to ensure reli
     
     \item \textbf{RQ4}: \textit{How to find the most reliable algorithm for generating alerts?}
 
-This includes assessing different algorithms' accuracy, efficiency, and scalability to determine their suitability for real-time alert generation for HPC.
+This includes assessing different algorithms' accuracy, efficiency, and scalability to determine their suitability for real-time alert generation of HPC.
 
 \end{itemize}
 
@@ -99,14 +99,14 @@ The contributions of this thesis are as follows:
 
 \section{Thesis structure}
 
-In this thesis, we systematically explore techniques and methodologies for designing and implementing a monitoring system and alert service for GPU resource utilization on HPC clusters. Following the introduction, which provides background information, outlines the application domains, and presents research questions and contributions, the thesis is organized as follows:
+This thesis explores techniques and methodologies for designing and implementing a monitoring system and alert service for GPU resource utilization on HPC clusters. Following the introduction, which provides background information, outlines the application domains, and presents research questions and contributions, the thesis is organized as follows:
 
-Chapter \ref{chap:background} focuses on the background, which discusses various techniques for building the monitoring system and the alert service. This includes an examination of job schedulers, an overview of HPC systems at CSC (including Puhti, Mahti, and LUMI), an overview of the time-series database TimescaleDB, as well as an exploration of different monitoring systems techniques, such as /proc, Cgroups, NVML, and ROCm-SMI, database techniques including triggers, LISTEN \& NOTIFY, and continuous aggregates. Additionally, the section delves into alert algorithms, covering descriptive statistics, decision trees, and random forests, K-Means clustering and silhouette analysis.
+Chapter \ref{chap:background} focuses on the background, which discusses various techniques for building the monitoring system and the alert service. This includes an examination of job schedulers, an overview of HPC systems at CSC (including Puhti, Mahti, and LUMI), an overview of the time-series database TimescaleDB, and an exploration of different monitoring systems techniques, such as /proc, Cgroups, NVML, and ROCm-SMI, as well as database techniques, including triggers, LISTEN \& NOTIFY, and continuous aggregates. Additionally, the section delves into alert algorithms, covering descriptive statistics, decision trees, random forests, K-means clustering, and silhouette analysis.
 
 Chapter \ref{chap:methods} details the methods we use for implementing the system, which includes developing a monitoring daemon, timescale ingest, timescale reader, alert service, and alert dashboard, configuring TimescaleDB, and designing alert algorithms.
 
 In Chapter \ref{chap:result}, benchmark results from both experimental and production setups are presented and analyzed. This includes an overview of the experimental setup, benchmarking results, and insights from production environments by case studies.
 
-Chapter \ref{chap:discussion} discusses the findings, analyzing related work and their implications and limitations.
+Chapter \ref{chap:discussion} discusses the findings, analyzing related work and their limitations.
 
 Finally, Chapter \ref{chap:conclusions} provides concluding remarks, including a summary of critical points and suggestions for future work.
