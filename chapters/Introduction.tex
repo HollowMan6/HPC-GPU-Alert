@@ -1,7 +1,7 @@
 %!TEX root = ../Thesis.tex
 \chapter{Introduction}
 \label{chap:introduction}
-This chapter provides an overview of the thesis, including its foundational background, the purpose and objectives to be pursued, and the identified problems. Additionally, we point out the thesis's contributions, and structure.
+This Chapter provides an overview of the thesis, including its foundational background, the purpose and objectives to be pursued, and the identified problems. Additionally, we point out the thesis's contributions, and structure.
 
 \section{Background}
 In contemporary computational science and AI, using HPC systems has become advantageous and indispensable. As the boundaries of human knowledge expand, so do the complexities of the problems we seek to solve. From simulating climate models to analyzing vast datasets in genomics and training deep neural networks to powering advanced simulations in fluid dynamics, HPC emerges as the bedrock for modern scientific research and technological advancement.
@@ -101,7 +101,7 @@ The contributions of this thesis are as follows:
 
 This thesis explores techniques and methodologies for designing and implementing a monitoring system and alert service for GPU resource utilization on HPC clusters. Following the introduction, which provides background information, outlines the application domains, and presents research questions and contributions, the thesis is organized as follows:
 
-Chapter \ref{chap:background} focuses on the background, which discusses various techniques for building the monitoring system and the alert service. This includes an examination of job schedulers, an overview of HPC systems at CSC (including Puhti, Mahti, and LUMI), an overview of the time-series database TimescaleDB, and an exploration of different monitoring systems techniques, such as /proc, Cgroups, NVML, and ROCm-SMI, as well as database techniques, including triggers, LISTEN \& NOTIFY, and continuous aggregates. Additionally, the section delves into alert algorithms, covering descriptive statistics, decision trees, random forests, K-means clustering, and silhouette analysis.
+Chapter \ref{chap:background} focuses on the background, which discusses various techniques for building the monitoring system and the alert service. This includes an examination of job schedulers, an overview of HPC systems at CSC (including Puhti, Mahti, and LUMI), an overview of the time-series database TimescaleDB, and an exploration of different monitoring systems techniques, such as /proc, Cgroups, NVML, and ROCm-SMI, as well as database techniques, including triggers, LISTEN \& NOTIFY, and continuous aggregates. Additionally, this Chapter delves into alert algorithms, covering descriptive statistics, decision trees, random forests, K-means clustering, and silhouette analysis.
 
 Chapter \ref{chap:methods} details the methods we use for implementing the system, which includes developing a monitoring daemon, timescale ingest, timescale reader, alert service, and alert dashboard, configuring TimescaleDB, and designing alert algorithms.
 

@@ -2,7 +2,7 @@
 \chapter{Background}
 \label{chap:background}
 \section{Job scheduler}
-This chapter briefly overviews the well-known open-source workload manager we use at CSC -- IT Center for Science, Slurm \cite{10.1007/10968987_3}.
+This Chapter briefly overviews the well-known open-source workload manager we use at CSC -- IT Center for Science, Slurm \cite{10.1007/10968987_3}.
 
 Let's first start with some definitions:
 
@@ -10,7 +10,7 @@ Let's first start with some definitions:
     \item \textbf{Resource Manager} is a software component for overseeing the resources within a cluster, typically under the control of a scheduler. Its responsibilities include:
 
     \begin{itemize}
-        \item Management of various resources such as tasks, nodes, CPUs, memory, and network.
+        \item Management of various resources such as nodes, CPUs, GPUs, memory, and network.
         \item Coordination of job execution across compute nodes to ensure efficient resource utilization.
         \item Prevention of resource overlap among concurrent jobs.
     \end{itemize}
@@ -136,7 +136,7 @@ Slurm plays a crucial role in maximizing the utilization of computational resour
 % \end{enumerate}
 
 \section{HPC systems at CSC}
-Table \ref{tab:gpu_details} shows the GPU statistics for the three HPC systems at the CSC-IT Center for Science: Puhti, Mahti, and LUMI. Understanding the architecture and capabilities of these systems is crucial for tailoring GPU monitoring and alerting strategies and ensuring seamless integration with existing infrastructure. This section provides an overview of the GPU computing nodes for these HPC systems.
+Table \ref{tab:gpu_details} shows the GPU statistics for the three HPC systems at the CSC-IT Center for Science: Puhti, Mahti, and LUMI. Understanding the architecture and capabilities of these systems is crucial for tailoring GPU monitoring and alerting strategies and ensuring seamless integration with existing infrastructure. This Section provides an overview of the GPU computing nodes for these HPC systems.
 
 \begin{table}[H]
     \centering
@@ -158,7 +158,7 @@ Table \ref{tab:gpu_details} shows the GPU statistics for the three HPC systems a
 \end{table}
 
 \subsection{Puhti}
-Puhti \cite{puhti} is an Atos BullSequana X400 cluster. Its AI partition comprises 80 GPU nodes, tailored specifically for artificial intelligence tasks, and collectively achieve a peak performance of 2.7 petaflops. Each node integrates the Intel Xeon Gold 6230 processors of the Cascade Lake family, which has 20 cores running at 2.1 GHz and supports AVX-512 vector instructions \& VNNI instructions for AI inference workloads. Each core supports simultaneous multi-threading, enabling a total thread count of 40 threads per node. Additionally, we have 4 Nvidia Volta V100 GPUs on each node, each with 32 GB of memory and connected via NVLink. Each node also features 384 GB of main memory and 3.6 TB of high-speed local storage.
+Puhti \cite{puhti} is an Atos BullSequana X400 cluster. Its AI partition comprises 80 GPU nodes, tailored specifically for artificial intelligence tasks, and collectively achieve a peak performance of 2.7 petaflops. Each node integrates the Intel Xeon Gold 6230 processors of the Cascade Lake family, which has 20 cores running at 2.1 GHz and supports AVX-512 vector instructions \& VNNI instructions for AI inference workloads. We have a total thread count of 80 threads per node (40 per socket). Additionally, we have 4 Nvidia Volta V100 GPUs on each node, each with 32 GB of memory and connected via NVLink. Each node also features 384 GB of main memory and 3.6 TB of high-speed local storage.
 
 % The interconnect architecture is based on a dual-rail Mellanox HDR100 InfiniBand setup. It offers a non-blocking fat-tree topology with a blocking factor of approximately 2:1 and delivers an impressive aggregate bandwidth of 200 Gbps, ensuring efficient connectivity across the network.
 
@@ -287,7 +287,7 @@ The CPU of LUMI-G nodes is a 64-core AMD EPYC 7A53 Trento CPU. These CPU cores, 
 % \end{figure}
 
 \section{Monitoring tools}
-A robust selection of monitoring techniques is crucial for capturing accurate metrics, diagnosing performance issues, and ensuring efficient resource utilization. This section explores various components for building a monitoring system, each offering unique capabilities for monitoring within large-scale distributed computing clusters, thus providing the cornerstone for building an accurate alert algorithm.
+A robust selection of monitoring techniques is crucial for capturing accurate metrics, diagnosing performance issues, and ensuring efficient resource utilization. This Section explores various components for building a monitoring system, each offering unique capabilities for monitoring within large-scale distributed computing clusters, thus providing the cornerstone for building an accurate alert algorithm.
 
 \subsection{Cgroups}
 Cgroups \cite{7876184} is a Linux kernel feature that enables the isolation and accounting of resources, including CPU, memory, and devices, among a collection of processes. It provides a means to track and manage CPU and memory utilization per process.
@@ -343,7 +343,7 @@ For HPC clusters that utilize AMD GPUs, such as LUMI, integrating ROCm-SMI into 
 
 \section{Time-series databases}
 
-% This section explores two prominent time-series databases, InfluxDB and TimescaleDB \cite{le2021developing}.
+% This Section explores two prominent time-series databases, InfluxDB and TimescaleDB \cite{le2021developing}.
 
 % \subsection{InfluxDB}
 % InfluxDB is a high-performance, open-source time series database developed by InfluxData. It is written in Go and is optimized for handling time series data at scale, making it a popular choice for use cases involving monitoring performance metrics, IoT data, and real-time analytics.
@@ -469,7 +469,7 @@ Continuous aggregates comprise the following components:
 For real-time continuous aggregates, it provides data by combining pre-aggregated data from materialized views with recent unaggregated data, ensuring that query results remain up-to-date.
 
 % \section{Event stream management}
-% Event Stream Management involves ingesting, analyzing, and storing streams of events, which are discrete data points denoting state changes. This allows for real-time analytics and decision-making. In this section, we explore some of the state-of-the-art open-source event stream management platforms to give an overview.
+% Event Stream Management involves ingesting, analyzing, and storing streams of events, which are discrete data points denoting state changes. This allows for real-time analytics and decision-making. In this Section, we explore some of the state-of-the-art open-source event stream management platforms to give an overview.
 
 % \begin{itemize}
 %     \item \textbf{MapReduce} \cite{hashem2016mapreduce} is a programming model for processing large data sets with a parallel, distributed algorithm on a cluster. A MapReduce program comprises a map procedure, which performs filtering and sorting, and a reduce method, which performs a summary operation. The MapReduce algorithm contains two important tasks, namely Map and Reduce. The map script takes some input data and maps it to \texttt{<key, value>} pairs according to the specifications. The reduce script takes a collection of \texttt{<key, value>} pairs and "reduces" them according to the specifications. MapReduce is primarily used for batch processing of large datasets and is not designed for real-time processing or low-latency queries.
@@ -509,7 +509,7 @@ For real-time continuous aggregates, it provides data by combining pre-aggregate
 % Kapacitor is an open-source data processing framework that makes it easy to create alerts, run ETL jobs, and detect anomalies. Kapacitor tasks define work to do on a data set using TICKscript syntax. Kapacitor tasks include stream tasks, which replicate data written to InfluxDB in Kapacitor, offloading query overhead and requiring Kapacitor to store the data on disk, and batch tasks, which query and process data for a specified interval.
 
 \section{Alert algorithms}
-This section explores the alert algorithms we can use, including descriptive statistics, decision trees, random forest, and K-Means clustering, thus trying to resolve \textbf{RQ4} in Section \ref{sec:rqs}. Although deep learning models are powerful tools with great flexibility and capacity to learn feature hierarchies from raw data, they come with challenges. They can hardly be used in our case, since they require a large amount of data and substantial computational resources, which makes them less efficient compared to simpler models like decision trees and random forests when dealing with smaller datasets or when computational resources are limited. Furthermore, deep learning models can be challenging to interpret and require careful tuning to avoid over-fitting.
+This Section explores the alert algorithms we can use, including descriptive statistics, decision trees, random forest, and K-Means clustering, thus trying to resolve \textbf{RQ4} in Section \ref{sec:rqs}. Although deep learning models are powerful tools with great flexibility and capacity to learn feature hierarchies from raw data, they come with challenges. They can hardly be used in our case, since they require a large amount of data and substantial computational resources, which makes them less efficient compared to simpler models like decision trees and random forests when dealing with smaller datasets or when computational resources are limited. Furthermore, deep learning models can be challenging to interpret and require careful tuning to avoid over-fitting.
 
 \subsection{Descriptive statistics}
 \label{subsec:statistics}
@@ -603,7 +603,7 @@ Silhouette coefficients close to +1 imply that a sample is far from neighboring 
 % Silhouette analysis can be used to evaluate the validity of the clustering results. It can be compared with the K-means cost function and the original silhouette to find the best way to automate the selection of the best clustering result from a set of K-means clusterings with different parameter configurations.
 
 \section{Summary}
-In this section, we have delved into the intricacies of designing and implementing a real-time GPU monitoring and alerting system for large-scale distributed computing environments, focusing mainly on HPC clusters. By leveraging monitoring techniques, database technologies, and event stream management platforms, we aimed to address the need for efficient resource utilization and performance monitoring in these complex computing infrastructures.
+In this Section, we have delved into the intricacies of designing and implementing a real-time GPU monitoring and alerting system for large-scale distributed computing environments, focusing mainly on HPC clusters. By leveraging monitoring techniques, database technologies, and event stream management platforms, we aimed to address the need for efficient resource utilization and performance monitoring in these complex computing infrastructures.
 
 The exploration began with an overview of Slurm, emphasizing its role in resource allocation, job scheduling, and management.
 

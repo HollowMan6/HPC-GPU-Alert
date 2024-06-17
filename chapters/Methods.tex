@@ -1,10 +1,10 @@
 %!TEX root = ../Thesis.tex
 \chapter{Methods}
 \label{chap:methods}
-Implementing real-time GPU resource monitoring and alerting involves systematically integrating various components. This chapter provides detailed insight into how we construct such a system, including the architecture, design, and implementation, covering key elements such as the monitoring system, alert service, and algorithms.
+Implementing real-time GPU resource monitoring and alerting involves systematically integrating various components. This Chapter provides detailed insight into how we construct such a system, including the architecture, design, and implementation, covering key elements such as the monitoring system, alert service, and algorithms.
 
 \section{Research process}
-This section outlines the approach to achieving the thesis objectives, including designing, implementing, and evaluating the monitoring system and alert service for GPU utilization on HPC clusters.
+This Section outlines the approach to achieving the thesis objectives, including designing, implementing, and evaluating the monitoring system and alert service for GPU utilization on HPC clusters.
 
 \begin{enumerate}
     \item \textbf{Requirement Analysis}: We begin with a thorough analysis of the monitoring system and alert service requirements. This involves understanding the needs of HPC administrators and users, identifying key metrics and performance indicators for assessing GPU utilization and job efficiency.
@@ -36,7 +36,7 @@ Our monitoring system at the job level aims to improve observability and enable 
 
 % The monitoring system also collects status data and sends them to CSC's centralized logging system, Koivu.
 
-Communication between different components during the lifetime of a job is presented in Figure \ref{fig_monitoring}. This section will then give a detailed description of the design and how they work together.
+Communication between different components during the lifetime of a job is presented in Figure \ref{fig_monitoring}. This Section will then give a detailed description of the design and how they work together.
 
 \begin{figure}[H]
     \centering
