@@ -410,8 +410,6 @@ GPU energy
 -------------------------------------------------------------------
 \end{lstlisting}
 
-To integrate with the existing authentication mechanism, Timescale Reader will check the \textit{From:} header in the HTTP request. The request can set that header's value \textit{*} to unlimited data access. Otherwise, the user name will be set, and access to the data of the jobs will be limited to those jobs started by the user.
-
 The API design for the Timescale Reader is as follows:
 
 \begin{itemize}
@@ -725,7 +723,6 @@ baselinestretch=1.2,
 fontsize=\footnotesize,
 breaksymbolleft=]{text}
 To: johndow@users.csc.fi
-Cc: hpc-mon@csc.fi
 Subject: Low GPU utilization rate with the job you are running on Puhti
 
 Dear johndow,

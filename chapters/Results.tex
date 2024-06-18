@@ -40,9 +40,10 @@ We also have separate testing setups, either by randomly generated data or by re
 \label{subsec:performance}
 The benchmarking process focused on evaluating the system's responsiveness in detecting anomalies and the overall impact on system performance during monitoring, to assess the system's adaptability and robustness in different usage patterns.
 
-We use the local environment to run the container setup mentioned in Subsection \ref{subsection:experiment} on the 12th Gen Intel Core i7-12700H CPU with SSD and 16 GB of RAM by writing random GPU metrics data to the database continuously in an infinite loop, without any interval for writing and dumping data. We run each solution for 10 minutes and take the average of the last 2-minute delay. The benchmark result is shown in Figure \ref{fig_benchmark}:
+We use the local environment to run the container setup mentioned in Subsection \ref{subsection:experiment} on the 12th Gen Intel Core i7-12700H CPU with SSD and 16 GB of RAM by writing random GPU metrics data to the database continuously in an infinite loop, without any interval for writing and dumping data. We run each solution for 10 minutes and take the average of the last 2-minute delay. The benchmark result is shown in Figure \ref{fig_benchmark} (We apply the logarithmic scale on both the x and y axes):
 
 % import matplotlib.pyplot as plt
+% import numpy as np
 
 % # Data
 % methods = ["Polling CAGG", "Polling Direct Query", "Trigger CAGG", "Trigger in Memory"]
@@ -70,9 +71,15 @@ We use the local environment to run the container setup mentioned in Subsection 
 % axes[0].set_xlabel('Node Count * GPU')
 % axes[0].set_ylabel('Time (s)')
 % axes[0].set_title('Delay in Database Writing Transaction Commit')
+% axes[0].set_yscale('log')
 % axes[0].set_xticks([x + 0.2 * 3 / 2 for x in index])
 % axes[0].set_xticklabels(['93*8', '186*8', '372*8', '744*8', '1489*8', '2978*8'])
 % axes[0].legend()
+
+% # Set y-axis ticks and labels for GPU Write Delay plot
+% y_ticks_0 = [0.5, 1, 2, 3, 4, 5, 6, 7, 9, 11, 14, 17, 20]
+% axes[0].set_yticks(y_ticks_0)
+% axes[0].set_yticklabels([str(tick) for tick in y_ticks_0])
 
 % # Plot for Read Iteration
 % for i in range(2):
@@ -82,11 +89,17 @@ We use the local environment to run the container setup mentioned in Subsection 
 % axes[1].set_xlabel('Node Count * GPU')
 % axes[1].set_ylabel('Time (s)')
 % axes[1].set_title('Time Needed in Completing a Read Loop Iteration')
+% axes[1].set_yscale('log')
 % axes[1].set_xticks([x + 0.2 * 3 / 2 for x in index])
 % axes[1].set_xticklabels(['93*8', '186*8', '372*8', '744*8', '1489*8', '2978*8'])
 % axes[1].legend()
 
-% # Plot for Read Iteration
+% # Set y-axis ticks and labels for Read Iteration plot
+% y_ticks_1 = [0.5, 1, 2, 2.5, 3, 4, 5, 6, 7, 9, 12, 15, 20, 25, 30, 40, 50, 60]
+% axes[1].set_yticks(y_ticks_1)
+% axes[1].set_yticklabels([str(tick) for tick in y_ticks_1])
+
+% # Plot for Memory Status Dump
 % for i in range(2, 4):
 %     method = methods[i]
 %     axes[2].bar([x + i * 0.2 for x in index], read_iteration[i], 0.2, label=method, color=colors[i])
@@ -94,12 +107,19 @@ We use the local environment to run the container setup mentioned in Subsection 
 % axes[2].set_xlabel('Node Count * GPU')
 % axes[2].set_ylabel('Time (ms)')
 % axes[2].set_title('Delay in Completing a Memory Status Dump')
+% axes[2].set_yscale('log')
 % axes[2].set_xticks([x + 0.2 * 3 / 2 for x in index])
 % axes[2].set_xticklabels(['93*8', '186*8', '372*8', '744*8', '1489*8', '2978*8'])
 % axes[2].legend()
 
+% # Set y-axis ticks and labels for Memory Status Dump plot
+% y_ticks_2 = [5, 10, 20, 25, 30, 40, 50, 60, 70, 90, 120, 150, 200, 250, 300, 400, 500]
+% axes[2].set_yticks(y_ticks_2)
+% axes[2].set_yticklabels([str(tick) for tick in y_ticks_2])
+
 % plt.tight_layout()
 % plt.savefig("benchmark-data.pdf")
+
 
 \begin{figure}[H]
     \centering
