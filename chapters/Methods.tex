@@ -464,6 +464,7 @@ The human-readable printing format is as follows. Note that \#[\text{index}] wil
 
 
 \section{Alert algorithms}
+\label{sec:algo_method}
 The Alert algorithms component comprises predefined algorithms, that determine the conditions under which alerts are triggered. These algorithms consider various factors, including GPU utilization thresholds and temperature limits. The flexibility of the alert algorithms allows for customization --- based on the specific requirements of HPC clusters --- ensuring that alerts are triggered for conditions deemed critical by administrators.
 
 Regarding the design of the alert algorithms for GPU usage: many high-performance computing applications have load-balancing issues regarding pipeline parallelism, and the data has highly fluctuated characteristics for multiple GPU jobs. Thus, alerting only according to average is neither reliable nor practical, as it may not be fixable easily by the user, so those can be non-critical. Machine learning models could be one way to address the data fluctuation issue by recognizing the data pattern. Algorithm \ref{algo:ml} defines how we can use them.

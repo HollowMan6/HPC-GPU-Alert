@@ -1,0 +1,98 @@
+%!TEX root = ../Thesis.tex
+\chapter{Code and raw data for drawing Figure \ref{fig_benchmark}}
+In Subsection \ref{subsec:performance}, we have a performance benchmark, here is the code for drawing Figure \ref{fig_benchmark}, you can also find the raw data for the benchmark result in the code below:
+
+\begin{lstlisting}[language=Python]
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Data
+methods = ["Polling CAGG", "Polling Direct Query", "Trigger CAGG", "Trigger in Memory"]
+colors = ["#36A2EB", "#FF6384", "#FF9F40", "#9966FF"]
+gpu_write_delay = [
+    [0.321007643, 0.660196607, 1.279614867, 2.433749516, 5.131623884, 11.624568741],
+    [0.31859915, 0.625456453, 1.191235464, 2.350517039, 4.958478354, 9.977873813],
+    [0.765987412, 1.609155407, 2.73052539, 5.176909349, 10.908855175, 20.96940738],
+    [0.65528452, 1.285481557, 2.53125466, 5.007170087, 9.824896244, 19.604722893]
+]
+read_iteration = [
+    [1.201504459, 2.102009134, 3.58900885, 7.282948943, 13.567867101, 18.581255946],
+    [2.245655323, 3.443534234, 6.191009134, 12.676023435, 26.139007435, 55.204802484],
+    [13.184558, 30.957367, 56.111442, 101.592729, 212.071778, 433.089509],
+    [12.250112, 30.117734, 52.671703, 91.90153, 188.53631, 388.158221]
+]
+index = range(len(gpu_write_delay[0]))
+
+# Plot for GPU Write Delay
+fig, axes = plt.subplots(3, 1, figsize=(8, 12))
+
+for i, method in enumerate(methods):
+    axes[0].bar([x + i * 0.2 for x in index], gpu_write_delay[i], 0.2, label=method, color=colors[i])
+    axes[0].plot([x + i * 0.2 for x in index], gpu_write_delay[i], color=colors[i], marker='o', linewidth=1, markersize=2)
+    # Add horizontal lines to the first plot
+    for tick in gpu_write_delay[i]:
+        axes[0].axhline(y=tick, color='grey', linestyle='dotted', linewidth=0.3)
+
+axes[0].set_xlabel('Node Count * GPU')
+axes[0].set_ylabel('Time (s)')
+axes[0].set_title('Delay in Database Writing Transaction Commit')
+axes[0].set_yscale('log')
+axes[0].set_xticks([x + 0.2 * 3 / 2 for x in index])
+axes[0].set_xticklabels(['93*8', '186*8', '372*8', '744*8', '1489*8', '2978*8'])
+axes[0].legend()
+
+# Set y-axis ticks and labels for GPU Write Delay plot
+y_ticks_0 = [0.5, 1, 2, 3, 4, 5, 6, 7, 9, 11, 14, 17, 20]
+axes[0].set_yticks(y_ticks_0)
+axes[0].set_yticklabels([str(tick) for tick in y_ticks_0])
+
+
+# Plot for Read Iteration
+for i in range(2):
+    method = methods[i]
+    axes[1].bar([x + i * 0.2 for x in index], read_iteration[i], 0.2, label=method, color=colors[i])
+    axes[1].plot([x + i * 0.2 for x in index], read_iteration[i], color=colors[i], marker='o', linewidth=1, markersize=2)
+    # Add horizontal lines to the second plot
+    for tick in read_iteration[i]:
+        axes[1].axhline(y=tick, color='grey', linestyle='dotted', linewidth=0.3)
+
+axes[1].set_xlabel('Node Count * GPU')
+axes[1].set_ylabel('Time (s)')
+axes[1].set_title('Time Needed in Completing a Read Loop Iteration')
+axes[1].set_yscale('log')
+axes[1].set_xticks([x + 0.2 * 3 / 2 for x in index])
+axes[1].set_xticklabels(['93*8', '186*8', '372*8', '744*8', '1489*8', '2978*8'])
+axes[1].legend()
+
+# Set y-axis ticks and labels for Read Iteration plot
+y_ticks_1 = [0.5, 1, 2, 2.5, 3, 4, 5, 6, 7, 9, 12, 15, 20, 25, 30, 40, 50, 60]
+axes[1].set_yticks(y_ticks_1)
+axes[1].set_yticklabels([str(tick) for tick in y_ticks_1])
+
+
+# Plot for Memory Status Dump
+for i in range(2, 4):
+    method = methods[i]
+    axes[2].bar([x + i * 0.2 for x in index], read_iteration[i], 0.2, label=method, color=colors[i])
+    axes[2].plot([x + i * 0.2 for x in index], read_iteration[i], color=colors[i], marker='o', linewidth=1, markersize=2)
+    # Add horizontal lines to the third plot
+    for tick in read_iteration[i]:
+        axes[2].axhline(y=tick, color='grey', linestyle='dotted', linewidth=0.3)
+
+axes[2].set_xlabel('Node Count * GPU')
+axes[2].set_ylabel('Time (ms)')
+axes[2].set_title('Delay in Completing a Memory Status Dump')
+axes[2].set_yscale('log')
+axes[2].set_xticks([x + 0.2 * 3 / 2 for x in index])
+axes[2].set_xticklabels(['93*8', '186*8', '372*8', '744*8', '1489*8', '2978*8'])
+axes[2].legend()
+
+# Set y-axis ticks and labels for Memory Status Dump plot
+y_ticks_2 = [5, 10, 20, 25, 30, 40, 50, 60, 70, 90, 120, 150, 200, 250, 300, 400, 500]
+axes[2].set_yticks(y_ticks_2)
+axes[2].set_yticklabels([str(tick) for tick in y_ticks_2])
+
+
+plt.tight_layout()
+plt.savefig("benchmark-data.pdf")
+\end{lstlisting}
