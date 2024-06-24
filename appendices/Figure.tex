@@ -1,0 +1,237 @@
+%!TEX root = ../Thesis.tex
+\chapter{Code for figures}
+In this Chapter, we present the code for the some of figures that are drawn using Python script. These figures are drawn using the Matplotlib plotting library, together with pandas and NumPy.
+
+\section{Figure \ref{fig_silhouette_directly} \& Figure \ref{fig_silhouette_statistics}}
+In Section \ref{sec:algo_method}, we have the silhouette analysis on windowed GPU load data. Here is the code for the direct one, as in Figure \ref{fig_silhouette_directly}. Note that for \texttt{load\_gpu.csv}, we have the format as follows, where the data for each entry is the fixed-size (30) sliding window:
+
+\begin{equation*}
+hostname,job id,GPU id,data 0,data 1,....,data 28,data 29
+\end{equation*}
+
+\begin{lstlisting}[language=Python]
+import pandas as pd
+
+data = pd.read_csv('load_gpu.csv', usecols=[i for i in range(3, 33)])
+X = data.to_numpy()
+
+import matplotlib.cm as cm
+import matplotlib.pyplot as plt
+import numpy as np
+
+from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_samples, silhouette_score
+
+range_n_clusters = [2, 3, 4, 5, 6, 7]
+
+plt.rcParams.update({'font.size': 56})
+
+for n_clusters in range_n_clusters:
+    print("Start creating plot for n_clusters =", n_clusters)
+    # Create a subplot with 1 row and 1 column
+    fig, ax1 = plt.subplots(1, 1)
+    fig.set_size_inches(18, 18)
+
+    # The 1st subplot is the silhouette plot
+    # The silhouette coefficient can range from -1, 1
+    ax1.set_xlim([-0.6, 0.4])
+    # The (n_clusters+1)*10 is for inserting blank space between silhouette
+    # plots of individual clusters, to demarcate them clearly.
+    ax1.set_ylim([0, len(X) + (n_clusters + 1) * 10])
+
+    # Initialize the clusterer with n_clusters value and a random generator
+    # seed of 10 for reproducibility.
+    clusterer = KMeans(n_clusters=n_clusters)
+    cluster_labels = clusterer.fit_predict(X)
+    print(cluster_labels, cluster_labels.shape)
+
+    # The silhouette_score gives the average value for all the samples.
+    # This gives a perspective into the density and separation of the formed
+    # clusters
+    silhouette_avg = silhouette_score(X, cluster_labels)
+    print(
+        "For n_clusters =",
+        n_clusters,
+        "The average silhouette_score is :",
+        silhouette_avg,
+    )
+
+    # Compute the silhouette scores for each sample
+    sample_silhouette_values = silhouette_samples(X, cluster_labels)
+
+    y_lower = 10
+    for i in range(n_clusters):
+        # Aggregate the silhouette scores for samples belonging to
+        # cluster i, and sort them
+        ith_cluster_silhouette_values = sample_silhouette_values[cluster_labels == i]
+
+        ith_cluster_silhouette_values.sort()
+
+        size_cluster_i = ith_cluster_silhouette_values.shape[0]
+        y_upper = y_lower + size_cluster_i
+
+        color = cm.nipy_spectral(float(i) / n_clusters)
+        ax1.fill_betweenx(
+            np.arange(y_lower, y_upper),
+            0,
+            ith_cluster_silhouette_values,
+            facecolor=color,
+            edgecolor=color,
+            alpha=0.7,
+        )
+
+        # Label the silhouette plots with their cluster numbers at the middle
+        ax1.text(-0.05, y_lower + 0.5 * size_cluster_i, str(i))
+
+        # Compute the new y_lower for next plot
+        y_lower = y_upper + 10  # 10 for the 0 samples
+
+    # ax1.set_title("The silhouette plot for the various clusters.")
+    ax1.set_xlabel("The silhouette coefficient values")
+    ax1.set_ylabel("Cluster label")
+
+    # The vertical line for average silhouette score of all the values
+    ax1.axvline(x=silhouette_avg, color="red", linestyle="--")
+
+    ax1.set_yticks([])  # Clear the yaxis labels / ticks
+    ax1.set_xticks([-0.6, -0.4, -0.2, 0, 0.1, 0.2, 0.3, 0.4])
+
+    plt.savefig("plot/directly/silhouette_directly_" + str(n_clusters) + ".pdf", format="pdf", bbox_inches="tight")
+
+plt.show()
+\end{lstlisting}
+
+For the one with statistics analysis, as in Figure \ref{fig_silhouette_statistics}, the code for drawing it is similar, the only difference is that, we do an aggregation for each entry (fixed-size (30) sliding window), and append those results to the end of each entry, using the nine descriptive statistics metrics, as defined in Subsection \ref{subsec:statistics}: percentiles (25\%, 50\%, 75\%), kurtosis, maximum, minimum, skewness, standard deviation, as well as the variance.
+
+\section{Figure \ref{fig_load_gpu_histogram_1} \& Figure \ref{fig_load_gpu_histogram_2}}
+In Section \ref{sec:algo_method}, we also have the histogram of statistics analysis on windowed GPU load data. Here is the code for drawing those figures:
+
+\begin{lstlisting}[language=Python]
+import pandas as pd
+import matplotlib.pyplot as plt
+plt.rcParams.update({'font.size': 32})
+plt.figure(figsize=(14,4))
+
+data = pd.read_csv('load_gpu.csv', usecols=[i for i in range(3, 33)])
+new_data = data.transpose()
+stat = new_data.describe()
+stat.loc['skew'] = new_data.skew()
+stat.loc['kurt'] = new_data.kurt()
+stat = stat.drop(['count'], axis=0)
+stat = stat.transpose()
+for kind in ["mean", "std", "min", "25%", "50%", "75%", "max", "skew", "kurt"]:
+    pd.cut(stat[kind], bins=100).value_counts().sort_index().to_csv("load_gpu_" + kind + "_histogram.csv")
+    figure = stat[kind].plot.hist(bins=100).get_figure()
+    figure.savefig("load_gpu_" + kind + "_histogram.pdf")
+    figure.clear()
+
+# Verify the threshold selection
+def getJobs(name, threshold):
+    jobs = []
+    for index in stat.index[stat[name] < threshold].tolist():
+        jobs.append(data.iat[index, 1])
+    jobs.sort()
+
+    return set(jobs)
+
+for job in (getJobs("75%", 20).union(getJobs("max", 32))):
+    print(job)
+\end{lstlisting}
+
+\section{Figure \ref{fig_benchmark}}
+In Subsection \ref{subsec:performance}, we have a performance benchmark, here is the code for drawing the related Figure \ref{fig_benchmark}, you can also find the raw data for the benchmark result in the code below:
+
+\begin{lstlisting}[language=Python]
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Data
+methods = ["Polling CAGG", "Polling Direct Query", "Trigger CAGG", "Trigger in Memory"]
+colors = ["#36A2EB", "#FF6384", "#FF9F40", "#9966FF"]
+gpu_write_delay = [
+    [0.321007643, 0.660196607, 1.279614867, 2.433749516, 5.131623884, 11.624568741],
+    [0.31859915, 0.625456453, 1.191235464, 2.350517039, 4.958478354, 9.977873813],
+    [0.765987412, 1.609155407, 2.73052539, 5.176909349, 10.908855175, 20.96940738],
+    [0.65528452, 1.285481557, 2.53125466, 5.007170087, 9.824896244, 19.604722893]
+]
+read_iteration = [
+    [1.201504459, 2.102009134, 3.58900885, 7.282948943, 13.567867101, 18.581255946],
+    [2.245655323, 3.443534234, 6.191009134, 12.676023435, 26.139007435, 55.204802484],
+    [13.184558, 30.957367, 56.111442, 101.592729, 212.071778, 433.089509],
+    [12.250112, 30.117734, 52.671703, 91.90153, 188.53631, 388.158221]
+]
+index = range(len(gpu_write_delay[0]))
+
+# Plot for GPU Write Delay
+fig, axes = plt.subplots(3, 1, figsize=(8, 12))
+
+for i, method in enumerate(methods):
+    axes[0].bar([x + i * 0.2 for x in index], gpu_write_delay[i], 0.2, label=method, color=colors[i])
+    axes[0].plot([x + i * 0.2 for x in index], gpu_write_delay[i], color=colors[i], marker='o', linewidth=1, markersize=2)
+    # Add horizontal lines to the first plot
+    for tick in gpu_write_delay[i]:
+        axes[0].axhline(y=tick, color='grey', linestyle='dotted', linewidth=0.3)
+
+axes[0].set_xlabel('Node Count * GPU')
+axes[0].set_ylabel('Time (s)')
+axes[0].set_title('Delay in Database Writing Transaction Commit')
+axes[0].set_yscale('log')
+axes[0].set_xticks([x + 0.2 * 3 / 2 for x in index])
+axes[0].set_xticklabels(['93*8', '186*8', '372*8', '744*8', '1489*8', '2978*8'])
+axes[0].legend()
+
+# Set y-axis ticks and labels for GPU Write Delay plot
+y_ticks_0 = [0.5, 1, 2, 3, 4, 5, 6, 7, 9, 11, 14, 17, 20]
+axes[0].set_yticks(y_ticks_0)
+axes[0].set_yticklabels([str(tick) for tick in y_ticks_0])
+
+
+# Plot for Read Iteration
+for i in range(2):
+    method = methods[i]
+    axes[1].bar([x + i * 0.2 for x in index], read_iteration[i], 0.2, label=method, color=colors[i])
+    axes[1].plot([x + i * 0.2 for x in index], read_iteration[i], color=colors[i], marker='o', linewidth=1, markersize=2)
+    # Add horizontal lines to the second plot
+    for tick in read_iteration[i]:
+        axes[1].axhline(y=tick, color='grey', linestyle='dotted', linewidth=0.3)
+
+axes[1].set_xlabel('Node Count * GPU')
+axes[1].set_ylabel('Time (s)')
+axes[1].set_title('Time Needed in Completing a Read Loop Iteration')
+axes[1].set_yscale('log')
+axes[1].set_xticks([x + 0.2 * 3 / 2 for x in index])
+axes[1].set_xticklabels(['93*8', '186*8', '372*8', '744*8', '1489*8', '2978*8'])
+axes[1].legend()
+
+# Set y-axis ticks and labels for Read Iteration plot
+y_ticks_1 = [0.5, 1, 2, 2.5, 3, 4, 5, 6, 7, 9, 12, 15, 20, 25, 30, 40, 50, 60]
+axes[1].set_yticks(y_ticks_1)
+axes[1].set_yticklabels([str(tick) for tick in y_ticks_1])
+
+
+# Plot for Memory Status Dump
+for i in range(2, 4):
+    method = methods[i]
+    axes[2].bar([x + i * 0.2 for x in index], read_iteration[i], 0.2, label=method, color=colors[i])
+    axes[2].plot([x + i * 0.2 for x in index], read_iteration[i], color=colors[i], marker='o', linewidth=1, markersize=2)
+    # Add horizontal lines to the third plot
+    for tick in read_iteration[i]:
+        axes[2].axhline(y=tick, color='grey', linestyle='dotted', linewidth=0.3)
+
+axes[2].set_xlabel('Node Count * GPU')
+axes[2].set_ylabel('Time (ms)')
+axes[2].set_title('Delay in Completing a Memory Status Dump')
+axes[2].set_yscale('log')
+axes[2].set_xticks([x + 0.2 * 3 / 2 for x in index])
+axes[2].set_xticklabels(['93*8', '186*8', '372*8', '744*8', '1489*8', '2978*8'])
+axes[2].legend()
+
+# Set y-axis ticks and labels for Memory Status Dump plot
+y_ticks_2 = [5, 10, 20, 25, 30, 40, 50, 60, 70, 90, 120, 150, 200, 250, 300, 400, 500]
+axes[2].set_yticks(y_ticks_2)
+axes[2].set_yticklabels([str(tick) for tick in y_ticks_2])
+
+
+plt.tight_layout()
+plt.savefig("benchmark-data.pdf")
+\end{lstlisting}
