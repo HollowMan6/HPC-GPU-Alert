@@ -2,6 +2,7 @@
 \chapter{Background}
 \label{chap:background}
 \section{Job scheduler}
+\label{Sec:jobScheduler}
 This Chapter briefly overviews the well-known open-source workload manager we use at CSC -- IT Center for Science, Slurm \cite{10.1007/10968987_3}.
 
 Let's first start with some definitions:
@@ -41,38 +42,6 @@ The architecture of Slurm is modular and extensible, with many plugins available
     \item \textbf{Slurmd} functions as the compute node daemon, operating at the node level to oversee the execution of computational tasks. Among its key responsibilities, slurmd actively monitors the status of tasks running on the compute nodes, facilitating efficient task management and resource allocation. It also acts as a connecting point for receiving task assignments, launching tasks onto the compute nodes, and terminating tasks as per system requirements or user requests.
 \end{itemize}
 
-% In addition to the three main components mentioned above, Figure \ref{fig_slurm_overview} shows the general slum architecture. Users interact with Slurm using commands available in the login node.
-
-% These plugins, from network topologies to authentication mechanisms, offer a customizable framework adaptable to different computing environments. Moreover, Slurm's robust plugin design allows for seamless integration of custom functionalities, empowering users to tailor the system to their specific needs.
-
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.8\textwidth]{figures/slurm-overview.pdf}
-%     \caption{Slurm architecture overview}
-%     \label{fig_slurm_overview}
-% \end{figure}
-
-% \begin{itemize}
-
-%     \item \textbf{sbatch}: For submitting batch scripts, which can be written in bash, Perl, or Python, enabling users to automate the execution of tasks in a batch mode.
-%     \item \textbf{scancel}: Enabling the cancellation of pending or running jobs or job steps, providing users with control over job management and resource allocation.
-%     \item \textbf{squeue}: For querying pending and running jobs, providing users with visibility into the status of their submitted tasks and overall system workload.
-%     \item \textbf{salloc}: For requesting interactive job allocations, users can access computing resources for their tasks interactively.
-%     \item \textbf{sinfo}: Retrieving comprehensive information about partitions, reservations, and the state of nodes within the system, aiding users in understanding the availability and status of computing resources.
-%     \item \textbf{scontrol}: Providing users with functionalities for managing jobs, querying system configurations, and retrieving resource utilization and allocation information.
-%     \item \textbf{sprio}: Enabling users to query job priorities, assisting in resource allocation decisions and prioritization of tasks based on predefined criteria.
-%     \item \textbf{seff}: Providing a concise overview of resource utilization for both active and completed batch jobs, detailing the requested and actual usage of resources.
-%     \item \textbf{sview}: GUI that offers state information for jobs, partitions, and nodes, enhancing user experience in monitoring and managing computing resources.
-%     \item \textbf{sshare}: Providing users with fair-share information, offering insights into resource allocation fairness among different users based on usage history and system policies.
-%     \item \textbf{sacct}: Retrieving accounting information about jobs and job steps stored in Slurm's database, assisting in resource usage analysis, billing, and reporting.
-%     \item \textbf{sacctmgr}: Enabling users to query accounting-related information and other accounting data stored in Slurm's database, facilitating user accounting management and administration tasks.
-%     \item \textbf{srun}: Initiating job steps, primarily within a job or starting interactive jobs, allowing for executing multiple steps sequentially or in parallel on allocated nodes within the job's resource allocation.
-%     \item \textbf{sattach}: Attaching standard input, output, and error streams, along with signal capabilities, to a currently running job or job step, facilitating real-time monitoring and interaction.
-%     \item \textbf{sstat}: Querying status information about running jobs, providing real-time updates on job progress, resource utilization, and other relevant metrics.
-%     \item \textbf{sbcast}: Facilitating the transfer of files to all nodes allocated for a specific job, ensuring that necessary data or resources are available across the computing environment.
-%     \item \textbf{sgather}: Allowing the retrieval of files from all allocated nodes to the currently active job, serving as a mechanism for aggregating results or data produced during job execution.
-% \end{itemize}
-
 Slurm plays a crucial role in maximizing the utilization of computational resources and ensuring fair access for users to run their parallel and distributed applications. It offers a powerful yet flexible solution for managing and scheduling computational workloads. Slurm is a preferred choice for orchestrating complex computing infrastructures worldwide, as used by over 65\% of TOP500 systems \cite{aboutslurm}.
 
 % \subsection{LSF}
@@ -85,27 +54,6 @@ Slurm plays a crucial role in maximizing the utilization of computational resour
 %     \item \textbf{Job Arrays}: LSF supports job arrays, enabling users to submit related jobs as a single entity.
 %     \item \textbf{Prolog and Epilog}: LSF allows users to define Prolog and Epilog scripts that run before and after job execution, respectively. Prolog scripts prepare the environment, while Epilog scripts handle cleanup tasks.
 % \end{itemize}
-
-% \subsection{Slurm}
-
-% Key features of Slurm include:
-% \begin{itemize}
-%     \item \textbf{High-availability} for the primary daemons, namely Slurmctld and Slurmdbd, ensuring uninterrupted operation.
-%     \item Compute nodes are grouped into \textbf{partitions} by Slurm, allowing for configuring various limits and policies for each partition, such as permitted users, maximum nodes, and maximum wall-time limit per job.
-%     \item \textbf{Quality-of-Services (QoS)} enforce additional limits based on the contingent status of the user's group.
-%     \item Utilization of the \textbf{backfilling scheduling algorithm} to optimize job scheduling and enhance resource utilization.
-%     \item Job scheduling based on \textbf{priorities} allows efficient resource allocation according to user-defined criteria.
-%     \item \textbf{Accounting} mechanism utilizing Slurmdbd and the MySQL/MariaDB database to track resource usage and job statistics for Trackable RESources (TRES). Default TRES include nodes, CPUs, memory, and billing.
-%     \item \textbf{No preemption} policies support, meaning that administrators can configure Slurm so that running jobs are not subject to interruption.
-%     \item \textbf{Prologue and Epilogue} scripts to execute tasks before and after job execution.
-%     \item \textbf{Generic RESources (GRES)} such as GPUs and NVMe allow flexibility but lack accounting support.
-% \end{itemize}
-
-% % \subsection{Comparison}
-
-% With the rise of cloud computing, container orchestration systems such as Kubernetes become increasingly popular. However, these tools are unsuitable for deployment in the HPC world, as HPC job schedulers like Slurm revolve around job completion. At the same time, Kubernetes is tailored for hosting and sustaining services over time \cite{9235080}. To be more precise, the primary distinction between an HPC workload and the typical application suited for Kubernetes lies in their operational characteristics. HPC workloads focus on efficiently executing a complex task within the shortest time frame, even if the duration is considerable. Conversely, Kubernetes excels in managing continuously running applications, particularly those designed as services.
-
-% However, there is a growing interest in integrating batch job systems with Kubernetes to provide the best of both worlds. Such integration aims to leverage Kubernetes's capabilities in managing scalable, long-running services while benefiting from the efficient scheduling and resource management of HPC systems like Slurm. Several models have been proposed for converging these environments, including \textit{Adjacent} and \textit{Under} models. In the \textit{Adjacent} model, both control planes are overlapped, with Slurm managing both traditional HPC and Kubernetes workloads, utilizing Kubernetes' capabilities like sidecars and operators. The \textit{Under} model involves running Slurm clusters within a Kubernetes environment, allowing for traditional user experiences and higher throughput for MPI workloads. At the same time, Kubernetes manages scaling and dynamic resource allocation. One such example project is SUNK (Slurm on Kubernetes) \cite{SlurmK8sIntegration}, which is working towards seamless integration to support large-scale AI training \& inference and other complex workflows on hybrid cloud-native and HPC environments.
 
 % There are also some minor differences between LSF and Slurm:
 
@@ -136,6 +84,7 @@ Slurm plays a crucial role in maximizing the utilization of computational resour
 % \end{enumerate}
 
 \section{HPC systems at CSC}
+\label{sec:hpc}
 Table \ref{tab:gpu_details} shows the GPU statistics for the three HPC systems at the CSC-IT Center for Science: Puhti, Mahti, and LUMI. Understanding the architecture and capabilities of these systems is crucial for tailoring GPU monitoring and alerting strategies and ensuring seamless integration with existing infrastructure. This Section provides an overview of the GPU computing nodes for these HPC systems.
 
 \begin{table}[H]
@@ -160,60 +109,11 @@ Table \ref{tab:gpu_details} shows the GPU statistics for the three HPC systems a
 \subsection{Puhti}
 Puhti \cite{puhti} is an Atos BullSequana X400 cluster. Its AI partition comprises 80 GPU nodes, tailored specifically for artificial intelligence tasks, and collectively achieve a peak performance of 2.7 petaflops. Each node integrates the Intel Xeon Gold 6230 processors of the Cascade Lake family, which has 20 cores running at 2.1 GHz and supports AVX-512 vector instructions \& VNNI instructions for AI inference workloads. We have a total thread count of 80 threads per node (40 per socket). Additionally, we have 4 Nvidia Volta V100 GPUs on each node, each with 32 GB of memory and connected via NVLink. Each node also features 384 GB of main memory and 3.6 TB of high-speed local storage.
 
-% The interconnect architecture is based on a dual-rail Mellanox HDR100 InfiniBand setup. It offers a non-blocking fat-tree topology with a blocking factor of approximately 2:1 and delivers an impressive aggregate bandwidth of 200 Gbps, ensuring efficient connectivity across the network.
-
 \subsection{Mahti}
 
 Mahti \cite{mahti} is an Atos BullSequana XH2000 cluster. It comprises 24 GPU nodes, accumulating a theoretical peak performance of 2.0 petaflops. Each CPU and GPU node has 2 AMD Rome 7H12 CPUs featuring 64 cores each. The CPUs are based on the AMD Zen 2 architecture and operate at a base frequency of 2.6 GHz and a maximum peak frequency of up to 3.3 GHz. They also support the AVX2 vector instruction set. Each core supports simultaneous multi-threading, enabling 256 threads per node.
 
 The GPU nodes have 512 GB of memory and a local 3.8 TB NVMe drive. They also have 4 Nvidia Ampere A100 GPUs, with a subset of nodes featuring split A100 GPUs, which enable lightweight workloads such as interactive tasks, courses, and code development and save energy consumption.
-
-% The NUMA configuration of Mahti involves a hierarchical structure within each node. Each node contains two sockets, each accommodating a single CPU alongside memory DIMMs. Although the memory within the node is shared, the performance of memory access varies based on the proximity of the core to the memory. Mahti operates each CPU in NPS4 (NUMA per socket 4) mode to optimize memory performance, dividing each CPU into four NUMA domains. Each NUMA domain includes 16 cores and two memory controllers, providing 32 GiB of memory. Thread allocation within each core follows a specific pattern: core 0 runs threads 0 and 128, core 1 runs threads 1 and 129, and so forth. Figure \ref{fig_mahti_numa} shows how the threads are distributed over each core and NUMA node.
-
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=1\textwidth]{figures/mahti_numa.png}
-%     \caption{Mahti NUMA structure overview \cite{mahti}}
-%     \label{fig_mahti_numa}
-% \end{figure}
-
-% Each core possesses 32 KiB of L1 data cache and 32 KiB of L1 instruction cache, and a private 512 KiB L2 cache. Additionally, each core has two FMA (fused multiply-add) units capable of processing operations on full 256-bit vectors. Consequently, each unit can execute operations on eight single-precision floats or four double-precision floats per clock cycle, resulting in 16 double-precision floating point operations per cycle.
-
-% As shown in Figure \ref{fig_mahti_ccd}, cores in the CPU are grouped into core complexes (CCXs) and further combined into compute dies (CCDs). At the CCX level, four cores share a 16 MiB L3 cache within the CCX, and two CCX parts combine to form a compute die (CCD).
-
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.3\textwidth]{figures/mahti_ccd.png}
-%     \caption{Mahti CCD structure overview \cite{mahti}}
-%     \label{fig_mahti_ccd}
-% \end{figure}
-
-% Each processor comprises eight compute dies and an additional I/O die, including memory and PCI-e controllers. Furthermore, each node consists of two processors and one 200 Gbps HDR network adapter, as shown in Figure \ref{fig_mahti_node}.
-
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=1\textwidth]{figures/mahti_node.png}
-%     \caption{Mahti node structure overview \cite{mahti}}
-%     \label{fig_mahti_node}
-% \end{figure}
-
-% The network interconnect in Mahti is based on Mellanox HDR InfiniBand, with each node connected to the network via a single 200 Gbps HDR link. The network topology adopts a dragonfly+ configuration, wherein multiple groups of nodes are internally connected using a fat tree topology. These fat trees are interconnected using all-to-all links, ensuring fully non-blocking connectivity between groups, as shown in Figure \ref{fig_mahti_df_ex}.
-
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.6\textwidth]{figures/mahti_df_ex.png}
-%     \caption{Mahti dragonfly+ configuration overview \cite{mahti}}
-%     \label{fig_mahti_df_ex}
-% \end{figure}
-
-% In Mahti, each dragonfly group comprises 234 nodes, with an internal fat tree featuring a blocking factor of 1.7:1 and 20 or 18 nodes connected per leaf switch. Each leaf switch connects to the spine switch in the group via 12 200 Gbps links. Figure \ref{fig_mahti_df} shows the topology of such a group. There are six groups, with five 200 Gbps links connecting each spine switch to a spine switch in every other group, facilitating comprehensive inter-group communication.
-
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.8\textwidth]{figures/mahti_df.png}
-%     \caption{Mahti dragonfly topology \cite{mahti}}
-%     \label{fig_mahti_df}
-% \end{figure}
 
 \subsection{LUMI}
 \label{subsec:lumi}
@@ -221,7 +121,7 @@ By Jun 2024, LUMI \cite{lumi}, one of the three European pre-exascale supercompu
 
 \begin{figure}[H]
     \centering
-    \includesvgpath[width=0.9\textwidth]{lumig-overview.svg}
+    \includesvgpath[width=1\textwidth]{lumig-overview.svg}
     \caption{LUMI GPU partition overview \cite{lumi}}
     \label{fig_lumig_overview}
 \end{figure}
@@ -232,59 +132,9 @@ The LUMI-G compute nodes have four AMD MI250X GPUs, each based on the 2nd Gen AM
 
 Each GCD has 110 compute units and accesses a 64 GB slice of high-bandwidth memory, totaling 220 compute units and 128 GB of memory per MI250X module. All compute units share an L2 cache with an 8 MB capacity to enhance memory throughput. The cache is divided into 32 slices, capable of delivering 128 B/clock/slice, amounting to a peak theoretical bandwidth of 6.96 TB/s. Including an L2 cache in the MI250X GPU modules enhances synchronization capabilities for algorithms reliant on atomic operations to coordinate communication across the entire GPU. These atomic operations are executed close to the memory within the L2 cache.
 
-% \begin{figure}[H]
-%     \centering
-%     \includesvgpath[width=1\textwidth]{MI250x-gcd.svg}
-%     \caption{AMD MI250X GCD structure \cite{lumi}}
-%     \label{mi250x-gcd.svg}
-% \end{figure}
-
-% When a kernel is dispatched for execution on the GPU, it is organized as a grid of thread blocks (workgroups), with the grid and thread blocks being one, two, or three-dimensional. The grid can have a maximum number of blocks specified along each dimension of (2147483647, 2147483647, 2147483647), while the maximum number of threads (work-items) for each dimension of a block is (1024, 1024, 1024), with a thread block size limit of 1024, which means size.x * size.y * size.z must be less than or equal to 1024.
-
-% The thread blocks are assigned to one of the 110 compute units and are scheduled in groups of 64 threads known as wavefronts. This is analogous to a warp on NVIDIA hardware, except that a warp consists of 32 threads, while a wavefront comprises 64 threads.
-
-% The execution process of wavefronts by a compute unit can be outlined as follows:
-
-% \begin{enumerate}
-%     \item Each wavefront, comprising 64 work items (threads), is allocated to one of the 16-wide SIMD units.
-%     \item Most instructions are executed within a single cycle, although one instruction requires four cycles per wavefront.
-%     \item With 4 SIMD units available per compute unit, up to 4 wavefronts can be processed simultaneously, ensuring a consistent throughput of one instruction per wavefront per compute unit.
-% \end{enumerate}
-
-% Figure \ref{mi250x-compute-unit.svg} shows that each compute unit has 512 64-wide 4-byte vector general-purpose registers. Additionally, the unit provides access to low-latency storage through a 64 kB local data share (LDS, shared memory), accessible to all threads within a block. The programmer manages the LDS allocation. Furthermore, each compute unit has access to 16 kB of L1 cache.
-
-% \begin{figure}[H]
-%     \centering
-%     \includesvgpath[width=1\textwidth]{mi250x-compute-unit.svg}
-%     \caption{AMD MI250X compute unit structure \cite{lumi}}
-%     \label{mi250x-compute-unit.svg}
-% \end{figure}
-
-% The vector ALUs are complemented by matrix cores optimized to execute matrix fused multiply-add instructions, offering significant acceleration for generalized matrix multiplication computations, crucial for Linear Algebra in High-Performance Computing applications and AI workloads. Each compute unit (CU) has four matrix cores capable of achieving a throughput of 256 double-precision floating-point format (FP64) Flops/cycle/CU.
-
 \subsubsection{CPU}
 
 The CPU of LUMI-G nodes is a 64-core AMD EPYC 7A53 Trento CPU. These CPU cores, built on the Zen 3 architecture, support AVX2 256-bit vector instructions, enabling a maximum throughput of 16 double-precision FLOP/clock (AVX2 FMA operations). Each core has 32 KiB of private L1 cache, a 32 KiB instruction cache, and 512 KiB of L2 cache. The L3 cache has 32 MiB shared among groups of 8 cores, accumulating 256 MiB of L3 cache per CPU. Configured as 4 NUMA nodes (NPS4), the system allocates 128 GiB of DDR4 memory per NUMA node, resulting in 512 GiB of CPU memory.
-
-% \subsubsection{Connections}
-
-% Figure \ref{fig_lumig_topology} shows the node topology. Each MI250X module includes 5 GPU-GPU links, 2 CPU-GPU links, and 1 PCIe link to the slingshot-11 interconnect. The MI250X modules are connected via an in-package Infinity Fabric interface, capable of delivering a theoretical peak bidirectional bandwidth of up to 400 GB/s. Furthermore, GCDs across different MI250X modules are linked through single or double Infinity Fabric links, offering peak bidirectional bandwidths of 100 GB/s and 200 GB/s, respectively. Each MI250X module directly connects to the slingshot-11 network, affording peak bandwidths of up to 25+25 GB/s. 
-
-% \begin{figure}[H]
-%     \centering
-%     \includesvgpath[width=1\textwidth]{lumig-node-overview.svg}
-%     \caption{LUMI GPU node topology overview \cite{lumi}}
-%     \label{fig_lumig_topology}
-% \end{figure}
-
-% Figure \ref{fig_lumig_cpu_gpu_links} shows the CPU-GPU links from a CPU-centric or GPU-centric point of view of the LUMI GPU node. Proper binding of the NUMA node to the GPU can be essential to ensure optimal application performance.
-
-% \begin{figure}[H]
-%     \centering
-%     \includesvgpath[width=1\textwidth]{lumig-cpu-gpu-links.svg}
-%     \caption{CPU-GPU links on LUMI GPU node \cite{lumi}}
-%     \label{fig_lumig_cpu_gpu_links}
-% \end{figure}
 
 \section{Monitoring tools}
 A robust selection of monitoring techniques is crucial for capturing accurate metrics, diagnosing performance issues, and ensuring efficient resource utilization. This Section explores various components for building a monitoring system, each offering unique capabilities for monitoring within large-scale distributed computing clusters, thus providing the cornerstone for building an accurate alert algorithm.
@@ -367,7 +217,7 @@ Central to TimescaleDB's architecture are \textbf{hypertables}, which serve as f
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.9\textwidth]{figures/hypertables-chunks.png}
+\includegraphics[width=1\textwidth]{figures/hypertables-chunks.png}
 \caption{Hypertable compared with normal table \cite{hypertables}}
 \label{fig:hypertables-chunks}
 \end{figure}
@@ -468,29 +318,6 @@ Continuous aggregates comprise the following components:
 
 For real-time continuous aggregates, it provides data by combining pre-aggregated data from materialized views with recent unaggregated data, ensuring that query results remain up-to-date.
 
-% \section{Event stream management}
-% Event Stream Management involves ingesting, analyzing, and storing streams of events, which are discrete data points denoting state changes. This allows for real-time analytics and decision-making. In this Section, we explore some of the state-of-the-art open-source event stream management platforms to give an overview.
-
-% \begin{itemize}
-%     \item \textbf{MapReduce} \cite{hashem2016mapreduce} is a programming model for processing large data sets with a parallel, distributed algorithm on a cluster. A MapReduce program comprises a map procedure, which performs filtering and sorting, and a reduce method, which performs a summary operation. The MapReduce algorithm contains two important tasks, namely Map and Reduce. The map script takes some input data and maps it to \texttt{<key, value>} pairs according to the specifications. The reduce script takes a collection of \texttt{<key, value>} pairs and "reduces" them according to the specifications. MapReduce is primarily used for batch processing of large datasets and is not designed for real-time processing or low-latency queries.
-
-%     \item \textbf{Apache Spark} \cite{10.1145/2783258.2789993} is an open-source cluster-computing framework. It provides elegant development APIs for Scala, Java, Python, and R that allow developers to execute a variety of data-intensive workloads across diverse data sources, including HDFS, Cassandra, HBase, S3, etc. Spark provides a faster and more general data processing platform. Spark lets users run programs up to 100x faster in memory or 10x faster on disk than Hadoop. Spark's versatility makes it suitable for various applications and industries.
-
-%     \item \textbf{Apache Flink} \cite{10.14778/3137765.3137777} is a Big Data processing framework that allows programmers to process vast data efficiently and in a scalable. Flink primarily focuses on real-time stream processing, efficiently processing large volumes of data with low latency. Flink's processing engine is built on top of its streaming runtime and can handle batch processing. Flink provides robust Java, Scala, and Python APIs for developing data processing applications.
-
-%     \item \textbf{Apache Kafka} \cite{10213406} \textbf{/ Apache Pulsar} \cite{Sharma2022pulsar} is a real-time event-streaming platform that collects, stores, and processes messages. It provides excellent performance, too, at scale. On top of that, it provides capabilities such as stream processing, distributed logging, and pub-sub messaging. An event (or message) in Kafka consists of Key and Value.
-% \end{itemize}
-
-% All four technologies can handle big data, but each has strengths and ideal use cases.
-
-% \begin{itemize}
-%     \item MapReduce is primarily used for batch processing of large datasets. It is not designed for real-time processing or low-latency queries.
-%     \item Apache Spark, on the other hand, while initially designed for batch processing, has evolved to handle real-time data processing through micro-batching.
-%     \item However, Apache Flink was designed as a stream-first framework, excelling in real-time stream processing. It efficiently processes large volumes of data with low latency.
-%     \item Apache Kafka, similar to Flink, is designed for real-time data streaming. However, Kafka is more focused on the messaging system, providing a robust platform for storing, reading, and analyzing streaming data.
-%     \item Apache Pulsar combines the strengths of both a message queue system and a streaming platform, making it a versatile choice for many use cases.
-% \end{itemize}
-
 % \section{Streaming analytics}
 
 % \subsection{Google Datastream}
@@ -580,7 +407,7 @@ A decision tree \cite{song2015decision} represents possible solutions to a decis
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\textwidth]{figures/decision-tree.pdf}
+    \includegraphics[width=0.8\textwidth]{figures/decision-tree.pdf}
     \caption{Decision tree structure}
     \label{fig_decision_tree}
 \end{figure}

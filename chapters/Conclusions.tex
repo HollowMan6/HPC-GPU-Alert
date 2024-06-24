@@ -19,22 +19,22 @@ The thesis's contributions are multifaceted. First, a monitoring system and aler
 \section{Future work}
 There are several avenues for future research and improvements due to the limited time during this master's thesis project:
 
-\subsection{Additional Job Schedulers}
+\subsection{Additional job schedulers}
 Extend support for real-time GPU monitoring to additional job schedulers commonly used in HPC environments, such as LSF \cite{10.1145/3569951.3597564}, TORQUE \cite{10.1145/1188455.1188464}, or UGE \cite{10.1145/3332186.3338408}.
 
-\subsection{More Monitoring Metrics}
+\subsection{More monitoring metrics}
 Collect monitoring data from other hardware (e.g., CPU, disk I/O) and collectively contribute to the alert for the whole system. The monitoring infrastructure already has the capabilities for monitoring additional hardware, but they have not been tested in production due to performance considerations.
 
 In addition, we can also explore the possibility of capturing and analyzing fine-grained GPU usage metrics, including memory bandwidth, cache utilization, and instruction throughput. This granular level of monitoring can provide deeper insights into application performance and identify optimization opportunities at the code level.
 
-\subsection{Flexible Alerting}
+\subsection{Flexible alerting}
 Investigate adaptive alerting strategies that dynamically adjust thresholds we use in the alert algorithms currently based on workload characteristics, ensuring effective alerting across varying HPC workloads.
 
 It's also worth exploring the integration of possible other advanced machine learning algorithms to predict GPU resource usage patterns, enabling proactive alerting based on historical data analysis.
 
 We can also try to implement mechanisms to directly gather feedback from administrators or support teams regarding the effectiveness of the jobs, and improve our alert strategies automatically, so that we can have continuous refinement based on practical usage experiences.
 
-\subsection{Resource Optimization}
+\subsection{Resource optimization}
 Investigate optimization techniques for dynamically allocating GPU resources based on real-time workload demands and system utilization. This could involve developing algorithms for intelligent resource provisioning and load balancing to maximize overall cluster efficiency and performance.
 
 We can also investigate the predictive maintenance techniques for GPUs based on real-time monitoring data. Predictive maintenance models can anticipate failures or performance degradation by analyzing hardware health metrics and performance degradation, enabling proactive maintenance actions to minimize downtime and maximize system reliability.

@@ -1,0 +1,23 @@
+%!TEX root = ../Thesis.tex
+\chapter{Event stream management}
+Event Stream Management involves ingesting, analyzing, and storing streams of events, which are discrete data points denoting state changes. This allows for real-time analytics and decision-making.
+
+\begin{itemize}
+    \item \textbf{MapReduce} \cite{hashem2016mapreduce} is a programming model for processing large data sets with a parallel, distributed algorithm on a cluster. A MapReduce program comprises a map procedure, which performs filtering and sorting, and a reduce method, which performs a summary operation. The MapReduce algorithm contains two important tasks, namely Map and Reduce. The map script takes some input data and maps it to \texttt{<key, value>} pairs according to the specifications. The reduce script takes a collection of \texttt{<key, value>} pairs and \textit{reduces} them according to the specifications. MapReduce is primarily used for batch processing of large datasets and is not designed for real-time processing or low-latency queries.
+
+    \item \textbf{Apache Spark} \cite{10.1145/2783258.2789993} is an open-source cluster-computing framework. It provides elegant development APIs for Scala, Java, Python, and R that allow developers to execute a variety of data-intensive workloads across diverse data sources, including HDFS, Cassandra, HBase, S3, etc. Spark provides a faster and more general data processing platform. Spark lets users run programs up to 100x faster in memory or 10x faster on disk than Hadoop. Spark's versatility makes it suitable for various applications and industries.
+
+    \item \textbf{Apache Flink} \cite{10.14778/3137765.3137777} is a Big Data processing framework that allows programmers to process vast data efficiently and in a scalable. Flink primarily focuses on real-time stream processing, efficiently processing large volumes of data with low latency. Flink's processing engine is built on top of its streaming runtime and can handle batch processing. Flink provides robust Java, Scala, and Python APIs for developing data processing applications.
+
+    \item \textbf{Apache Kafka} \cite{10213406} \textbf{/ Apache Pulsar} \cite{Sharma2022pulsar} is a real-time event-streaming platform that collects, stores, and processes messages. It provides excellent performance, too, at scale. On top of that, it provides capabilities such as stream processing, distributed logging, and pub-sub messaging. An event (or message) in Kafka consists of Key and Value.
+\end{itemize}
+
+All four technologies can handle big data, but each has strengths and use cases:
+
+\begin{itemize}
+    \item MapReduce is primarily used for batch processing of large datasets. It is not designed for real-time processing or low-latency queries.
+    \item Apache Spark, on the other hand, while initially designed for batch processing, has evolved to handle real-time data processing through micro-batching.
+    \item However, Apache Flink was designed as a stream-first framework, excelling in real-time stream processing. It efficiently processes large volumes of data with low latency.
+    \item Apache Kafka, similar to Flink, is designed for real-time data streaming. However, Kafka is more focused on the messaging system, providing a robust platform for storing, reading, and analyzing streaming data.
+    \item Apache Pulsar combines the strengths of both a message queue system and a streaming platform, making it a versatile choice for many use cases.
+\end{itemize}
