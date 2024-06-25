@@ -2,7 +2,6 @@
 \chapter{Background}
 \label{chap:background}
 \section{Job scheduler}
-\label{Sec:jobScheduler}
 This Chapter briefly overviews the well-known open-source workload manager we use at CSC -- IT Center for Science, Slurm \cite{10.1007/10968987_3}.
 
 Let's first start with some definitions:
@@ -84,7 +83,6 @@ Slurm plays a crucial role in maximizing the utilization of computational resour
 % \end{enumerate}
 
 \section{HPC systems at CSC}
-\label{sec:hpc}
 Table \ref{tab:gpu_details} shows the GPU statistics for the three HPC systems at the CSC-IT Center for Science: Puhti, Mahti, and LUMI. Understanding the architecture and capabilities of these systems is crucial for tailoring GPU monitoring and alerting strategies and ensuring seamless integration with existing infrastructure. This Section provides an overview of the GPU computing nodes for these HPC systems.
 
 \begin{table}[H]
@@ -121,7 +119,7 @@ By Jun 2024, LUMI \cite{lumi}, one of the three European pre-exascale supercompu
 
 \begin{figure}[H]
     \centering
-    \includesvgpath[width=1\textwidth]{lumig-overview.svg}
+    \includesvgpath[width=0.9\textwidth]{lumig-overview.svg}
     \caption{LUMI GPU partition overview \cite{lumi}}
     \label{fig_lumig_overview}
 \end{figure}
@@ -137,7 +135,7 @@ Each GCD has 110 compute units and accesses a 64 GB slice of high-bandwidth memo
 The CPU of LUMI-G nodes is a 64-core AMD EPYC 7A53 Trento CPU. These CPU cores, built on the Zen 3 architecture, support AVX2 256-bit vector instructions, enabling a maximum throughput of 16 double-precision FLOP/clock (AVX2 FMA operations). Each core has 32 KiB of private L1 cache, a 32 KiB instruction cache, and 512 KiB of L2 cache. The L3 cache has 32 MiB shared among groups of 8 cores, accumulating 256 MiB of L3 cache per CPU. Configured as 4 NUMA nodes (NPS4), the system allocates 128 GiB of DDR4 memory per NUMA node, resulting in 512 GiB of CPU memory.
 
 \section{Monitoring tools}
-A robust selection of monitoring techniques is crucial for capturing accurate metrics, diagnosing performance issues, and ensuring efficient resource utilization. This Section explores various components for building a monitoring system, each offering unique capabilities for monitoring within large-scale distributed computing clusters. Thus, it provides the cornerstone for building an accurate alert algorithm.
+A robust selection of monitoring techniques is crucial for capturing accurate metrics, diagnosing performance issues, and ensuring efficient resource utilization. This Section explores various components for building a monitoring system, each offering unique capabilities for monitoring within large-scale distributed computing clusters, thus providing the cornerstone for building an accurate alert algorithm.
 
 \subsection{Cgroups}
 Cgroups \cite{7876184} is a Linux kernel feature that enables the isolation and accounting of resources, including CPU, memory, and devices, among a collection of processes. It provides a means to track and manage CPU and memory utilization per process.
@@ -213,11 +211,11 @@ One of the primary challenges in time-series monitoring for HPC jobs is handling
 
 TimescaleDB \cite{timescaledb} emerges as a robust solution, excelling in both rapid data ingestion and streamlined query processing, ensuring comprehensive time-series data management capabilities. TimescaleDB is an open-source time-series database optimized for fast ingest and complex queries. It is engineered on top of the mature RDBMS system PostgreSQL and packaged as an extension. TimescaleDB extends PostgreSQL with time-series-specific optimizations and functions, allowing it to manage time series data efficiently. TimescaleDB supports the full range of SQL functionality, including aggregates, joins, subqueries, and window functions.
 
-Central to TimescaleDB's architecture are \textbf{hypertables}, which serve as fundamental structures for efficient time-series data management as shown in Figure \ref{fig:hypertables-chunks}. Hypertables abstract multiple individual tables that store the data, referred to as chunks, providing users with a unified interface for data interaction. With hypertables, users can execute diverse operations, including data insertion, querying, and schema modifications, seamlessly integrating standard SQL functionalities. Hypertables are particularly advantageous for time-series data management, because they efficiently partition incoming data into smaller, manageable subsets. These data subsets, represented as time-based chunks, enable TimescaleDB to efficiently handle data retention and optimization. Consequently, TimescaleDB can do fast data ingestion and is scalable to ions of rows per second, which is crucial for time-series applications.
+Central to TimescaleDB's architecture are \textbf{hypertables}, which serve as fundamental structures for efficient time-series data management as shown in Figure \ref{fig:hypertables-chunks}. Hypertables abstract multiple individual tables that store the data, referred to as chunks, providing users with a unified interface for data interaction. With hypertables, users can execute diverse operations, including data insertion, querying, and schema modifications, seamlessly integrating standard SQL functionalities. Hypertables are particularly advantageous for time-series data management, because they efficiently partition incoming data into smaller, manageable subsets. These data subsets, represented as time-based chunks, enable TimescaleDB to handle data retention and optimization efficiently. Consequently, TimescaleDB can do fast data ingestion and is scalable to ions of rows per second, which is crucial for time-series applications.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=1\textwidth]{figures/hypertables-chunks.png}
+\includegraphics[width=0.9\textwidth]{figures/hypertables-chunks.png}
 \caption{Hypertable compared with normal table \cite{hypertables}}
 \label{fig:hypertables-chunks}
 \end{figure}
@@ -286,7 +284,7 @@ A practical programming approach to signaling changes to a particular table usin
 \subsection{Continuous aggregates}
 % Continuous aggregates in TimescaleDB offer a reliable solution for analyzing time-series data trends, leveraging aggregate functions to observe temporal patterns effectively. Unlike traditional approaches, continuous aggregates intelligently update aggregated data, refreshing only relevant portions of chunks based on underlying data modifications. Consequently, continuous aggregates optimize historical query performance while serving as a long-term data repository independent of changes to raw data.
 
-% Continuous Aggregates can contribute to optimizing data storage and query performance. By pre-computing aggregated values at regular intervals, the system can quickly retrieve summarized information for alerting and analysis. This approach ensures the monitoring system maintains responsiveness even as the time series data grows, providing administrators with timely insights into GPU resource utilization trends.
+% Continuous Aggregates can contribute to optimizing data storage and query performance. The system can quickly retrieve summarized information for alerting and analysis by pre-computing aggregated values at regular intervals. This approach ensures the monitoring system maintains responsiveness even as the time series data grows, providing administrators with timely insights into GPU resource utilization trends.
 
 Time-series data tends to experience rapid expansion over time. Consequently, aggregating such data into meaningful summaries often encounters considerable latency. Continuous aggregates \cite{10.14778/3611540.3611559} offer a solution by fastening the data aggregation process.
 
@@ -317,6 +315,29 @@ Continuous aggregates comprise the following components:
 \end{itemize}
 
 For real-time continuous aggregates, it provides data by combining pre-aggregated data from materialized views with recent unaggregated data, ensuring that query results remain up-to-date.
+
+% \section{Event stream management}
+% Event Stream Management involves ingesting, analyzing, and storing streams of events, which are discrete data points denoting state changes. This allows for real-time analytics and decision-making. In this Section, we explore some of the state-of-the-art open-source event stream management platforms to give an overview.
+
+% \begin{itemize}
+%     \item \textbf{MapReduce} \cite{hashem2016mapreduce} is a programming model for processing large data sets with a parallel, distributed algorithm on a cluster. A MapReduce program comprises a map procedure, which performs filtering and sorting, and a reduce method, which performs a summary operation. The MapReduce algorithm contains two important tasks, namely Map and Reduce. The map script takes some input data and maps it to \texttt{<key, value>} pairs according to the specifications. The reduce script takes a collection of \texttt{<key, value>} pairs and "reduces" them according to the specifications. MapReduce is primarily used for batch processing of large datasets and is not designed for real-time processing or low-latency queries.
+
+%     \item \textbf{Apache Spark} \cite{10.1145/2783258.2789993} is an open-source cluster-computing framework. It provides elegant development APIs for Scala, Java, Python, and R that allow developers to execute a variety of data-intensive workloads across diverse data sources, including HDFS, Cassandra, HBase, S3, etc. Spark provides a faster and more general data processing platform. Spark lets users run programs up to 100x faster in memory or 10x faster on disk than Hadoop. Spark's versatility makes it suitable for various applications and industries.
+
+%     \item \textbf{Apache Flink} \cite{10.14778/3137765.3137777} is a Big Data processing framework that allows programmers to process vast data efficiently and in a scalable. Flink primarily focuses on real-time stream processing, efficiently processing large volumes of data with low latency. Flink's processing engine is built on top of its streaming runtime and can handle batch processing. Flink provides robust Java, Scala, and Python APIs for developing data processing applications.
+
+%     \item \textbf{Apache Kafka} \cite{10213406} \textbf{/ Apache Pulsar} \cite{Sharma2022pulsar} is a real-time event-streaming platform that collects, stores, and processes messages. It provides excellent performance, too, at scale. On top of that, it provides capabilities such as stream processing, distributed logging, and pub-sub messaging. An event (or message) in Kafka consists of Key and Value.
+% \end{itemize}
+
+% All four technologies can handle big data, but each has strengths and ideal use cases.
+
+% \begin{itemize}
+%     \item MapReduce is primarily used for batch processing of large datasets. It is not designed for real-time processing or low-latency queries.
+%     \item Apache Spark, on the other hand, while initially designed for batch processing, has evolved to handle real-time data processing through micro-batching.
+%     \item However, Apache Flink was designed as a stream-first framework, excelling in real-time stream processing. It efficiently processes large volumes of data with low latency.
+%     \item Apache Kafka, similar to Flink, is designed for real-time data streaming. However, Kafka is more focused on the messaging system, providing a robust platform for storing, reading, and analyzing streaming data.
+%     \item Apache Pulsar combines the strengths of both a message queue system and a streaming platform, making it a versatile choice for many use cases.
+% \end{itemize}
 
 % \section{Streaming analytics}
 
@@ -407,7 +428,7 @@ A decision tree \cite{song2015decision} represents possible solutions to a decis
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{figures/decision-tree.pdf}
+    \includegraphics[width=0.6\textwidth]{figures/decision-tree.pdf}
     \caption{Decision tree structure}
     \label{fig_decision_tree}
 \end{figure}
