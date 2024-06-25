@@ -7,7 +7,7 @@ Implementing real-time GPU resource monitoring and alerting involves systematica
 This Section outlines the approach to achieving the thesis objectives, including designing, implementing, and evaluating the monitoring system and alert service for GPU utilization on HPC clusters.
 
 \begin{enumerate}
-    \item \textbf{Requirement Analysis}: We begin with a thorough analysis of the monitoring system and alert service requirements. This involves understanding the needs of HPC administrators and users, identifying key metrics and performance indicators for assessing GPU utilization and job efficiency.
+    \item \textbf{Requirement Analysis}: We begin with a thorough analysis of the monitoring system and alert service requirements. This involves understanding the needs of HPC administrators and users, and identifying key metrics and performance indicators for assessing GPU utilization and job efficiency.
     \item \textbf{System Design and Architecture}: The system design and architecture are developed based on the identified requirements. This phase involves defining the components of the monitoring system, including data collection mechanisms, storage infrastructure, and alert generation algorithms. Special attention is given to ensuring scalability, reliability, and compatibility with existing HPC cluster environments.
     \item \textbf{Implementation and Deployment}: With the system architecture finalized, the implementation phase commences. This involves developing the necessary software components for data collection, processing, and alert generation and integrating the monitoring system with the HPC cluster infrastructure. The deployment process includes configuration, testing, and validation to ensure the system operates effectively in a production environment.
     \item \textbf{Data Collection and Analysis}: Once deployed, the monitoring system collects real-time data on GPU usage and job performance. This data is then analyzed to identify patterns of inefficient resource utilization and inform the development of alert generation algorithms. Statistical analysis and machine learning techniques can be employed to extract insights from the collected data and optimize the performance of the alert service.
@@ -40,7 +40,7 @@ Communication between different components during the lifetime of a job is prese
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{figures/monitoring.pdf}
+    \includegraphics[width=0.75\textwidth]{figures/monitoring.pdf}
     \caption{Monitoring system structure}
     \label{fig_monitoring}
 \end{figure}
@@ -67,7 +67,7 @@ We also support dropping those jobs from the collection loop that have exceeded 
 
 \subsection{Timescale Ingest}
 
-Timescale Ingest offers API for data ingestion through HTTP or UDP. We do symmetric encryption on the monitoring data. We derive a cryptographic key from an API key using the PBKDF2-HMAC-SHA256 (Combining Password-Based Key Derivation Function 2, Hash-based Message Authentication Code, and Secure Hash Algorithm 256-bit), and then use the derived key as the key for AES-GCM (Combining Advanced Encryption Standard and Galois/Counter Mode) encryption. The server is configured to handle incoming data according to the specified protocol. If UDP is chosen, a UDP server is spun up in a separate thread (goroutine in Golang). If HTTP is selected, the server creates a route to handle incoming POST requests to the \textbf{/write} API endpoint. The transmitted data format follows the InfluxDB line protocol \cite{influxlineprotocol}.
+Timescale Ingest offers API for data ingestion through HTTP or UDP. We do symmetric encryption on the monitoring data. We derive a cryptographic key from an API key using the PBKDF2-HMAC-SHA256 (Combining Password-Based Key Derivation Function 2, Hash-based Message Authentication Code, and Secure Hash Algorithm 256-bit), and then use the derived key as the key for AES-GCM (Combining Advanced Encryption Standard and Galois/Counter Mode) encryption. The server is configured to handle incoming data according to the specified protocol. A UDP server is spun up in a separate thread (goroutine in Golang) if UDP is chosen. If HTTP is selected, the server creates a route to handle incoming POST requests to the \textbf{/write} API endpoint. The transmitted data format follows the InfluxDB line protocol \cite{influxlineprotocol}.
 
 We have an ingestion buffer to store the data temporarily in memory. Whenever we receive the data, we parse it into an instance of Go's structs. When the buffer is full, or after a timeout, we sort the buffer by timestamp, convert them into SQL insert statements, and execute them together. This allows us to reduce the database's write load in batches.
 
@@ -92,7 +92,7 @@ In addition to the /write API endpoint as demonstrated above, the API design for
 \end{itemize}
 
 \subsection{TimescaleDB}
-TimescaleDB, as the time-series database, introduces a relational aspect to monitoring. This component stores metrics in a structured manner, allowing for complex SQL queries and analysis. TimescaleDB accommodates the evolving nature of HPC workloads by enabling the retention of historical data. It also accelerates the query speed, which is essential for identifying trends and patterns over time.
+TimescaleDB, as the time-series database, introduces a relational aspect to monitoring. This component stores metrics in a structured manner, allowing for complex SQL queries and analysis. TimescaleDB accommodates the evolving nature of HPC workloads by enabling the retention of historical data. It also accelerates the query speed, essential for identifying trends and patterns over time.
 
 Table \ref{tab:gpu_usage} shows how we define the database table for storing the GPU usage data at the job level collected by MonServer. These give us a basic idea of how well the job performs using GPUs.
 
@@ -490,7 +490,7 @@ Regarding the design of the alert algorithms for GPU usage: many high-performanc
 \label{algo:ml}
 \end{algorithm}
 
-Unsupervised machine learning, such as reinforcement learning, is hard to train and interpret. Deep learning algorithms are also very slow to run, so they do not fit our need for real-time job analysis. Most importantly, we cannot find a good reward function. The only way is from human feedback.
+Unsupervised machine learning, such as reinforcement learning, is hard to train and interpret. Deep learning algorithms are also very slow to run, and do not fit our need for real-time job analysis. Most importantly, we cannot find a good reward function. The only way is from human feedback.
 
 For supervised machine learning, such as random forests that involve decision trees, although it can be much faster to run, all the data collected from the monitoring system is unlabeled. It is unrealistic for humans to label all those data manually.
 
@@ -653,14 +653,14 @@ Since we want real-time alerts, we want to aggregate with a fixed-size sliding w
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{figures/sliding-window.pdf}
+    \includegraphics[width=0.7\textwidth]{figures/sliding-window.pdf}
     \caption{Sliding-window aggregation on the last 1 hour's data}
     \label{fig_sliding_window}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{figures/fixed-sliding-window.pdf}
+    \includegraphics[width=0.7\textwidth]{figures/fixed-sliding-window.pdf}
     \caption{Aggregation with a fixed start time}
     \label{fig_fixed_sliding_window}
 \end{figure}
@@ -705,9 +705,9 @@ The alert dashboard reads data to display and learn about the current job status
     \label{fig_status_dashboard}
 \end{figure}
 
-In addition, the dashboard allows users to disable or re-enable job alerts, so that admins can improve the alert manually and focus more on those jobs, that have not been checked or can be improved. The users can also click on the button to check more detailed JSON information about jobs from the output of \texttt{sacct --json}. (We don't render that information directly into the table, since the SQL database behind Slurm runs full steam for several seconds when calling that even for a single job)
+In addition, the dashboard allows users to disable or re-enable job alerts, so that admins can improve the alert manually and focus more on those jobs, that have not been checked or can be improved. The users can also click on the button to check more detailed JSON information about jobs from the output of \texttt{sacct --json}. (We don't render that information directly into the table, since the SQL database behind Slurm runs full steam for several seconds when calling that, even for a single job)
 
-Besides showing the alert status, the dashboard also displays the watermark information for the job lifetime metrics, such as the average, minimum and maximum GPU load, to give admins a whole picture of what might happen to the job.
+Besides showing the alert status, the dashboard also displays the watermark information for the job lifetime metrics, such as the average, minimum, and maximum GPU load, to give admins a whole picture of what might happen to the job.
 
 Aside from sorting the data, the dashboard allows the viewers to filter the data by job ID, user name, hostname, and alert status, so viewers can quickly target different entities in question. When we filter by user name or job ID, the dashboard also allows admins to send emails to the user in question, with one click, from the preset template, for the current jobs in the alert. One example email generated by the dashboard, when we click the button in Figure \ref{fig_status_dashboard}, is as follows:
 

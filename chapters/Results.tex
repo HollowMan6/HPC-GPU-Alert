@@ -1,7 +1,7 @@
 %!TEX root = ../Thesis.tex
 \chapter{Results and analysis}
 \label{chap:result}
-This Chapter presents the results from benchmarking the real-time GPU resource monitoring and alerting system in experimental and production setups. The evaluation includes a comprehensive analysis of the system's performance, scalability, and impact on energy efficiency and resource utilization for production within High-Performance Computing (HPC) clusters.
+This Chapter presents the results of benchmarking the real-time GPU resource monitoring and alerting system in experimental and production setups. The evaluation includes a comprehensive analysis of the system's performance, scalability, and impact on energy efficiency and resource utilization for production within High-Performance Computing (HPC) clusters.
 
 \section{Benchmark}
 \subsection{Experimental setup}
@@ -64,11 +64,11 @@ Hence, the results confirmed our empirical analysis in Section \ref{sec:alertser
 
 \section{Production}
 
-The production evaluation involved deploying the real-time GPU monitoring system in a live HPC environment, including Puhti and Mahti. This evaluation allows us to test the practicability of alerting for real-world workloads from diverse scientific domains, including molecular dynamics simulations, computational chemistry, and machine learning. Unfortunately, due to the time limit for the thesis writing process, we cannot finish deploying the alert services in production for the pre-exascale HPC system, LUMI. Still, we have verified the possibility of deploying it in a pre-exascale system in Section \ref{subsection:experiment} through a benchmark.
+The production evaluation involved deploying the real-time GPU monitoring system in a live HPC environment, including Puhti and Mahti. This evaluation allows us to test the practicability of alerting for real-world workloads from diverse scientific domains, including molecular dynamics simulations, computational chemistry, and machine learning. Unfortunately, due to the time limit for the thesis writing process, we cannot finish deploying the alert services in production for the pre-exascale HPC system, LUMI. Still, through a benchmark, we have verified the possibility of deploying it in a pre-exascale system in Section \ref{subsection:experiment}.
 
 % We intended to deploy this whole infrastructure on LUMI as well. Unfortunately, we were unable to do so during the thesis writing period due to the shortage of administrators on the LUMI side.
 
-The production evaluation focused on the practical implications of integrating the alerting and monitoring system into the daily operations of HPC clusters. Key performance indicators were measured, such as the system's ability to facilitate timely alerts. Additionally, the impact on user experience was evaluated considering the introduction of real-time alerts to administrators.
+The production evaluation focused on the practical implications of integrating the alerting and monitoring system into the daily operations of HPC clusters. Key performance indicators, such as the system's ability to facilitate timely alerts, were measured. Additionally, the impact on user experience was evaluated considering the introduction of real-time alerts to administrators.
 
 \subsection{Setup}
 
@@ -108,7 +108,7 @@ From the GPU alert status dashboard, the user support team was alerted by a job 
 \clearpage
 
 \subsubsection{Code Bugs}
-In another scenario, the support team received similar alerts about a job allocated multiple GPUs, described in the \textit{Configuration Error} above. Still, it showed low utilization on all GPUs except a few. Those with high usage constantly change and take turns, as Figure \ref{fig_job_code_bugs} demonstrates. By analyzing the job's execution patterns and checking with the user, they found that the workload was not adequately distributed across the GPUs because of code bugs and how the user's code was written. The user was advised to improve their code to parallelize tasks and fully utilize the allocated GPUs. This resulted in significantly improved performance and more efficient use of the cluster's GPU resources.
+In another scenario, the support team received similar alerts about a job allocated multiple GPUs, described in the \textit{Configuration Error}. Still, it showed low utilization on all GPUs except a few. Those with high usage constantly change and take turns, as Figure \ref{fig_job_code_bugs} demonstrates. By analyzing the job's execution patterns and checking with the user, they found that the workload was not adequately distributed across the GPUs because of code bugs and how the user's code was written. The user was advised to improve their code to parallelize tasks and fully utilize the allocated GPUs. This resulted in significantly improved performance and more efficient use of the cluster's GPU resources.
 
 \begin{figure}[H]
     \centering
@@ -119,7 +119,7 @@ In another scenario, the support team received similar alerts about a job alloca
 \clearpage
 
 \subsubsection{GPU Over-Provisioning}
-For most cases, the support team was alerted by jobs with low overall GPU utilization across all allocated GPUs, as shown in Figure \ref{fig_gpu-usage-graph} and Figure \ref{fig_job_over_provison} for examples. After contacting the users, most of the time, it was found that their applications did not scale well beyond a certain number of GPUs, which means there were more allocated GPUs than needed, resulting in under-utilization of the resources. Ultimately, the support team recommended shrinking the GPU requests to match the application's needs better, leading to more efficient GPU usage and freeing for other jobs.
+For most cases, the support team was alerted by jobs with low overall GPU utilization across all allocated GPUs, as shown in Figure \ref{fig_gpu-usage-graph} and Figure \ref{fig_job_over_provison} for examples. After contacting the users, most of the time, it was found that their applications did not scale well beyond a certain number of GPUs, which means there were more allocated GPUs than needed, resulting in the under-utilization of the resources. Ultimately, the support team recommended shrinking the GPU requests to match the application's needs better, leading to more efficient GPU usage and freeing for other jobs.
 
 \begin{figure}[H]
     \centering
