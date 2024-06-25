@@ -1,13 +1,13 @@
 %!TEX root = ../Thesis.tex
 \chapter{More about HPC systems at CSC}
-This Chapter gives more information about the HPC systems at CSC, on top of Section \ref{sec:hpc}, including the overview of CPU for Mahti, more information about the AMD MI250X GPU, and how the hardware is connected for each HPC system.
+This Chapter gives more information about the HPC systems at CSC, on top of Section \ref{sec:hpc}, including the overview of CPU for Mahti, more details about the AMD MI250X GPU, and how the hardware is connected for each HPC system.
 
 \section{Mahti CPU}
 The NUMA configuration of Mahti \cite{mahti} involves a hierarchical structure within each node. Each node contains two sockets, each accommodating a single CPU alongside memory DIMMs. Although the memory within the node is shared, the performance of memory access varies based on the proximity of the core to the memory. Mahti operates each CPU in NPS4 (NUMA per socket 4) mode to optimize memory performance, dividing each CPU into four NUMA domains. Each NUMA domain includes 16 cores and two memory controllers, providing 32 GiB of memory. Thread allocation within each core follows a specific pattern: core 0 runs threads 0 and 128, core 1 runs threads 1 and 129, and so forth. Figure \ref{fig_mahti_numa} shows how the threads are distributed over each core and NUMA node.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{figures/mahti_numa.png}
+    \includegraphics[width=0.8\textwidth]{figures/mahti_numa.png}
     \caption{Mahti NUMA structure overview \cite{mahti}}
     \label{fig_mahti_numa}
 \end{figure}
@@ -18,7 +18,7 @@ As shown in Figure \ref{fig_mahti_ccd}, cores in the CPU are grouped into core c
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.25\textwidth]{figures/mahti_ccd.png}
+    \includegraphics[width=0.3\textwidth]{figures/mahti_ccd.png}
     \caption{Mahti CCD structure overview \cite{mahti}}
     \label{fig_mahti_ccd}
 \end{figure}
@@ -27,7 +27,7 @@ Each processor comprises eight compute dies and an additional I/O die, including
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{figures/mahti_node.png}
+    \includegraphics[width=1.1\textwidth]{figures/mahti_node.png}
     \caption{Mahti node structure overview \cite{mahti}}
     \label{fig_mahti_node}
 \end{figure}
@@ -43,12 +43,12 @@ Each processor comprises eight compute dies and an additional I/O die, including
 
 The GCD structure of AMD MI250X GPU is demonstrated in Figure \ref{mi250x-gcd.svg}. When a kernel is dispatched for execution on the GPU, it is organized as a grid of thread blocks (workgroups), with the grid and thread blocks being one, two, or three-dimensional. The grid can have a maximum number of blocks specified along each dimension of (2147483647, 2147483647, 2147483647), while the maximum number of threads (work-items) for each dimension of a block is (1024, 1024, 1024), with a thread block size limit of 1024, which means size.x * size.y * size.z must be less or equal to 1024.
 
-The thread blocks are assigned to one of the 110 compute units and are scheduled in groups of 64 threads known as wavefronts. This is analogous to a warp on NVIDIA hardware, except that a warp consists of 32 threads, while a wavefront is composed of 64 threads.
+The thread blocks are assigned to one of the 110 compute units and are scheduled in groups of 64 threads, known as wavefronts. This is analogous to a warp on NVIDIA hardware, except that a warp consists of 32 threads, while for AMD hardware, a wavefront comprises 64 threads.
 
 The execution process of wavefronts by a compute unit can be outlined as follows:
 
 \begin{enumerate}
-    \item Each wavefront has 64 work items (threads), is allocated to one of the  16-wide SIMD units.
+    \item Each wavefront has 64 work items (threads) allocated to one of the  16-wide SIMD units.
     \item Most instructions are executed within a single cycle, although one instruction requires four cycles per wavefront.
     \item With 4 SIMD units available per compute unit, up to 4 wavefronts can be processed simultaneously, ensuring a consistent throughput of one instruction per wavefront per compute unit.
 \end{enumerate}
@@ -62,7 +62,7 @@ Figure \ref{mi250x-compute-unit.svg} shows that each compute unit has 512 64-wid
     \label{mi250x-compute-unit.svg}
 \end{figure}
 
-The vector ALUs are complemented by matrix cores optimized to execute matrix fused multiply-add instructions, offering significant acceleration for generalized matrix multiplication computations, crucial for Linear Algebra in High-Performance Computing applications and AI workloads. Each compute unit (CU) has four matrix cores capable of achieving a throughput of 256 double-precision floating-point format (FP64) Flops/cycle/CU.
+The vector ALUs are complemented by matrix cores optimized to execute matrix-fused multiply-add instructions. These cores offer significant acceleration for generalized matrix multiplication computations, which is crucial for linear algebra in High-Performance Computing applications and AI workloads. Each compute unit (CU) has four matrix cores capable of achieving a throughput of 256 double-precision floating-point format (FP64) Flops/cycle/CU.
 
 \section{Connections}
 This Section introduces how the hardware or node is inter-connected, for the three HPC systems at the CSC: Puhti, Mahti, and LUMI.
@@ -71,11 +71,11 @@ This Section introduces how the hardware or node is inter-connected, for the thr
 The Puhti\cite{puhti} interconnect architecture is based on a dual-rail Mellanox HDR100 InfiniBand setup. It offers a non-blocking fat-tree topology with a blocking factor of approximately 2:1 and delivers an impressive aggregate bandwidth of 200 Gbps, ensuring efficient connectivity across the network.
 
 \subsection{Mahti}
-The network interconnect in Mahti is based on Mellanox HDR InfiniBand, with each node connected to the network via a single 200 Gbps HDR link. The network topology adopts a dragonfly+ configuration, in which multiple groups of nodes are internally connected using a fat tree topology. These fat trees are interconnected using all-to-all links, so that we can ensure fully non-blocking connectivity between groups, as shown in Figure \ref{fig_mahti_df_ex}.
+The network interconnect in Mahti is based on Mellanox HDR InfiniBand, with each node connected via a single 200 Gbps HDR link. The network topology adopts a dragonfly+ configuration, in which multiple groups of nodes are internally connected using a fat tree topology. These fat trees are interconnected using all-to-all links to ensure fully non-blocking connectivity between groups, as shown in Figure \ref{fig_mahti_df_ex}.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.6\textwidth]{figures/mahti_df_ex.png}
+    \includegraphics[width=0.8\textwidth]{figures/mahti_df_ex.png}
     \caption{Mahti dragonfly+ configuration overview \cite{mahti}}
     \label{fig_mahti_df_ex}
 \end{figure}
@@ -84,7 +84,7 @@ In Mahti, each dragonfly group comprises 234 nodes, with an internal fat tree fe
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{figures/mahti_df.png}
+    \includegraphics[width=1\textwidth]{figures/mahti_df.png}
     \caption{Mahti dragonfly topology \cite{mahti}}
     \label{fig_mahti_df}
 \end{figure}

@@ -1,9 +1,9 @@
 %!TEX root = ../Thesis.tex
 \chapter{Code for figures}
-In this Chapter, we present the code for the some of figures that are drawn using Python script. These figures are drawn using the Matplotlib plotting library, together with pandas and NumPy.
+In this Chapter, we present the code for some of the figures drawn using Python script. These figures are drawn using the Matplotlib plotting library, together with pandas and NumPy.
 
 \section{Figure \ref{fig_silhouette_directly} \& Figure \ref{fig_silhouette_statistics}}
-In Section \ref{sec:algo_method}, we have the silhouette analysis on windowed GPU load data. Here is the code for the direct one \cite{figure_silhouette}, as in Figure \ref{fig_silhouette_directly}. Note that for \texttt{load\_gpu.csv}, we have the format as follows, where the data for each entry is the fixed-size (30) sliding window:
+Section \ref{sec:algo_method} shows the silhouette analysis on windowed GPU load data. Here is the code for the direct one \cite{figure_silhouette}, as in Figure \ref{fig_silhouette_directly}. Note that for \texttt{load\_gpu.csv}, we have the format as follows, where the data for each entry is the fixed-size (30) sliding window:
 
 \begin{equation*}
 hostname,job id,GPU id,data 0,data 1,....,data 28,data 29
@@ -101,12 +101,12 @@ for n_clusters in range_n_clusters:
 plt.show()
 \end{lstlisting}
 
-For the one with statistics analysis, as in Figure \ref{fig_silhouette_statistics}, the code for drawing it is similar, the only difference is that, we do an aggregation for each entry (fixed-size (30) sliding window), and append those results to the end of each entry, using the nine descriptive statistics metrics, as defined in Subsection \ref{subsec:statistics}: percentiles (25\%, 50\%, 75\%), kurtosis, maximum, minimum, skewness, standard deviation, as well as the variance.
+For the one with statistics analysis, as in Figure \ref{fig_silhouette_statistics}, the code for drawing it is similar. The only difference is that, we do an aggregation for each entry (fixed-size (30) sliding window), and append those results to the end of each entry, using the nine descriptive statistics metrics, as defined in Subsection \ref{subsec:statistics}: percentiles (25\%, 50\%, 75\%), kurtosis, maximum, minimum, skewness, standard deviation, as well as the variance.
 
 \clearpage
 
 \section{Figure \ref{fig_load_gpu_histogram_1} \& Figure \ref{fig_load_gpu_histogram_2}}
-In Section \ref{sec:algo_method}, we also have the histogram of statistics analysis on windowed GPU load data. Here is the code for drawing those figures:
+Section \ref{sec:algo_method} also has the histogram of statistics analysis on windowed GPU load data. Here is the code for drawing those figures:
 
 \begin{lstlisting}[language=Python]
 import pandas as pd
@@ -141,7 +141,7 @@ for job in (getJobs("75%", 20).union(getJobs("max", 32))):
 \end{lstlisting}
 
 \section{Figure \ref{fig_benchmark}}
-In Subsection \ref{subsec:performance}, we have a performance benchmark, here is the code for drawing the related Figure \ref{fig_benchmark}, you can also find the raw data for the benchmark result in the code below:
+In Subsection \ref{subsec:performance}, we have a performance benchmark. The code for drawing the related Figure \ref{fig_benchmark} is here. You can also find the raw data for the benchmark result in the code below:
 
 \begin{lstlisting}[language=Python]
 import matplotlib.pyplot as plt

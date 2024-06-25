@@ -5,7 +5,7 @@ In this Chapter, we summarize the thesis and conclude with future work that we c
 
 \section{Summary}
 
-The thesis comprehensively explores designing, implementing, and evaluating a monitoring system and alert service for GPU resource utilization in High-Performance Computing (HPC) clusters. Through a systematic methodology, the research addresses critical challenges in efficiently analyzing jobs in HPC systems in real-time, focusing on minimizing alert delays and performance impacts on database systems, maintaining reliable data structures for job alert status checks, and identifying optimal algorithms for generating alerts, to address all research questions in Section \ref{sec:rqs}.
+The thesis comprehensively explores designing, implementing, and evaluating a monitoring system and alert service for GPU resource utilization in High-Performance Computing (HPC) clusters. Through a systematic methodology, the research addresses critical challenges in efficiently analyzing jobs in HPC systems in real-time, focusing on minimizing alert delays and performance impacts on database systems, maintaining reliable data structures for job alert status checks, identifying optimal algorithms for generating alerts, and addressing all research questions in Section \ref{sec:rqs}.
 
 The thesis's contributions are multifaceted. First, a monitoring system and alert service with visualization are successfully created and deployed for Nvidia and AMD GPUs within Slurm-managed supercomputer systems. Then, an algorithm is developed to detect and alert jobs with inefficient GPU resource usage by investigating collected monitoring data. Additionally, the thesis provides insights into GPU resource utilization dynamics with case studies in production. By addressing critical challenges and proposing innovative solutions, the research enhances the effectiveness and sustainability of GPU-accelerated computing environments, paving the way for future advancements in HPC infrastructure management and AI research.
 
@@ -23,16 +23,16 @@ There are several avenues for future research and improvements due to the limite
 Extend support for real-time GPU monitoring to additional job schedulers commonly used in HPC environments, such as LSF \cite{10.1145/3569951.3597564}, TORQUE \cite{10.1145/1188455.1188464}, or UGE \cite{10.1145/3332186.3338408}.
 
 \subsection{More monitoring metrics}
-Collect monitoring data from other hardware (e.g., CPU, disk I/O) and collectively contribute to the alert for the whole system. The monitoring infrastructure already has the capabilities for monitoring additional hardware, but they have not been tested in production due to performance considerations.
+Collect monitoring data from other hardware (e.g., CPU, disk I/O) and collectively contribute to the alert for the whole system. The monitoring infrastructure already has the capabilities for monitoring additional hardware, but due to performance considerations, they have not been tested in production.
 
 In addition, we can also explore the possibility of capturing and analyzing fine-grained GPU usage metrics, including memory bandwidth, cache utilization, and instruction throughput. This granular level of monitoring can provide deeper insights into application performance and identify optimization opportunities at the code level.
 
 \subsection{Flexible alerting}
-Investigate adaptive alerting strategies that dynamically adjust thresholds we use in the alert algorithms currently based on workload characteristics, ensuring effective alerting across varying HPC workloads.
+Investigate adaptive alerting strategies that dynamically adjust the thresholds in our alert algorithms based on workload characteristics, ensuring effective alerting across varying HPC workloads.
 
 It's also worth exploring the integration of possible other advanced machine learning algorithms to predict GPU resource usage patterns, enabling proactive alerting based on historical data analysis.
 
-We can also try to implement mechanisms to directly gather feedback from administrators or support teams regarding the effectiveness of the jobs, and improve our alert strategies automatically, so that we can have continuous refinement based on practical usage experiences.
+We can also try to implement mechanisms to directly gather feedback from administrators or support teams regarding the effectiveness of the jobs, and improve our alert strategies automatically, so that we can continuously refine them based on practical usage experiences.
 
 \subsection{Resource optimization}
 Investigate optimization techniques for dynamically allocating GPU resources based on real-time workload demands and system utilization. This could involve developing algorithms for intelligent resource provisioning and load balancing to maximize overall cluster efficiency and performance.

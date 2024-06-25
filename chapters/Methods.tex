@@ -7,7 +7,7 @@ Implementing real-time GPU resource monitoring and alerting involves systematica
 This Section outlines the approach to achieving the thesis objectives, including designing, implementing, and evaluating the monitoring system and alert service for GPU utilization on HPC clusters.
 
 \begin{enumerate}
-    \item \textbf{Requirement Analysis}: We begin with a thorough analysis of the monitoring system and alert service requirements. This involves understanding the needs of HPC administrators and users, identifying key metrics and performance indicators for assessing GPU utilization and job efficiency.
+    \item \textbf{Requirement Analysis}: We begin with a thorough analysis of the monitoring system and alert service requirements. This involves understanding the needs of HPC administrators and users, and identifying key metrics and performance indicators for assessing GPU utilization and job efficiency.
     \item \textbf{System Design and Architecture}: The system design and architecture are developed based on the identified requirements. This phase involves defining the components of the monitoring system, including data collection mechanisms, storage infrastructure, and alert generation algorithms. Special attention is given to ensuring scalability, reliability, and compatibility with existing HPC cluster environments.
     \item \textbf{Implementation and Deployment}: With the system architecture finalized, the implementation phase commences. This involves developing the necessary software components for data collection, processing, and alert generation and integrating the monitoring system with the HPC cluster infrastructure. The deployment process includes configuration, testing, and validation to ensure the system operates effectively in a production environment.
     \item \textbf{Data Collection and Analysis}: Once deployed, the monitoring system collects real-time data on GPU usage and job performance. This data is then analyzed to identify patterns of inefficient resource utilization and inform the development of alert generation algorithms. Statistical analysis and machine learning techniques can be employed to extract insights from the collected data and optimize the performance of the alert service.
@@ -40,7 +40,7 @@ Communication between different components during the lifetime of a job is prese
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{figures/monitoring.pdf}
+    \includegraphics[width=1\textwidth]{figures/monitoring.pdf}
     \caption{Monitoring system structure}
     \label{fig_monitoring}
 \end{figure}
@@ -67,7 +67,7 @@ We also support dropping those jobs from the collection loop that have exceeded 
 
 \subsection{Timescale Ingest}
 
-Timescale Ingest offers API for data ingestion through HTTP or UDP. We do symmetric encryption on the monitoring data. We derive a cryptographic key from an API key using the PBKDF2-HMAC-SHA256 (Combining Password-Based Key Derivation Function 2, Hash-based Message Authentication Code, and Secure Hash Algorithm 256-bit), and then use the derived key as the key for AES-GCM (Combining Advanced Encryption Standard and Galois/Counter Mode) encryption. The server is configured to handle incoming data according to the specified protocol. If UDP is chosen, a UDP server is spun up in a separate thread (goroutine in Golang). If HTTP is selected, the server creates a route to handle incoming POST requests to the \textbf{/write} API endpoint. The transmitted data format follows the InfluxDB line protocol \cite{influxlineprotocol}.
+Timescale Ingest offers API for data ingestion through HTTP or UDP. We do symmetric encryption on the monitoring data. We derive a cryptographic key from an API key using the PBKDF2-HMAC-SHA256 (Combining Password-Based Key Derivation Function 2, Hash-based Message Authentication Code, and Secure Hash Algorithm 256-bit), and then use the derived key as the key for AES-GCM (Combining Advanced Encryption Standard and Galois/Counter Mode) encryption. The server is configured to handle incoming data according to the specified protocol. A UDP server is spun up in a separate thread (goroutine in Golang) if UDP is chosen. If HTTP is selected, the server creates a route to handle incoming POST requests to the \textbf{/write} API endpoint. The transmitted data format follows the InfluxDB line protocol \cite{influxlineprotocol}.
 
 We have an ingestion buffer to store the data temporarily in memory. Whenever we receive the data, we parse it into an instance of Go's structs. When the buffer is full, or after a timeout, we sort the buffer by timestamp, convert them into SQL insert statements, and execute them together. This allows us to reduce the database's write load in batches.
 
@@ -92,7 +92,7 @@ In addition to the /write API endpoint as demonstrated above, the API design for
 \end{itemize}
 
 \subsection{TimescaleDB}
-TimescaleDB, as the time-series database, introduces a relational aspect to monitoring. This component stores metrics in a structured manner, allowing for complex SQL queries and analysis. TimescaleDB accommodates the evolving nature of HPC workloads by enabling the retention of historical data. It also accelerates the query speed, which is essential for identifying trends and patterns over time.
+TimescaleDB, as the time-series database, introduces a relational aspect to monitoring. This component stores metrics in a structured manner, allowing for complex SQL queries and analysis. TimescaleDB accommodates the evolving nature of HPC workloads by enabling the retention of historical data. It also accelerates the query speed, essential for identifying trends and patterns over time.
 
 Table \ref{tab:gpu_usage} shows how we define the database table for storing the GPU usage data at the job level collected by MonServer. These give us a basic idea of how well the job performs using GPUs.
 
@@ -141,6 +141,8 @@ Table \ref{tab:slurm_job_metadata} shows how we define the database table for st
 \begin{enumerate}
     \item \textbf{start-job} indicates initiating a new job. It includes details such as the user name (\textit{user}), user's ID (\textit{uid}), the group ID that the user belongs to (\textit{gid}), the partition that the job belongs to (\textit{partition}), and resource allocations, e.g., GPU and CPU id lists that get allocated to the job). Additionally, it includes the GPU energy counter of all the GPUs that belong to the node.
 
+\clearpage
+
 \begin{lstlisting}[language=JSON]
 {
   "method":"start-job",
@@ -175,6 +177,8 @@ Table \ref{tab:slurm_job_metadata} shows how we define the database table for st
 
     \item \textbf{start-task}: indicates the start of a specific task within a job. It contains metadata such as the task's process ID, step ID (\textit{-1} indicates the batch step), node-local task ID for the process within a job (\textit{locaID}), number of processes in the job step or whole heterogeneous job step (\textit{stepTasks}) and loaded modules, which records the modules name as well as their versions separated by a colon. It also includes the GPU energy counter assigned to the job.
 
+\clearpage
+
 \begin{lstlisting}[language=JSON]
 {
   "method":"start-task",
@@ -202,7 +206,7 @@ Table \ref{tab:slurm_job_metadata} shows how we define the database table for st
   "stepID":0,
   "locaID":0,
   "stepTasks":1,
-  "loadedModules":"csc-tools:StdEnv:gcc/9.4.0:tensorflow/2.12:openblas/0.3.18-omp:openmpi/4.1.2:cuda/11.5.0",
+  "loadedModules": "csc-tools:StdEnv:gcc/9.4.0:tensorflow/2.12:openblas/0.3.18-omp:openmpi/4.1.2:cuda/11.5.0",
   "gpu_energy":[
     {
       "pciBusId":"00000000:44:00.0",
@@ -226,8 +230,6 @@ Table \ref{tab:slurm_job_metadata} shows how we define the database table for st
 \end{lstlisting}
 
     \item \textbf{stop-task}: denotes completing or terminating a task within a job. Like the start task, it includes metadata for the task and the energy consumption of GPUs allocated to the task-related job during its execution.
-
-\clearpage
 
 \begin{lstlisting}[language=JSON]
 {
@@ -265,6 +267,8 @@ Table \ref{tab:slurm_job_metadata} shows how we define the database table for st
 
     \item \textbf{stop-job}: indicates the completion or termination of a job. It includes metadata about the job and the total energy consumption of all the GPUs inside the job running node during its execution.
 
+\clearpage
+
 \begin{lstlisting}[language=JSON]
 {
   "method":"stop-job",
@@ -297,6 +301,8 @@ Table \ref{tab:slurm_job_metadata} shows how we define the database table for st
 We use TimescaleDB-specific features to improve query performance. We turn the metrics table into a hypertable with 6-hour chunking. We also create indexes on job IDs, hostnames, and GPU IDs, as those are the keys most commonly used for our SQL group queries. We compress data older than one day and drop data older than six months.
 
 We define two triggers and corresponding notification functions in PL/pgSQL -- SQL Procedural language. These triggers are designed to automatically send notifications whenever new data is inserted into table \textit{slurm\_job\_metadata} and \textit{gpu\_usage}.
+
+\clearpage
 
 \begin{lstlisting}[language=SQL]
 -- Notify of new job metadata
@@ -490,7 +496,7 @@ Regarding the design of the alert algorithms for GPU usage: many high-performanc
 \label{algo:ml}
 \end{algorithm}
 
-Unsupervised machine learning, such as reinforcement learning, is hard to train and interpret. Deep learning algorithms are also very slow to run, so they do not fit our need for real-time job analysis. Most importantly, we cannot find a good reward function. The only way is from human feedback.
+Unsupervised machine learning, such as reinforcement learning, is hard to train and interpret. Deep learning algorithms are also very slow to run, and do not fit our need for real-time job analysis. Most importantly, we cannot find a good reward function. The only way is from human feedback.
 
 For supervised machine learning, such as random forests that involve decision trees, although it can be much faster to run, all the data collected from the monitoring system is unlabeled. It is unrealistic for humans to label all those data manually.
 
@@ -499,22 +505,22 @@ In the hope of doing labeling automatically, we also did the silhouette analysis
 \begin{figure}[H]
     \centering
         \subfloat[n\_clusters = 2]{
-        \includegraphics[width=0.4\textwidth]{figures/silhouette/silhouette_directly_2.pdf}
+        \includegraphics[width=0.45\textwidth]{figures/silhouette/silhouette_directly_2.pdf}
     }
         \subfloat[n\_clusters = 3]{
-        \includegraphics[width=0.4\textwidth]{figures/silhouette/silhouette_directly_3.pdf}
+        \includegraphics[width=0.45\textwidth]{figures/silhouette/silhouette_directly_3.pdf}
     }\\
         \subfloat[n\_clusters = 4]{
-        \includegraphics[width=0.4\textwidth]{figures/silhouette/silhouette_directly_4.pdf}
+        \includegraphics[width=0.45\textwidth]{figures/silhouette/silhouette_directly_4.pdf}
     }
         \subfloat[n\_clusters = 5]{
-        \includegraphics[width=0.4\textwidth]{figures/silhouette/silhouette_directly_5.pdf}
+        \includegraphics[width=0.45\textwidth]{figures/silhouette/silhouette_directly_5.pdf}
     }\\
         \subfloat[n\_clusters = 6]{
-        \includegraphics[width=0.4\textwidth]{figures/silhouette/silhouette_directly_6.pdf}
+        \includegraphics[width=0.45\textwidth]{figures/silhouette/silhouette_directly_6.pdf}
     }
         \subfloat[n\_clusters = 7]{
-        \includegraphics[width=0.4\textwidth]{figures/silhouette/silhouette_directly_7.pdf}
+        \includegraphics[width=0.45\textwidth]{figures/silhouette/silhouette_directly_7.pdf}
     }\\
     %     \subfloat[n\_clusters = 8]{
     %     \includegraphics[width=0.5\textwidth]{figures/silhouette/silhouette_directly_8.pdf}
@@ -532,22 +538,22 @@ In the hope of doing labeling automatically, we also did the silhouette analysis
 \begin{figure}[H]
     \centering
         \subfloat[n\_clusters = 2]{
-        \includegraphics[width=0.4\textwidth]{figures/silhouette/silhouette_statistics_2.pdf}
+        \includegraphics[width=0.45\textwidth]{figures/silhouette/silhouette_statistics_2.pdf}
     }
         \subfloat[n\_clusters = 3]{
-        \includegraphics[width=0.4\textwidth]{figures/silhouette/silhouette_statistics_3.pdf}
+        \includegraphics[width=0.45\textwidth]{figures/silhouette/silhouette_statistics_3.pdf}
     }\\
         \subfloat[n\_clusters = 4]{
-        \includegraphics[width=0.4\textwidth]{figures/silhouette/silhouette_statistics_4.pdf}
+        \includegraphics[width=0.45\textwidth]{figures/silhouette/silhouette_statistics_4.pdf}
     }
         \subfloat[n\_clusters = 5]{
-        \includegraphics[width=0.4\textwidth]{figures/silhouette/silhouette_statistics_5.pdf}
+        \includegraphics[width=0.45\textwidth]{figures/silhouette/silhouette_statistics_5.pdf}
     }\\
         \subfloat[n\_clusters = 6]{
-        \includegraphics[width=0.4\textwidth]{figures/silhouette/silhouette_statistics_6.pdf}
+        \includegraphics[width=0.45\textwidth]{figures/silhouette/silhouette_statistics_6.pdf}
     }
         \subfloat[n\_clusters = 7]{
-        \includegraphics[width=0.4\textwidth]{figures/silhouette/silhouette_statistics_7.pdf}
+        \includegraphics[width=0.45\textwidth]{figures/silhouette/silhouette_statistics_7.pdf}
     }
     \caption{Silhouette analysis of KMeans on windowed GPU load statistics}
     \label{fig_silhouette_statistics}
@@ -588,37 +594,37 @@ Figure \ref{fig_load_gpu_histogram_1} and Figure \ref{fig_load_gpu_histogram_2} 
 \begin{figure}[H]
     \centering
         \subfloat[25\%]{
-        \includegraphics[width=0.5\textwidth]{figures/analysis/load_gpu_25_histogram.pdf}
-    }
+        \includegraphics[width=0.8\textwidth]{figures/analysis/load_gpu_25_histogram.pdf}
+    }\\
         \subfloat[50\%]{
-        \includegraphics[width=0.5\textwidth]{figures/analysis/load_gpu_50_histogram.pdf}
+        \includegraphics[width=0.8\textwidth]{figures/analysis/load_gpu_50_histogram.pdf}
     }\\
         \subfloat[75\%]{
-        \includegraphics[width=0.5\textwidth]{figures/analysis/load_gpu_75_histogram.pdf}
-    }
+        \includegraphics[width=0.8\textwidth]{figures/analysis/load_gpu_75_histogram.pdf}
+    }\\
         \subfloat[Kurtosis]{
-        \includegraphics[width=0.5\textwidth]{figures/analysis/load_gpu_kurt_histogram.pdf}
+        \includegraphics[width=0.8\textwidth]{figures/analysis/load_gpu_kurt_histogram.pdf}
     }\\
         \subfloat[Maximum]{
-        \includegraphics[width=0.5\textwidth]{figures/analysis/load_gpu_max_histogram.pdf}
+        \includegraphics[width=0.8\textwidth]{figures/analysis/load_gpu_max_histogram.pdf}
     }
-        \subfloat[Mean]{
-        \includegraphics[width=0.5\textwidth]{figures/analysis/load_gpu_mean_histogram.pdf}
-    }\\
     \caption{Histogram of statistics analysis on windowed GPU load data, Part 1}
     \label{fig_load_gpu_histogram_1}
 \end{figure}
 
 \begin{figure}[H]
     \centering
+        \subfloat[Mean]{
+        \includegraphics[width=0.8\textwidth]{figures/analysis/load_gpu_mean_histogram.pdf}
+    }\\
         \subfloat[Minimum]{
-        \includegraphics[width=0.5\textwidth]{figures/analysis/load_gpu_min_histogram.pdf}
-    }
+        \includegraphics[width=0.8\textwidth]{figures/analysis/load_gpu_min_histogram.pdf}
+    }\\
         \subfloat[Skewness]{
-        \includegraphics[width=0.5\textwidth]{figures/analysis/load_gpu_skew_histogram.pdf}
+        \includegraphics[width=0.8\textwidth]{figures/analysis/load_gpu_skew_histogram.pdf}
     }\\
         \subfloat[Standard deviation]{
-        \includegraphics[width=0.5\textwidth]{figures/analysis/load_gpu_std_histogram.pdf}
+        \includegraphics[width=0.8\textwidth]{figures/analysis/load_gpu_std_histogram.pdf}
     }
     \caption{Histogram of statistics analysis on windowed GPU load data, Part 2}
     \label{fig_load_gpu_histogram_2}
@@ -705,9 +711,9 @@ The alert dashboard reads data to display and learn about the current job status
     \label{fig_status_dashboard}
 \end{figure}
 
-In addition, the dashboard allows users to disable or re-enable job alerts, so that admins can improve the alert manually and focus more on those jobs, that have not been checked or can be improved. The users can also click on the button to check more detailed JSON information about jobs from the output of \texttt{sacct --json}. (We don't render that information directly into the table, since the SQL database behind Slurm runs full steam for several seconds when calling that even for a single job)
+In addition, the dashboard allows users to disable or re-enable job alerts, so that admins can improve the alert manually and focus more on those jobs, that have not been checked or can be improved. The users can also click on the button to check more detailed JSON information about jobs from the output of \texttt{sacct --json}. (We don't render that information directly into the table, since the SQL database behind Slurm runs full steam for several seconds when calling that, even for a single job)
 
-Besides showing the alert status, the dashboard also displays the watermark information for the job lifetime metrics, such as the average, minimum and maximum GPU load, to give admins a whole picture of what might happen to the job.
+Besides showing the alert status, the dashboard also displays the watermark information for the job lifetime metrics, such as the average, minimum, and maximum GPU load, to give admins a whole picture of what might happen to the job.
 
 Aside from sorting the data, the dashboard allows the viewers to filter the data by job ID, user name, hostname, and alert status, so viewers can quickly target different entities in question. When we filter by user name or job ID, the dashboard also allows admins to send emails to the user in question, with one click, from the preset template, for the current jobs in the alert. One example email generated by the dashboard, when we click the button in Figure \ref{fig_status_dashboard}, is as follows:
 
@@ -722,7 +728,7 @@ Subject: Low GPU utilization rate with the job you are running on Puhti
 
 Dear johndow,
 
-We have noticed that you have a low utilization rate at least during the last 30 min, according to our monitoring system, for the jobs you are running on Puhti:
+We have noticed that you have a low utilization rate, at least during the last 30 min, according to our monitoring system, for the jobs you are running on Puhti:
 
 - GPU 0 on host r03g03 for job 21850954, with lifetime average 3.13%, maximum 20%, miminum 0%.
 
@@ -739,8 +745,6 @@ if the situation continues and we receive no response from you, we might take ac
 Best regards,
 CSC computing services
 \end{minted}
-
-\clearpage
 
 We also have a dashboard showing the alert history, as presented in Figure \ref{fig_history_dashboard}, which shows the alert status change time, job ID, user name, hostname, GPU ID, alert type, alert value (for usage alert, it will be the 75\% percentile), and whether the status change generates a new alert or clear out an old one. The history dashboard also shares the same features as the status dashboard.
 
