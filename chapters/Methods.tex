@@ -40,7 +40,7 @@ Communication between different components during the lifetime of a job is prese
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{figures/monitoring.pdf}
+    \includegraphics[width=1\textwidth]{figures/monitoring.pdf}
     \caption{Monitoring system structure}
     \label{fig_monitoring}
 \end{figure}
@@ -141,6 +141,8 @@ Table \ref{tab:slurm_job_metadata} shows how we define the database table for st
 \begin{enumerate}
     \item \textbf{start-job} indicates initiating a new job. It includes details such as the user name (\textit{user}), user's ID (\textit{uid}), the group ID that the user belongs to (\textit{gid}), the partition that the job belongs to (\textit{partition}), and resource allocations, e.g., GPU and CPU id lists that get allocated to the job). Additionally, it includes the GPU energy counter of all the GPUs that belong to the node.
 
+\clearpage
+
 \begin{lstlisting}[language=JSON]
 {
   "method":"start-job",
@@ -175,6 +177,8 @@ Table \ref{tab:slurm_job_metadata} shows how we define the database table for st
 
     \item \textbf{start-task}: indicates the start of a specific task within a job. It contains metadata such as the task's process ID, step ID (\textit{-1} indicates the batch step), node-local task ID for the process within a job (\textit{locaID}), number of processes in the job step or whole heterogeneous job step (\textit{stepTasks}) and loaded modules, which records the modules name as well as their versions separated by a colon. It also includes the GPU energy counter assigned to the job.
 
+\clearpage
+
 \begin{lstlisting}[language=JSON]
 {
   "method":"start-task",
@@ -202,7 +206,7 @@ Table \ref{tab:slurm_job_metadata} shows how we define the database table for st
   "stepID":0,
   "locaID":0,
   "stepTasks":1,
-  "loadedModules":"csc-tools:StdEnv:gcc/9.4.0:tensorflow/2.12:openblas/0.3.18-omp:openmpi/4.1.2:cuda/11.5.0",
+  "loadedModules": "csc-tools:StdEnv:gcc/9.4.0:tensorflow/2.12:openblas/0.3.18-omp:openmpi/4.1.2:cuda/11.5.0",
   "gpu_energy":[
     {
       "pciBusId":"00000000:44:00.0",
@@ -226,8 +230,6 @@ Table \ref{tab:slurm_job_metadata} shows how we define the database table for st
 \end{lstlisting}
 
     \item \textbf{stop-task}: denotes completing or terminating a task within a job. Like the start task, it includes metadata for the task and the energy consumption of GPUs allocated to the task-related job during its execution.
-
-\clearpage
 
 \begin{lstlisting}[language=JSON]
 {
@@ -265,6 +267,8 @@ Table \ref{tab:slurm_job_metadata} shows how we define the database table for st
 
     \item \textbf{stop-job}: indicates the completion or termination of a job. It includes metadata about the job and the total energy consumption of all the GPUs inside the job running node during its execution.
 
+\clearpage
+
 \begin{lstlisting}[language=JSON]
 {
   "method":"stop-job",
@@ -297,6 +301,8 @@ Table \ref{tab:slurm_job_metadata} shows how we define the database table for st
 We use TimescaleDB-specific features to improve query performance. We turn the metrics table into a hypertable with 6-hour chunking. We also create indexes on job IDs, hostnames, and GPU IDs, as those are the keys most commonly used for our SQL group queries. We compress data older than one day and drop data older than six months.
 
 We define two triggers and corresponding notification functions in PL/pgSQL -- SQL Procedural language. These triggers are designed to automatically send notifications whenever new data is inserted into table \textit{slurm\_job\_metadata} and \textit{gpu\_usage}.
+
+\clearpage
 
 \begin{lstlisting}[language=SQL]
 -- Notify of new job metadata
@@ -499,22 +505,22 @@ In the hope of doing labeling automatically, we also did the silhouette analysis
 \begin{figure}[H]
     \centering
         \subfloat[n\_clusters = 2]{
-        \includegraphics[width=0.4\textwidth]{figures/silhouette/silhouette_directly_2.pdf}
+        \includegraphics[width=0.45\textwidth]{figures/silhouette/silhouette_directly_2.pdf}
     }
         \subfloat[n\_clusters = 3]{
-        \includegraphics[width=0.4\textwidth]{figures/silhouette/silhouette_directly_3.pdf}
+        \includegraphics[width=0.45\textwidth]{figures/silhouette/silhouette_directly_3.pdf}
     }\\
         \subfloat[n\_clusters = 4]{
-        \includegraphics[width=0.4\textwidth]{figures/silhouette/silhouette_directly_4.pdf}
+        \includegraphics[width=0.45\textwidth]{figures/silhouette/silhouette_directly_4.pdf}
     }
         \subfloat[n\_clusters = 5]{
-        \includegraphics[width=0.4\textwidth]{figures/silhouette/silhouette_directly_5.pdf}
+        \includegraphics[width=0.45\textwidth]{figures/silhouette/silhouette_directly_5.pdf}
     }\\
         \subfloat[n\_clusters = 6]{
-        \includegraphics[width=0.4\textwidth]{figures/silhouette/silhouette_directly_6.pdf}
+        \includegraphics[width=0.45\textwidth]{figures/silhouette/silhouette_directly_6.pdf}
     }
         \subfloat[n\_clusters = 7]{
-        \includegraphics[width=0.4\textwidth]{figures/silhouette/silhouette_directly_7.pdf}
+        \includegraphics[width=0.45\textwidth]{figures/silhouette/silhouette_directly_7.pdf}
     }\\
     %     \subfloat[n\_clusters = 8]{
     %     \includegraphics[width=0.5\textwidth]{figures/silhouette/silhouette_directly_8.pdf}
@@ -532,22 +538,22 @@ In the hope of doing labeling automatically, we also did the silhouette analysis
 \begin{figure}[H]
     \centering
         \subfloat[n\_clusters = 2]{
-        \includegraphics[width=0.4\textwidth]{figures/silhouette/silhouette_statistics_2.pdf}
+        \includegraphics[width=0.45\textwidth]{figures/silhouette/silhouette_statistics_2.pdf}
     }
         \subfloat[n\_clusters = 3]{
-        \includegraphics[width=0.4\textwidth]{figures/silhouette/silhouette_statistics_3.pdf}
+        \includegraphics[width=0.45\textwidth]{figures/silhouette/silhouette_statistics_3.pdf}
     }\\
         \subfloat[n\_clusters = 4]{
-        \includegraphics[width=0.4\textwidth]{figures/silhouette/silhouette_statistics_4.pdf}
+        \includegraphics[width=0.45\textwidth]{figures/silhouette/silhouette_statistics_4.pdf}
     }
         \subfloat[n\_clusters = 5]{
-        \includegraphics[width=0.4\textwidth]{figures/silhouette/silhouette_statistics_5.pdf}
+        \includegraphics[width=0.45\textwidth]{figures/silhouette/silhouette_statistics_5.pdf}
     }\\
         \subfloat[n\_clusters = 6]{
-        \includegraphics[width=0.4\textwidth]{figures/silhouette/silhouette_statistics_6.pdf}
+        \includegraphics[width=0.45\textwidth]{figures/silhouette/silhouette_statistics_6.pdf}
     }
         \subfloat[n\_clusters = 7]{
-        \includegraphics[width=0.4\textwidth]{figures/silhouette/silhouette_statistics_7.pdf}
+        \includegraphics[width=0.45\textwidth]{figures/silhouette/silhouette_statistics_7.pdf}
     }
     \caption{Silhouette analysis of KMeans on windowed GPU load statistics}
     \label{fig_silhouette_statistics}
@@ -588,37 +594,37 @@ Figure \ref{fig_load_gpu_histogram_1} and Figure \ref{fig_load_gpu_histogram_2} 
 \begin{figure}[H]
     \centering
         \subfloat[25\%]{
-        \includegraphics[width=0.5\textwidth]{figures/analysis/load_gpu_25_histogram.pdf}
-    }
+        \includegraphics[width=0.8\textwidth]{figures/analysis/load_gpu_25_histogram.pdf}
+    }\\
         \subfloat[50\%]{
-        \includegraphics[width=0.5\textwidth]{figures/analysis/load_gpu_50_histogram.pdf}
+        \includegraphics[width=0.8\textwidth]{figures/analysis/load_gpu_50_histogram.pdf}
     }\\
         \subfloat[75\%]{
-        \includegraphics[width=0.5\textwidth]{figures/analysis/load_gpu_75_histogram.pdf}
-    }
+        \includegraphics[width=0.8\textwidth]{figures/analysis/load_gpu_75_histogram.pdf}
+    }\\
         \subfloat[Kurtosis]{
-        \includegraphics[width=0.5\textwidth]{figures/analysis/load_gpu_kurt_histogram.pdf}
+        \includegraphics[width=0.8\textwidth]{figures/analysis/load_gpu_kurt_histogram.pdf}
     }\\
         \subfloat[Maximum]{
-        \includegraphics[width=0.5\textwidth]{figures/analysis/load_gpu_max_histogram.pdf}
+        \includegraphics[width=0.8\textwidth]{figures/analysis/load_gpu_max_histogram.pdf}
     }
-        \subfloat[Mean]{
-        \includegraphics[width=0.5\textwidth]{figures/analysis/load_gpu_mean_histogram.pdf}
-    }\\
     \caption{Histogram of statistics analysis on windowed GPU load data, Part 1}
     \label{fig_load_gpu_histogram_1}
 \end{figure}
 
 \begin{figure}[H]
     \centering
+        \subfloat[Mean]{
+        \includegraphics[width=0.8\textwidth]{figures/analysis/load_gpu_mean_histogram.pdf}
+    }\\
         \subfloat[Minimum]{
-        \includegraphics[width=0.5\textwidth]{figures/analysis/load_gpu_min_histogram.pdf}
-    }
+        \includegraphics[width=0.8\textwidth]{figures/analysis/load_gpu_min_histogram.pdf}
+    }\\
         \subfloat[Skewness]{
-        \includegraphics[width=0.5\textwidth]{figures/analysis/load_gpu_skew_histogram.pdf}
+        \includegraphics[width=0.8\textwidth]{figures/analysis/load_gpu_skew_histogram.pdf}
     }\\
         \subfloat[Standard deviation]{
-        \includegraphics[width=0.5\textwidth]{figures/analysis/load_gpu_std_histogram.pdf}
+        \includegraphics[width=0.8\textwidth]{figures/analysis/load_gpu_std_histogram.pdf}
     }
     \caption{Histogram of statistics analysis on windowed GPU load data, Part 2}
     \label{fig_load_gpu_histogram_2}
@@ -653,14 +659,14 @@ Since we want real-time alerts, we want to aggregate with a fixed-size sliding w
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{figures/sliding-window.pdf}
+    \includegraphics[width=1\textwidth]{figures/sliding-window.pdf}
     \caption{Sliding-window aggregation on the last 1 hour's data}
     \label{fig_sliding_window}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{figures/fixed-sliding-window.pdf}
+    \includegraphics[width=1\textwidth]{figures/fixed-sliding-window.pdf}
     \caption{Aggregation with a fixed start time}
     \label{fig_fixed_sliding_window}
 \end{figure}
@@ -722,7 +728,7 @@ Subject: Low GPU utilization rate with the job you are running on Puhti
 
 Dear johndow,
 
-We have noticed that you have a low utilization rate at least during the last 30 min, according to our monitoring system, for the jobs you are running on Puhti:
+We have noticed that you have a low utilization rate, at least during the last 30 min, according to our monitoring system, for the jobs you are running on Puhti:
 
 - GPU 0 on host r03g03 for job 21850954, with lifetime average 3.13%, maximum 20%, miminum 0%.
 
@@ -739,8 +745,6 @@ if the situation continues and we receive no response from you, we might take ac
 Best regards,
 CSC computing services
 \end{minted}
-
-\clearpage
 
 We also have a dashboard showing the alert history, as presented in Figure \ref{fig_history_dashboard}, which shows the alert status change time, job ID, user name, hostname, GPU ID, alert type, alert value (for usage alert, it will be the 75\% percentile), and whether the status change generates a new alert or clear out an old one. The history dashboard also shares the same features as the status dashboard.
 
