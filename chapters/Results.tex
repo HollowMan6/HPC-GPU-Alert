@@ -76,7 +76,7 @@ As is presented in Figure \ref{fig_monitoring_production_development}, we have t
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\textwidth]{figures/production-deployment.pdf}
+    \includegraphics[width=0.8\textwidth]{figures/production-deployment.pdf}
     \caption{GPU monitoring infrastructure production setup for Puhti and Mahti}
     \label{fig_monitoring_production_development}
 \end{figure}
@@ -105,6 +105,8 @@ From the GPU alert status dashboard, the user support team was alerted by a job 
     \label{fig_job_config_error}
 \end{figure}
 
+\clearpage
+
 \subsubsection{Code Bugs}
 In another scenario, the support team received similar alerts about a job allocated multiple GPUs, described in the \textit{Configuration Error}. Still, it showed low utilization on all GPUs except a few. Those with high usage constantly change and take turns, as Figure \ref{fig_job_code_bugs} demonstrates. By analyzing the job's execution patterns and checking with the user, they found that the workload was not adequately distributed across the GPUs because of code bugs and how the user's code was written. The user was advised to improve their code to parallelize tasks and fully utilize the allocated GPUs. This resulted in significantly improved performance and more efficient use of the cluster's GPU resources.
 
@@ -114,6 +116,7 @@ In another scenario, the support team received similar alerts about a job alloca
     \caption{Job usage graph for a job with code bugs}
     \label{fig_job_code_bugs}
 \end{figure}
+\clearpage
 
 \subsubsection{GPU Over-Provisioning}
 For most cases, the support team was alerted by jobs with low overall GPU utilization across all allocated GPUs, as shown in Figure \ref{fig_gpu-usage-graph} and Figure \ref{fig_job_over_provison} for examples. After contacting the users, most of the time, it was found that their applications did not scale well beyond a certain number of GPUs, which means there were more allocated GPUs than needed, resulting in the under-utilization of the resources. Ultimately, the support team recommended shrinking the GPU requests to match the application's needs better, leading to more efficient GPU usage and freeing for other jobs.
@@ -124,6 +127,7 @@ For most cases, the support team was alerted by jobs with low overall GPU utiliz
     \caption{Job usage graph for a job with over-provisioning}
     \label{fig_job_over_provison}
 \end{figure}
+\clearpage
 
 \subsubsection{Interactive use on GPU compute node}
 For some cases, the support team also gets alerted by jobs that only requested 1 GPU but still have low GPU utilization, on partitions meant for heavy GPU computing jobs, as demonstrated in Figure \ref{fig_job_interactive} for one example. After checking with the users, most of the time, it was found that they develop their code interactively. The user was then advised to switch their job to the partition meant for lightweight GPU computing.
@@ -134,6 +138,8 @@ For some cases, the support team also gets alerted by jobs that only requested 1
     \caption{Job usage graph for an interactive job on heavy GPU compute partition}
     \label{fig_job_interactive}
 \end{figure}
+
+\clearpage
 
 \subsubsection{GPU Memory Leaks}
 A user raised a ticket, asking for help from the user support team about why his long-running AI inference job eventually crashed after some time. After checking the monitoring history, as shown in Figure \ref{fig_job_memory_leak}, the support team found progressively increasing GPU memory usage, ultimately leading to the job being killed due to exceeding memory limits. The support team worked with the user to review the code and identified a memory leak, caused by improper handling of GPU memory allocations in a loop. The memory usage was stabilized by fixing the code, allowing the job to be finished successfully, without exceeding memory limits.
