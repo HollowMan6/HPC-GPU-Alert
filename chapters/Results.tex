@@ -76,7 +76,7 @@ As is presented in Figure \ref{fig_monitoring_production_development}, we have t
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{figures/production-deployment.pdf}
+    \includegraphics[width=1\textwidth]{figures/production-deployment.pdf}
     \caption{GPU monitoring infrastructure production setup for Puhti and Mahti}
     \label{fig_monitoring_production_development}
 \end{figure}
@@ -105,8 +105,6 @@ From the GPU alert status dashboard, the user support team was alerted by a job 
     \label{fig_job_config_error}
 \end{figure}
 
-\clearpage
-
 \subsubsection{Code Bugs}
 In another scenario, the support team received similar alerts about a job allocated multiple GPUs, described in the \textit{Configuration Error}. Still, it showed low utilization on all GPUs except a few. Those with high usage constantly change and take turns, as Figure \ref{fig_job_code_bugs} demonstrates. By analyzing the job's execution patterns and checking with the user, they found that the workload was not adequately distributed across the GPUs because of code bugs and how the user's code was written. The user was advised to improve their code to parallelize tasks and fully utilize the allocated GPUs. This resulted in significantly improved performance and more efficient use of the cluster's GPU resources.
 
@@ -116,6 +114,7 @@ In another scenario, the support team received similar alerts about a job alloca
     \caption{Job usage graph for a job with code bugs}
     \label{fig_job_code_bugs}
 \end{figure}
+
 \clearpage
 
 \subsubsection{GPU Over-Provisioning}
@@ -127,6 +126,7 @@ For most cases, the support team was alerted by jobs with low overall GPU utiliz
     \caption{Job usage graph for a job with over-provisioning}
     \label{fig_job_over_provison}
 \end{figure}
+
 \clearpage
 
 \subsubsection{Interactive use on GPU compute node}
